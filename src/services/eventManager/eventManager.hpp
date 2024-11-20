@@ -6,8 +6,8 @@
 
 class Event {
 public:
-  Event() = default;
-  virtual ~Event();
+  // Event() = default;
+  // virtual ~Event();
 
   void setCycleMs(double milliseconds) { m_cycle = milliseconds * 1000000; }
   double getCycleMs() const { return m_cycle / 1000000; }
@@ -24,7 +24,6 @@ public:
 
   virtual void add() = 0;
   virtual void remove() = 0;
-  virtual void restart() = 0;
   virtual void process() = 0;
 
 private:
@@ -41,17 +40,32 @@ public:
   }
 
   void addEvent(Event *event) {
-    m_eventQueue.emplace(event, event->getNextTick());
-    event->add();
+    // Ensure the event is not already added.
+    if (std::find(m_eventQueue.begin(), m_eventQueue.end(), event) == m_eventQueue.end()) {
+      // m_eventQueue.push_back(event);
+
+      // Add as ordered
+      auto it =
+          std::lower_bound(m_eventQueue.begin(), m_eventQueue.end(), event,
+                           [](const Event *lhs, const Event *rhs) { return lhs->getNextTick() < rhs->getNextTick(); });
+      m_eventQueue.insert(it, event);
+
+      event->add();
+    }
   }
 
   void removeEvent(Event *event) {
-    // m_events.erase(std::find(m_events.begin(), m_events.end(), event));
-    event->remove();
+    auto it = std::find(m_eventQueue.begin(), m_eventQueue.end(), event);
+    if (it != m_eventQueue.end()) {
+      m_eventQueue.erase(it);
+      event->remove();
+    }
   }
+
+  std::vector<Event *> getEventQueue() const { return m_eventQueue; }
 
 private:
   EventManager() = default;
 
-  std::priority_queue<Event *, std::vector<Event *>, std::less<>> m_eventQueue;
+  std::vector<Event *> m_eventQueue;
 };

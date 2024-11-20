@@ -8,11 +8,13 @@
 
 #define SEC_TO_TICK(sec) sec * 1000000
 
-class ModelEvent : private Event {
+class ModelEvent : public Event {
 public:
-  ModelEvent() { EventManager::getInstance().addEvent(this); }
+  ModelEvent() {
+    // EventManager::getInstance().addEvent(this);
+  }
 
-  ~ModelEvent() override { EventManager::getInstance().removeEvent(this); }
+  // ~ModelEvent() override { EventManager::getInstance().removeEvent(this); }
 
   /**
    * Sets the event callback function for the event.
@@ -98,13 +100,6 @@ protected:
    * @throws None
    */
   void remove() override {}
-
-  /**
-   * Called when the event is restarted from a checkpoint.
-   *
-   * @throws None
-   */
-  void restart() override {}
 
   void process() override { m_eventFunction(); }
 
