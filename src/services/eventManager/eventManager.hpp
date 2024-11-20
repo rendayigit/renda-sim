@@ -6,23 +6,84 @@
 
 class Event {
 public:
-  // Event() = default;
-  // virtual ~Event();
+  virtual ~Event() = default;
+  
+  /**
+   * Sets the cycle time for the event based on the input time.
+   *
+   * @param cycleTime The amount of time between cycles or repetitions. Time unit is in milliseconds.
+   *
+   * @throws None
+   */
+  void setCycleMs(double milliseconds) { m_cycle = milliseconds * 1000000000; }
 
-  void setCycleMs(double milliseconds) { m_cycle = milliseconds * 1000000; }
-  double getCycleMs() const { return m_cycle / 1000000; }
+  /**
+   * Returns the cycle time for the event if the event is cyclic.
+   *
+   * @return Cycle time, is the amount of time between cycles or repetitions. Time unit is in
+   * milliseconds.
+   *
+   * @throws None
+   */
+  double getCycleMs() const { return m_cycle / 1000000000; }
 
   void setCycleTicks(unsigned int ticks) { m_cycle = ticks; }
+
+  /**
+   * Returns the cycle tick for the event if the event is cyclic.
+   *
+   * @return Cycle tick, is the amount of ticks between cycles or repetitions.
+   *
+   * @throws None
+   */
   unsigned int getCycleTicks() const { return m_cycle; }
 
+  /**
+   * Sets the tick at which the event will trigger.
+   *
+   * @param tick Ttick at which the event will trigger.
+   *
+   * @throws None
+   */
   void setNextTick(unsigned int tick) { m_nextTick = tick; }
+
   unsigned int getNextTick() const { return m_nextTick; }
 
+  /**
+   * Activates the event. An event cannot trigger if not activated.
+   *
+   * @throws None
+   */
   void activate() { m_isActive = true; }
+
+  /**
+   * Deactivates the event. An event cannot trigger if not activated.
+   *
+   * @throws None
+   */
   void deactivate() { m_isActive = false; }
+
+  /**
+   * Returns if the event is active or not. An event cannot trigger if not activated.
+   *
+   * @return Boolean value to indicate if event is active or not.
+   *
+   * @throws None
+   */
   bool isActive() const { return m_isActive; }
 
+  /**
+   * Called when the event is added to the event manager.
+   *
+   * @throws None
+   */
   virtual void add() = 0;
+
+  /**
+   * Called when the event is removed from the event manager.
+   *
+   * @throws None
+   */
   virtual void remove() = 0;
   virtual void process() = 0;
 
