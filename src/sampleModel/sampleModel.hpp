@@ -1,6 +1,7 @@
 #pragma once
 
-#include "services/modelEvent.hpp"
+#include "services/eventManager/eventManager.hpp"
+#include "services/eventManager/simpleEvent.hpp"
 
 class SampleModel {
 public:
@@ -8,5 +9,5 @@ public:
   static void step();
 
 private:
-  ModelEvent *m_event;
+  SimpleEvent *m_event;
 };

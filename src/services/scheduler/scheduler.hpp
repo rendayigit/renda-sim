@@ -9,6 +9,10 @@ public:
     return instance;
   }
 
+  void start() {
+    
+  }
+
   void progressSimulation(unsigned int ticks) {
     // Set new simulation time
     m_simTick += ticks;
