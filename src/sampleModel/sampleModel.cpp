@@ -9,7 +9,7 @@ SampleModel::SampleModel() : m_event(new SimpleEvent) {
   std::cout << "SampleModel Initialized" << std::endl;
 
   m_event->setEventFunction([&] { step(); });
-  m_event->setCycleMs(TIME_STEP);
+  m_event->setCycleMillis(TIME_STEP);
   m_event->activate();
 
   EventManager::getInstance().addEvent(m_event);

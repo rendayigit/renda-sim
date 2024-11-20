@@ -15,7 +15,7 @@ public:
    *
    * @throws None
    */
-  void setCycleMs(double milliseconds) { m_cycle = milliseconds * 1000000000; }
+  void setCycleMillis(long millis) { m_cycleMillis = millis; }
 
   /**
    * Returns the cycle time for the event if the event is cyclic.
@@ -25,18 +25,7 @@ public:
    *
    * @throws None
    */
-  double getCycleMs() const { return m_cycle / 1000000000; }
-
-  void setCycleTicks(unsigned int ticks) { m_cycle = ticks; }
-
-  /**
-   * Returns the cycle tick for the event if the event is cyclic.
-   *
-   * @return Cycle tick, is the amount of ticks between cycles or repetitions.
-   *
-   * @throws None
-   */
-  unsigned int getCycleTicks() const { return m_cycle; }
+  long getCycleMillis() const { return m_cycleMillis; }
 
   /**
    * Sets the tick at which the event will trigger.
@@ -45,9 +34,9 @@ public:
    *
    * @throws None
    */
-  void setNextTick(unsigned int tick) { m_nextTick = tick; }
+  void setNextMillis(long millis) { m_nextMillis = millis; }
 
-  unsigned int getNextTick() const { return m_nextTick; }
+  long getNextMillis() const { return m_nextMillis; }
 
   /**
    * Activates the event. An event cannot trigger if not activated.
@@ -88,8 +77,8 @@ public:
   virtual void process() = 0;
 
 private:
-  unsigned int m_cycle{};
-  unsigned int m_nextTick{};
+  long m_cycleMillis{};
+  long m_nextMillis{};
   bool m_isActive{};
 };
 
@@ -105,8 +94,9 @@ public:
     if (std::find(m_eventQueue.begin(), m_eventQueue.end(), event) == m_eventQueue.end()) {
       // Find position to insert event into the queue
       auto it =
-          std::lower_bound(m_eventQueue.begin(), m_eventQueue.end(), event,
-                           [](const Event *lhs, const Event *rhs) { return lhs->getNextTick() < rhs->getNextTick(); });
+          std::lower_bound(m_eventQueue.begin(), m_eventQueue.end(), event, [](const Event *lhs, const Event *rhs) {
+            return lhs->getNextMillis() < rhs->getNextMillis();
+          });
       // Insert event into the queue based on next tick
       m_eventQueue.insert(it, event);
 

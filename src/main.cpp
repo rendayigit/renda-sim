@@ -10,5 +10,7 @@ int main(int /*argc*/, char ** /*argv*/) {
 
   SampleModel sm;
 
+  std::cin.get();
+
   return 0;
 }
