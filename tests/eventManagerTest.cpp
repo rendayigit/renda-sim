@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "services/eventManager/simpleEvent.hpp"
+#include "services/scheduler/scheduler.hpp"
 
 TEST(EventManager, EventQueue) {
   SimpleEvent evt1;
@@ -18,7 +19,28 @@ TEST(EventManager, EventQueue) {
   evt3.activate();
   EventManager::getInstance().addEvent(&evt3);
 
+  // Test order
   EXPECT_EQ(EventManager::getInstance().getEventQueue().at(0)->getNextTick(), 1);
   EXPECT_EQ(EventManager::getInstance().getEventQueue().at(1)->getNextTick(), 2);
   EXPECT_EQ(EventManager::getInstance().getEventQueue().at(2)->getNextTick(), 3);
+}
+
+TEST(EventManager, EventTriggering) {
+  bool isTriggered = false;
+
+  SimpleEvent evt;
+  evt.setEventFunction([&] { isTriggered = true; });
+  evt.setNextTick(3);
+  evt.activate();
+  EventManager::getInstance().addEvent(&evt);
+
+  EXPECT_FALSE(isTriggered);
+
+  Scheduler::getInstance().progressSimulation(1);
+
+  EXPECT_FALSE(isTriggered);
+
+  Scheduler::getInstance().progressSimulation(2);
+
+  EXPECT_TRUE(isTriggered);
 }

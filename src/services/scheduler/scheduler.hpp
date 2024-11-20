@@ -4,30 +4,28 @@
 
 class Scheduler {
 public:
-  void progressSimulation(double seconds) {
+  static Scheduler &getInstance() {
+    static Scheduler instance;
+    return instance;
+  }
+
+  void progressSimulation(unsigned int ticks) {
     // Set new simulation time
-    simTime += seconds;
+    m_simTick += ticks;
 
     // Iterate through all events in the simulation
     for (auto &event : EventManager::getInstance().getEventQueue()) {
       if (event->isActive()) {
-        double cycle = event->getCycleMs();
-        // If the event is periodic
-        if (cycle > 0) {
-          // Process the event enough cycles for the given amount of time
-          double timeProgress = 0.0;
-          while (timeProgress < seconds) {
-            // Process the event
-            event->process();
-
-            timeProgress += event->getCycleMs();
+        double cycle = event->getCycleTicks();
+        if (cycle > 0) { // If the event is periodic
+          double tickProgress = 0.0;
+          while (tickProgress < ticks) { // Process the event enough cycles for the given amount of ticks
+            event->process();            // Process the event
+            tickProgress += event->getCycleTicks();
           }
-          // If the event is single shotl
-        } else {
-          // Process the event if its schedule is due
-          if ((event->getNextTick() / 1000000) <= simTime) {
-            // Process the event
-            event->process();
+        } else {                                   // If the event is single shot
+          if (event->getNextTick() <= m_simTick) { // Process the event if it is due
+            event->process();                      // Process the event
           }
         }
       }
@@ -35,5 +33,6 @@ public:
   }
 
 private:
-  double simTime;
+  Scheduler() = default;
+  unsigned int m_simTick = 0;
 };

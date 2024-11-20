@@ -7,7 +7,7 @@
 class Event {
 public:
   virtual ~Event() = default;
-  
+
   /**
    * Sets the cycle time for the event based on the input time.
    *
@@ -103,12 +103,11 @@ public:
   void addEvent(Event *event) {
     // Ensure the event is not already added.
     if (std::find(m_eventQueue.begin(), m_eventQueue.end(), event) == m_eventQueue.end()) {
-      // m_eventQueue.push_back(event);
-
-      // Add as ordered
+      // Find position to insert event into the queue
       auto it =
           std::lower_bound(m_eventQueue.begin(), m_eventQueue.end(), event,
                            [](const Event *lhs, const Event *rhs) { return lhs->getNextTick() < rhs->getNextTick(); });
+      // Insert event into the queue based on next tick
       m_eventQueue.insert(it, event);
 
       event->add();
