@@ -1,0 +1,11 @@
+# Executables
+bin/
+
+# CMake build directory
+build/
+
+# clangd cache
+.cache/
+
+# coverage data
+coverage/

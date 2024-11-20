@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build App",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": [
+                "chmod -R 777 ./scripts/;",
+                "./scripts/build.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "problemMatcher": "$gcc",
+            "runOptions": {"reevaluateOnRerun": false},
+        },
+        {
+            "label": "Run App",
+            "type": "shell",
+            "group": "test",
+            "command": [
+                "chmod -R 777 ./scripts/;",
+                "./scripts/run.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "runOptions": {"reevaluateOnRerun": false},
+        },
+        {
+            "label": "Coverage",
+            "type": "shell",
+            "group": "test",
+            "command": [
+                "chmod -R 777 ./scripts/;",
+                "./scripts/coverage.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "runOptions": {"reevaluateOnRerun": false},
+        },
+        {
+            "label": "Unit Test",
+            "type": "shell",
+            "group": "test",
+            "command": [
+                "chmod -R 777 ./scripts/;",
+                "./scripts/test.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "runOptions": {"reevaluateOnRerun": false},
+        },
+        {
+            "label": "Clean App",
+            "type": "shell",
+            "group": "test",
+            "command": [
+                "chmod -R 777 ./scripts/;",
+                "./scripts/clean.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "runOptions": {"reevaluateOnRerun": false},
+        }
+    ]
+}

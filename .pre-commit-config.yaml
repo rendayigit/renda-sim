@@ -1,0 +1,16 @@
+fail_fast: true
+repos:
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-format
+        args: [-i, -style=file, -fallback-style=none]
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+      - id: cmake-format
+
+# manually run clang-format on all files:
+# sudo apt install clang-format
+# find . -type f -name "*.cpp" | xargs clang-format -i
+# find . -type f -name "*.hpp" | xargs clang-format -i
