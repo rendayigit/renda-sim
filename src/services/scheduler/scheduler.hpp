@@ -27,12 +27,13 @@ public:
   }
 
   void progressTime(long millis) const {
-    static long currentMillis = 0.0;
-    currentMillis += millis;
+    static long currentMillis = 0;
 
-    for (long i = 0; i < millis; i++) {
+    for (long i = currentMillis; i < currentMillis + millis; i++) {
       step(i);
     }
+
+    currentMillis += millis;
   }
 
 private:
