@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "App",
+            "name": "Sim",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/app",
+            "program": "${workspaceFolder}/bin/renda-sim",
             "args": [],
             "cwd": "${workspaceFolder}/bin/"
         }
