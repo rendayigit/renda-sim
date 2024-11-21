@@ -54,6 +54,7 @@ TEST(EventManager, CyclicEventTriggering) {
 
   SimpleEvent evt;
   evt.setEventFunction([&] { triggerCount += 1; });
+  evt.setNextMillis(5);
   evt.setCycleMillis(5);
   evt.activate();
   EventManager::getInstance().addEvent(&evt);

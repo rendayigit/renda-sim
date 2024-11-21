@@ -17,10 +17,8 @@ public:
   void start() {
     m_schedulerThread = std::thread([&] {
       while (true) {
-        auto now = std::chrono::steady_clock::now();
-        auto currentMillis = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_appStartTime).count();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
+        auto now = std::chrono::high_resolution_clock::now();
+        auto currentMillis = std::chrono::duration<double, std::milli>(now - m_appStartTime).count();
         step(currentMillis);
       }
     });
@@ -28,26 +26,27 @@ public:
 
   void progressTime(long millis) const {
     static long currentMillis = 0;
-
-    for (long i = currentMillis; i < currentMillis + millis; i++) {
-      step(i);
-    }
-
     currentMillis += millis;
+    step(currentMillis);
   }
 
 private:
   Scheduler()
-      : m_appStartTime(std::chrono::steady_clock::now()), m_eventManagerInstance(&EventManager::getInstance()),
+      : m_appStartTime(std::chrono::high_resolution_clock::now()), m_eventManagerInstance(&EventManager::getInstance()),
         m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
   void step(long currentMillis) const {
     while (true) {
+      // Skip if event no events in queue
+      if (m_eventQueueInstance->empty()) {
+        return;
+      }
+
       // Get the event at the top of the event queue
       Event *event = m_eventQueueInstance->at(0);
 
       // Skip if event is null or is not active
-      if (event == nullptr or not event->isActive()) {
+      if (not event->isActive()) {
         return;
       }
 
@@ -73,7 +72,7 @@ private:
     }
   }
 
-  std::chrono::steady_clock::time_point m_appStartTime;
+  std::chrono::system_clock::time_point m_appStartTime;
   std::thread m_schedulerThread;
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;
