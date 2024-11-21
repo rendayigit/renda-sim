@@ -11,11 +11,12 @@ class Scheduler {
 public:
   explicit Scheduler(EventManager *eventManager)
       : m_appStartTime(std::chrono::high_resolution_clock::now()), m_eventManagerInstance(eventManager),
-        m_eventQueueInstance(m_eventManagerInstance->getEventQueue()), m_progressTimeLastMillis(0) {}
+        m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
   void start() {
     m_schedulerThread = std::thread([&] {
       while (true) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto now = std::chrono::high_resolution_clock::now();
         auto currentMillis = std::chrono::duration<double, std::milli>(now - m_appStartTime).count();
         step(currentMillis);
@@ -70,5 +71,5 @@ private:
   std::thread m_schedulerThread;
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;
-  long m_progressTimeLastMillis;
+  long m_progressTimeLastMillis{};
 };
