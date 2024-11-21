@@ -61,23 +61,10 @@ public:
    */
   bool isActive() const { return m_isActive; }
 
-  /**
-   * Called when the event is added to the event manager.
-   *
-   * @throws None
-   */
-  virtual void add() = 0;
-
-  /**
-   * Called when the event is removed from the event manager.
-   *
-   * @throws None
-   */
-  virtual void remove() = 0;
   virtual void process() = 0;
 
 private:
-  long m_cycleMillis{};
+  long m_cycleMillis = -1;
   long m_nextMillis{};
   bool m_isActive{};
 };
@@ -91,31 +78,32 @@ public:
 
   void addEvent(Event *event) {
     // Ensure the event is not already added.
-    if (std::find(m_eventQueue.begin(), m_eventQueue.end(), event) == m_eventQueue.end()) {
+    if (std::find(m_eventQueue->begin(), m_eventQueue->end(), event) == m_eventQueue->end()) {
       // Find position to insert event into the queue
       auto it =
-          std::lower_bound(m_eventQueue.begin(), m_eventQueue.end(), event, [](const Event *lhs, const Event *rhs) {
+          std::lower_bound(m_eventQueue->begin(), m_eventQueue->end(), event, [](const Event *lhs, const Event *rhs) {
             return lhs->getNextMillis() < rhs->getNextMillis();
           });
-      // Insert event into the queue based on next tick
-      m_eventQueue.insert(it, event);
 
-      event->add();
+      // Insert event into the queue based on next tick
+      m_eventQueue->insert(it, event);
     }
   }
 
   void removeEvent(Event *event) {
-    auto it = std::find(m_eventQueue.begin(), m_eventQueue.end(), event);
-    if (it != m_eventQueue.end()) {
-      m_eventQueue.erase(it);
-      event->remove();
+    // Find event
+    auto it = std::find(m_eventQueue->begin(), m_eventQueue->end(), event);
+
+    // Remove event from queue
+    if (it != m_eventQueue->end()) {
+      m_eventQueue->erase(it);
     }
   }
 
-  std::vector<Event *> getEventQueue() const { return m_eventQueue; }
+  std::vector<Event *> *getEventQueue() const { return m_eventQueue; }
 
 private:
   EventManager() = default;
 
-  std::vector<Event *> m_eventQueue;
+  std::vector<Event *> *m_eventQueue = new std::vector<Event *>;
 };

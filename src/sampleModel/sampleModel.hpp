@@ -8,7 +8,7 @@
 class SampleModel {
 public:
   SampleModel();
-  void step(const std::string &);
+  void step(int stepTime);
 
 private:
   SimpleEvent *m_eventSlow;

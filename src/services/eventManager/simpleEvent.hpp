@@ -20,8 +20,6 @@ public:
   void setEventFunction(std::function<void()> eventFunction) { m_eventFunction = std::move(eventFunction); }
 
 private:
-  void add() override { std::cout << "Added event" << std::endl; }
-  void remove() override { std::cout << "Removed event" << std::endl; }
   void process() override { m_eventFunction(); }
 
   std::function<void()> m_eventFunction;

@@ -20,9 +20,9 @@ TEST(EventManager, EventQueue) {
   EventManager::getInstance().addEvent(&evt3);
 
   // Test order
-  EXPECT_EQ(EventManager::getInstance().getEventQueue().at(0)->getNextMillis(), 1);
-  EXPECT_EQ(EventManager::getInstance().getEventQueue().at(1)->getNextMillis(), 2);
-  EXPECT_EQ(EventManager::getInstance().getEventQueue().at(2)->getNextMillis(), 3);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(0)->getNextMillis(), 1);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(1)->getNextMillis(), 2);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(2)->getNextMillis(), 3);
 }
 
 TEST(EventManager, SingleShotEventTriggering) {
@@ -36,15 +36,15 @@ TEST(EventManager, SingleShotEventTriggering) {
 
   EXPECT_EQ(triggerCount, 0);
 
-  Scheduler::getInstance().progressSimulation(1);
+  Scheduler::getInstance().progressTime(1);
 
   EXPECT_EQ(triggerCount, 0);
 
-  Scheduler::getInstance().progressSimulation(2);
+  Scheduler::getInstance().progressTime(2);
 
   EXPECT_EQ(triggerCount, 1);
 
-  Scheduler::getInstance().progressSimulation(10000);
+  Scheduler::getInstance().progressTime(10000);
 
   EXPECT_EQ(triggerCount, 1);
 }
@@ -60,31 +60,31 @@ TEST(EventManager, CyclicEventTriggering) {
 
   EXPECT_EQ(triggerCount, 0);
 
-  Scheduler::getInstance().progressSimulation(1);
+  Scheduler::getInstance().progressTime(1);
 
   EXPECT_EQ(triggerCount, 0);
 
-  Scheduler::getInstance().progressSimulation(2);
+  Scheduler::getInstance().progressTime(2);
 
   EXPECT_EQ(triggerCount, 0);
 
-  Scheduler::getInstance().progressSimulation(3);
+  Scheduler::getInstance().progressTime(3);
 
   EXPECT_EQ(triggerCount, 1);
 
-  Scheduler::getInstance().progressSimulation(3);
+  Scheduler::getInstance().progressTime(3);
 
   EXPECT_EQ(triggerCount, 1);
 
-  Scheduler::getInstance().progressSimulation(2);
+  Scheduler::getInstance().progressTime(2);
 
   EXPECT_EQ(triggerCount, 2);
 
-  Scheduler::getInstance().progressSimulation(5);
+  Scheduler::getInstance().progressTime(5);
 
   EXPECT_EQ(triggerCount, 3);
 
-  Scheduler::getInstance().progressSimulation(5);
+  Scheduler::getInstance().progressTime(5);
 
   EXPECT_EQ(triggerCount, 4);
 }
