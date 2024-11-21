@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "sampleModel.hpp"
-#include "services/eventManager/eventManager.hpp"
+#include "services/serviceContainer.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -29,10 +29,10 @@ SampleModel::SampleModel()
   m_eventFastest->setCycleMillis(TIME_STEP_1_MSEC);
   m_eventFastest->activate();
 
-  EventManager::getInstance().addEvent(m_eventSlow);
-  EventManager::getInstance().addEvent(m_eventFast);
-  EventManager::getInstance().addEvent(m_eventFaster);
-  EventManager::getInstance().addEvent(m_eventFastest);
+  ServiceContainer::getInstance().eventManager()->addEvent(m_eventSlow);
+  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFast);
+  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFaster);
+  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFastest);
 }
 
 void SampleModel::step(int stepTime) {

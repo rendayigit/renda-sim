@@ -8,8 +8,6 @@
 
 class SimpleEvent : public Event {
 public:
-  ~SimpleEvent() override { EventManager::getInstance().removeEvent(this); }
-
   /**
    * Sets the event callback function for the event.
    *

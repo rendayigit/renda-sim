@@ -71,11 +71,6 @@ private:
 
 class EventManager {
 public:
-  static EventManager &getInstance() {
-    static EventManager instance;
-    return instance;
-  }
-
   void addEvent(Event *event) {
     // Ensure the event is not already added.
     if (std::find(m_eventQueue->begin(), m_eventQueue->end(), event) == m_eventQueue->end()) {
@@ -103,7 +98,5 @@ public:
   std::vector<Event *> *getEventQueue() const { return m_eventQueue; }
 
 private:
-  EventManager() = default;
-
   std::vector<Event *> *m_eventQueue = new std::vector<Event *>;
 };

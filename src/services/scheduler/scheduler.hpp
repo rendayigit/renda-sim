@@ -9,10 +9,9 @@
 
 class Scheduler {
 public:
-  static Scheduler &getInstance() {
-    static Scheduler instance;
-    return instance;
-  }
+  explicit Scheduler(EventManager *eventManager)
+      : m_appStartTime(std::chrono::high_resolution_clock::now()), m_eventManagerInstance(eventManager),
+        m_eventQueueInstance(m_eventManagerInstance->getEventQueue()), m_progressTimeLastMillis(0) {}
 
   void start() {
     m_schedulerThread = std::thread([&] {
@@ -24,17 +23,12 @@ public:
     });
   }
 
-  void progressTime(long millis) const {
-    static long currentMillis = 0;
-    currentMillis += millis;
-    step(currentMillis);
+  void progressTime(long millis) {
+    m_progressTimeLastMillis += millis;
+    step(m_progressTimeLastMillis);
   }
 
 private:
-  Scheduler()
-      : m_appStartTime(std::chrono::high_resolution_clock::now()), m_eventManagerInstance(&EventManager::getInstance()),
-        m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
-
   void step(long currentMillis) const {
     while (true) {
       // Skip if event no events in queue
@@ -76,4 +70,5 @@ private:
   std::thread m_schedulerThread;
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;
+  long m_progressTimeLastMillis;
 };
