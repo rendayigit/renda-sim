@@ -13,6 +13,7 @@ cmake \
 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++ \
 -S$SCRIPTDIR/../ \
 -B$SCRIPTDIR/../build/ \
+--no-warn-unused-cli \
 -G "Unix Makefiles"
 
 # Build
