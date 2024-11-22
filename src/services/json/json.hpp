@@ -36,7 +36,7 @@ public:
    * @param t The type of the value
    * @return The value
    */
-  template <typename t> t getValue();
+  template <typename t> t getValue() { return m_root.get_value<t>(); }
 
   /**
    * @brief Get the key of the node

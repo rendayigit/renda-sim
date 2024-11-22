@@ -1,4 +1,5 @@
 #include "services/json/json.hpp"
+#include <string>
 
 Json::Json(const std::string &jsonFile) : m_jsonFile(jsonFile) {
   try {
@@ -15,8 +16,6 @@ Json Json::getNode(const std::string &key) {
 
   return Json(m_jsonFile, m_root.get_child(key), m_keyHistory);
 }
-
-template <typename t> t Json::getValue() { return m_root.get_value<t>(); }
 
 std::string Json::getKey() { return m_keyHistory.back(); }
 
@@ -70,3 +69,20 @@ template <typename t> void Json::setValue(t value) {
 
 Json::Json(std::string &jsonFile, const pt::ptree &root, std::vector<std::string> keyHistory)
     : m_jsonFile(jsonFile), m_root(root), m_keyHistory(std::move(keyHistory)){};
+
+template void Json::setValue(bool);
+template void Json::setValue(float);
+template void Json::setValue(double);
+template void Json::setValue(long double);
+template void Json::setValue(char);
+template void Json::setValue(std::string);
+template void Json::setValue(signed char);
+template void Json::setValue(unsigned char);
+template void Json::setValue(short int);
+template void Json::setValue(unsigned short int);
+template void Json::setValue(int);
+template void Json::setValue(unsigned int);
+template void Json::setValue(long int);
+template void Json::setValue(unsigned long int);
+template void Json::setValue(long long int);
+template void Json::setValue(unsigned long long int);
