@@ -14,6 +14,7 @@ cmake \
 -DENABLE_COVERAGE=ON \
 -S$SCRIPTDIR/../ \
 -B$SCRIPTDIR/../build/ \
+--no-warn-unused-cli \
 -G "Unix Makefiles"
 
 # Build
