@@ -12,6 +12,7 @@
 #pragma once
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <iostream>
 
@@ -30,14 +31,12 @@ constexpr double BATTERY_CURRENT_VOLTAGE_RATIO = 5.0; // Ratio of current to vol
 class PowerSubsystem {
 public:
   PowerSubsystem() {
-    auto appStartTime = std::chrono::steady_clock::now();
-
     initialize(500.0, 3, 5);
 
     long i = 0;
     m_powerEvent.setEventFunction([&] {
-      auto now = std::chrono::steady_clock::now();
-      auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - appStartTime).count();
+      auto now = std::chrono::high_resolution_clock::now();
+      auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_appStartTime).count();
 
       std::cout << "Power Step Time: " << std::to_string(milliseconds) << " ms" << std::endl;
 
@@ -122,4 +121,5 @@ private:
   int m_panelAgeYears{};       // Age of the panels in years
 
   SimpleEvent m_powerEvent;
+  std::chrono::system_clock::time_point m_appStartTime = std::chrono::high_resolution_clock::now();
 };
