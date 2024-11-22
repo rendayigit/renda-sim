@@ -1,7 +1,3 @@
-/*************************************************************************
-PURPOSE: ( TCP Server )
-ICG: (No)
-**************************************************************************/
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
@@ -11,8 +7,6 @@ ICG: (No)
 #include <memory>
 #include <mutex>
 #include <vector>
-
-#ifndef SWIG
 
 class Server;
 
@@ -67,26 +61,5 @@ private:
   std::vector<boost::asio::ip::tcp::socket *> m_clients;
   mutable std::mutex m_clientsMutex;
 };
-
-#else
-
-class Server : public std::enable_shared_from_this<Server> {
-public:
-  explicit Server(uint16_t port) {}
-
-  void start() {}
-  void stop() {}
-
-  static void transmit(boost::asio::ip::tcp::socket *socket, const std::string &message) {}
-  void broadcast(const std::string &message) {}
-
-  virtual void onConnect(boost::asio::ip::tcp::socket *socket) {}
-  virtual void onDisconnect(boost::asio::ip::tcp::socket *socket) {}
-  virtual void onReceive(boost::asio::ip::tcp::socket *socket, const std::string &message) {}
-
-  std::vector<boost::asio::ip::tcp::socket *> getClients() const {}
-};
-
-#endif
 
 #endif // SERVER_HPP

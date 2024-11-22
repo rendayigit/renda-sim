@@ -1,7 +1,3 @@
-/**
- * PURPOSE: ( A Logger service. )
- */
-
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
