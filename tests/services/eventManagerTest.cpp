@@ -96,3 +96,21 @@ TEST(EventManager, CyclicEventTriggering) {
 
   EXPECT_EQ(triggerCount, 4);
 }
+
+TEST(EventManager, NoTriggering) {
+  int triggerCount = 0;
+  EventManager eventManager;
+  Scheduler scheduler(&eventManager);
+
+  SimpleEvent evt;
+  evt.setEventFunction([&] { triggerCount += 1; });
+  evt.setNextMillis(5);
+  evt.setCycleMillis(5);
+  eventManager.addEvent(&evt);
+
+  EXPECT_FALSE(evt.isActive());
+
+  scheduler.progressTime(100);
+
+  EXPECT_EQ(triggerCount, 0);
+}

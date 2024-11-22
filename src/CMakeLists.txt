@@ -17,6 +17,4 @@ target_link_libraries(renda-sim PRIVATE
     Boost::filesystem
 )
 
-target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS}
-    ${CMAKE_SOURCE_DIR}/src/
-)
+target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})

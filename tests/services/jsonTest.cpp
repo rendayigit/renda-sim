@@ -5,7 +5,7 @@
 #include <string>
 
 std::string testJsonFilePath =
-    FileOperations::getInstance().getExecutableDirectory() + "../tests/services/json/test.json";
+    FileOperations::getInstance().getExecutableDirectory() + "../tests/test.json";
 
 TEST(Json, GetValue) {
   // Get node "first_name"

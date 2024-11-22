@@ -1,5 +1,4 @@
-#ifndef LOGGER_HPP
-#define LOGGER_HPP
+#pragma once
 
 #include <fstream>
 #include <map>
@@ -57,5 +56,3 @@ private:
   std::string m_logDirectory; // Directory of the log file
   int m_logBufferLimit;       // Buffer limit to flush logs
 };
-
-#endif // LOGGER_HPP

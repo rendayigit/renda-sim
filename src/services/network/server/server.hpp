@@ -1,5 +1,4 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/asio/io_context.hpp>
@@ -61,5 +60,3 @@ private:
   std::vector<boost::asio::ip::tcp::socket *> m_clients;
   mutable std::mutex m_clientsMutex;
 };
-
-#endif // SERVER_HPP

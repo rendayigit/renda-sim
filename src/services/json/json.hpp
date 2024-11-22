@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/property_tree/json_parser.hpp>
 #include <cstdlib>
 #include <iostream>
@@ -6,9 +8,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#ifndef JSON_HPP
-#define JSON_HPP
 
 namespace pt = boost::property_tree;
 
@@ -90,5 +89,3 @@ private:
   // The history of the keys
   std::vector<std::string> m_keyHistory;
 };
-
-#endif // JSON_HPP

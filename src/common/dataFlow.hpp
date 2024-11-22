@@ -1,9 +1,4 @@
-/************************************************************
-PURPOSE:
-    ( A variable type that allows the flow of data between models. )
-*************************************************************/
-#ifndef DATAFLOW_HPP
-#define DATAFLOW_HPP
+#pragma once
 
 #include <functional>
 #include <stdexcept>
@@ -95,37 +90,6 @@ private:
 };
 
 /**
- * MuxInFlow class that selects the first non-zero value from multiple connected OutFlows.
- */
-template <class T> class MuxInFlow : public InFlow<T> { // NOLINT(readability-identifier-naming)
-public:
-  /**
-   * Constructors
-   */
-  MuxInFlow() = default;
-  explicit MuxInFlow(T defaultValue) : InFlow<T>(defaultValue) {}
-
-  /**
-   * Override the setValue function to check if the value is 0.
-   *
-   * @param t The new value.
-   *
-   * @throws None
-   */
-  void setValue(T t) override {
-    for (const auto &connectedOutFlow : this->connectedOutFlows) {
-      if (connectedOutFlow->getValue() != 0) {
-        t = connectedOutFlow->getValue();
-        break;
-      }
-    }
-    InFlow<T>::setValue(t);
-  }
-
-  std::vector<OutFlow<T> *> connectedOutFlows;
-};
-
-/**
  * SumInFlow class that sums the values of all connected OutFlows.
  */
 template <class T> class SumInFlow : public InFlow<T> { // NOLINT(readability-identifier-naming)
@@ -184,7 +148,6 @@ public:
    * handling.
    */
   void connect(InFlow<T> *inFlow) {
-    auto muxInFlow = dynamic_cast<MuxInFlow<T> *>(inFlow);
     auto sumInFlow = dynamic_cast<SumInFlow<T> *>(inFlow);
 
     if (inFlow == nullptr) {
@@ -197,9 +160,7 @@ public:
       }
     }
 
-    if (muxInFlow) {
-      muxInFlow->connectedOutFlows.push_back(this);
-    } else if (sumInFlow) {
+    if (sumInFlow) {
       sumInFlow->connectedOutFlows.push_back(this);
     } else {
       if (inFlow->getConnected()) {
@@ -236,5 +197,3 @@ private:
   friend void InFlow<T>::setConnected();
   friend bool InFlow<T>::getConnected();
 };
-
-#endif // DATAFLOW_HPP

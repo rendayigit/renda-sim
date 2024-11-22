@@ -1,4 +1,4 @@
-#include "services/dataFlow.hpp"
+#include "common/dataFlow.hpp"
 #include <gtest/gtest.h>
 #include <stdexcept>
 
@@ -76,70 +76,6 @@ TEST(DataFlow, UpdateFunction) {
   EXPECT_TRUE(updateFunctionTestVariable);
   EXPECT_EQ(inFlow.getValue(), aOut);
   EXPECT_EQ(outFlow.getValue(), aOut);
-}
-
-TEST(DataFlow, MuxInFlowStates) {
-  // Create muxInFlow Object with default Value
-  MuxInFlow<double> muxInFlow(0);
-  // Create OutflowA with default Value
-  OutFlow<double> outFlowA(0);
-  // Create OutflowB with default Value
-  OutFlow<double> outFlowB(0);
-
-  // Connect outFlowA to muxInFlow
-  outFlowA.connect(&muxInFlow);
-  // Connect outFlowB to muxInFlow
-  outFlowB.connect(&muxInFlow);
-
-  // Both flows are 0
-  // Verify That outflowA value is 0
-  EXPECT_EQ(0, outFlowA.getValue());
-  // Verify That outflowB value is 0
-  EXPECT_EQ(0, outFlowB.getValue());
-  // Verify That muxInFlow value is 0
-  EXPECT_EQ(0, muxInFlow.getValue());
-
-  // Flow A is aOut, muxInFlow is aOut
-  // Set outFlowA Value to aOut
-  outFlowA.setValue(aOut);
-  // Verify that outFlowA Value is aOut
-  EXPECT_EQ(aOut, outFlowA.getValue());
-  // Verify that outFlowB Value is stil 0
-  EXPECT_EQ(0, outFlowB.getValue());
-  // Verify That muxInFlow value is aOut
-  EXPECT_EQ(aOut, muxInFlow.getValue());
-
-  // Flow A value is aOut, Flow b value is bOut, muxInFlow value is aOut
-  // Flow A's value is aOut, Flow B's value is bOut, but MuxInFlow initially takes the value of
-  // the first connected flow, which is Flow A.
-  // Set OutFlowB to bOut
-  outFlowB.setValue(bOut);
-  // Verify that outFlowA Value is aOut
-  EXPECT_EQ(aOut, outFlowA.getValue());
-  // Verify that outFlowB Value is bOut
-  EXPECT_EQ(bOut, outFlowB.getValue());
-  // Verify that multInflow value is still aOut
-  EXPECT_EQ(aOut, muxInFlow.getValue());
-
-  // Flow A value is 0, Flow B value is bOut, MuxInFlow  value is bOut
-  // Set OutFlow A to 0
-  outFlowA.setValue(0);
-  // Verify that outFlowA Value is 0
-  EXPECT_EQ(0, outFlowA.getValue());
-  // Verify that outFlowB Value is bOut
-  EXPECT_EQ(bOut, outFlowB.getValue());
-  // Verify that muxInFlow value is bOut
-  EXPECT_EQ(bOut, muxInFlow.getValue());
-
-  // Both flow are 0
-  // Set OutFlow B to 0
-  outFlowB.setValue(0);
-  // Verify that outFlowA Value is 0
-  EXPECT_EQ(0, outFlowA.getValue());
-  // Verify that outFlowB Value is 0
-  EXPECT_EQ(0, outFlowB.getValue());
-  // Verify that muxInFlow value is 0
-  EXPECT_EQ(0, muxInFlow.getValue());
 }
 
 TEST(DataFlow, SumInFlowStates) {
@@ -233,15 +169,6 @@ TEST(SumInflow, UnconnectedOutflowUsage) {
   sumInflowA.setValue(aIn);
   // Verify that sumInflowA value is aIn
   EXPECT_EQ(aIn, sumInflowA.getValue());
-}
-
-TEST(MuxInflow, UnconnectedOutflowUsage) {
-  // Create sumInflowA Object with default Value
-  MuxInFlow<double> muxInflowA(0);
-  // Set sumInflowA value to aIn
-  muxInflowA.setValue(aIn);
-  // Verify that sumInflowA value is aIn
-  EXPECT_EQ(aIn, muxInflowA.getValue());
 }
 
 TEST(DataFlow, BadInflowUsage) {

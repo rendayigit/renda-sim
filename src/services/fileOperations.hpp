@@ -1,6 +1,4 @@
-/**
- * PURPOSE: File operations
- */
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -9,9 +7,6 @@
 #include <filesystem>
 #include <linux/limits.h>
 #include <unistd.h>
-
-#ifndef FILE_OPERATIONS
-#define FILE_OPERATIONS
 
 class FileOperations {
 public:
@@ -54,5 +49,3 @@ private:
 
   std::string m_executableDirectory;
 };
-
-#endif // FILE_OPERATIONS

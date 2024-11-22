@@ -1,5 +1,4 @@
-#ifndef BENCHMARK_HPP
-#define BENCHMARK_HPP
+#pragma once
 
 #include <chrono>
 #include <cmath>
@@ -61,5 +60,3 @@
     res = "Average Time : " + std::to_string(timeResult) + " nsecs";                                                   \
     TEST_COUT(res);                                                                                                    \
   }
-
-#endif // BENCHMARK_HPP

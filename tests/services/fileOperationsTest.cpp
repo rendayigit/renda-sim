@@ -6,7 +6,7 @@
 bool endsWithTestsBin(const std::string &inputStr) {
   std::string_view svInput(inputStr);
 
-  const char *subStr = "/tests/bin/../../";
+  const char *subStr = "/bin/";
 
   // Find the position where "/tests/bin/" begins in original input string.
   auto pos = svInput.find(subStr);
