@@ -6,7 +6,7 @@
 #include "services/serviceContainer.hpp"
 
 int main(int /*argc*/, char ** /*argv*/) {
-  std::cout << "Simulation Start" << std::endl;
+  std::cout << "\n***** Simulation Start *****\n\n";
 
   ServiceContainer::getInstance().scheduler()->start();
 
@@ -14,7 +14,14 @@ int main(int /*argc*/, char ** /*argv*/) {
 
   PowerSubsystem powerSubsystem;
 
-  std::cin.get();
+  char input = 0;
+  while (input != '\n') {
+    std::cin.get(input);
+  }
+
+  ServiceContainer::getInstance().scheduler()->stop();
+
+  std::cout << "\n****** Simulation End ******\n\n";
 
   return 0;
 }

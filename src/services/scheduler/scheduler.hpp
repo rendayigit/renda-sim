@@ -18,6 +18,7 @@ public:
         m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
   void start();
+  void stop();
 
   void progressTime(long millis);
 
@@ -28,6 +29,8 @@ private:
   double m_rate;
 
   std::thread m_schedulerThread;
+  bool m_isRunning = false;
+
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;
   long m_progressTimeLastMillis{};

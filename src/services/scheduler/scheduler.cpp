@@ -4,12 +4,22 @@
 #include "services/timer/timer.hpp"
 
 void Scheduler::start() {
+  m_isRunning = true;
+
   m_schedulerThread = std::thread([&] {
-    while (true) {
+    while (m_isRunning) {
       std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTime * 1000)));
       step(Timer::getInstance().currentMillis() * m_rate);
     }
   });
+}
+
+void Scheduler::stop() {
+  m_isRunning = false;
+
+  if (m_schedulerThread.joinable()) {
+    m_schedulerThread.join();
+  }
 }
 
 void Scheduler::progressTime(long millis) {
