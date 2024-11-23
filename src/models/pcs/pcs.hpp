@@ -12,7 +12,6 @@
 #pragma once
 
 #include <algorithm>
-#include <chrono>
 #include <cmath>
 #include <iostream>
 
@@ -50,5 +49,4 @@ private:
   int m_panelAgeYears{};       // Age of the panels in years
 
   SimpleEvent m_powerEvent;
-  std::chrono::system_clock::time_point m_appStartTime = std::chrono::high_resolution_clock::now();
 };

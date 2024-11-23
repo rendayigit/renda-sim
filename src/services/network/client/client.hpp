@@ -1,5 +1,4 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/asio/io_context.hpp>
@@ -43,5 +42,3 @@ private:
   boost::asio::ip::tcp::socket m_socket;
   boost::asio::streambuf m_buffer;
 };
-
-#endif // CLIENT_HPP

@@ -1,17 +1,21 @@
 #pragma once
 
-#include <chrono>
-// #include <cstddef>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include "services/eventManager/eventManager.hpp"
+#include "services/fileOperations.hpp"
+#include "services/json/json.hpp"
+
+const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirectory() + "/../config.json";
 
 class Scheduler {
 public:
   explicit Scheduler(EventManager *eventManager)
-      : m_appStartTime(std::chrono::high_resolution_clock::now()), m_eventManagerInstance(eventManager),
-        m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
+      : m_stepTime(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME").getValue<double>()),
+        m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()),
+        m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
   void start();
 
@@ -20,7 +24,9 @@ public:
 private:
   void step(long currentMillis) const;
 
-  std::chrono::system_clock::time_point m_appStartTime;
+  double m_stepTime;
+  double m_rate;
+
   std::thread m_schedulerThread;
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;

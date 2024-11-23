@@ -2,7 +2,6 @@
 #include <iostream>
 #include <utility>
 
-#ifndef SWIG
 namespace ip = boost::asio::ip;
 
 Server::Server(uint16_t port) : m_ioThread(1), m_acceptor(m_ioContext, ip::tcp::endpoint(ip::tcp::v4(), port)) {
@@ -135,4 +134,3 @@ void Session::readHandler(const boost::system::error_code &errorCode) {
     std::cerr << "Error receiving from client: " << errorCode.message() << '\n';
   }
 }
-#endif

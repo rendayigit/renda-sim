@@ -1,12 +1,13 @@
+#include <chrono>
+
 #include "services/scheduler/scheduler.hpp"
+#include "services/timer/timer.hpp"
 
 void Scheduler::start() {
   m_schedulerThread = std::thread([&] {
     while (true) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      auto now = std::chrono::high_resolution_clock::now();
-      auto currentMillis = std::chrono::duration<double, std::milli>(now - m_appStartTime).count();
-      step(currentMillis);
+      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTime * 1000)));
+      step(Timer::getInstance().currentMillis() * m_rate);
     }
   });
 }
@@ -52,4 +53,3 @@ void Scheduler::step(long currentMillis) const {
     m_eventManagerInstance->addEvent(event);
   }
 }
-
