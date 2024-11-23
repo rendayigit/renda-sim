@@ -32,7 +32,7 @@ pip install gcovr                   # Install gcovr code coverage tool.
 ### Install GDB for debugging
 
 ``` bash
-sudo apt install gdb# Install GNU GDB debugger.
+sudo apt install gdb                # Install GNU GDB debugger.
 ```
 
 ### Install clang-format and pre-commit for code formatting
