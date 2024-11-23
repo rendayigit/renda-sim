@@ -5,42 +5,42 @@
 ### Install GNU compilers
 
 ``` bash
-sudo apt install build-essential                                    # Install GNU compilers.
-sudo apt install libboost-all-dev                                   # Install boost libraries.
+sudo apt install build-essential    # Install GNU compilers.
+sudo apt install libboost-all-dev   # Install boost libraries.
 ```
 
 ### Install clangd language server
 
 ``` bash
-sudo apt install clangd                                             # Install clangd language server.
+sudo apt install clangd             # Install clangd language server.
 ```
 
 ### Install GTest for unit testing
 
 ``` bash
-sudo apt install libgtest-dev                                       # Install gtest unit testing framework
+sudo apt install libgtest-dev       # Install gtest unit testing framework
 ```
 
 ### Install Gcovr for code coverage
 
 ``` bash
 cd ~
-sudo apt install python3-pip                                        # Install python package manager.
-pip install gcovr                                                   # Install gcovr code coverage tool.
+sudo apt install python3-pip        # Install python package manager.
+pip install gcovr                   # Install gcovr code coverage tool.
 ```
 
 ### Install GDB for debugging
 
 ``` bash
-sudo apt install gdb                                                # Install GNU GDB debugger.
+sudo apt install gdb# Install GNU GDB debugger.
 ```
 
 ### Install clang-format and pre-commit for code formatting
 
 ``` bash
-sudo apt install clang-format                                       # Install clang-format.
-sudo apt install pre-commit                                         # Install pre-commit to run clang-format on commit.
-pre-commit install                                                  # Activate pre-commit hooks
+sudo apt install clang-format       # Install clang-format.
+sudo apt install pre-commit         # Install pre-commit to run clang-format on commit.
+pre-commit install                  # Activate pre-commit hooks
 ```
 
 ### Use the scripts under `scripts/`
