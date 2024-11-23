@@ -10,16 +10,14 @@
  */
 
 #include "pcs/pcs.hpp"
+#include "services/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem() {
   initialize(500.0, 3, 5);
 
   long i = 0;
   m_powerEvent.setEventFunction([&] {
-    auto now = std::chrono::high_resolution_clock::now();
-    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_appStartTime).count();
-
-    std::cout << "Power Step Time: " << std::to_string(milliseconds) << " ms" << std::endl;
+    std::cout << "Power Step Real Millis: " << std::to_string(Timer::getInstance().currentMillis())  << std::endl;
 
     double sunAngle = (M_PI / 4.0) * (std::sin(i * 0.1) + 1.0); // Simulated sun angle
     double powerConsumption = 50.0 + 10.0 * std::cos(i * 0.2);  // Simulated power consumption

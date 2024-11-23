@@ -10,6 +10,7 @@ set(SOURCEFILES
     ${CMAKE_SOURCE_DIR}/src/services/network/client/client.cpp
     ${CMAKE_SOURCE_DIR}/src/services/network/server/server.cpp
     ${CMAKE_SOURCE_DIR}/src/services/scheduler/scheduler.cpp
+    ${CMAKE_SOURCE_DIR}/src/services/timer/timer.cpp
     # Model Source Files
     ${CMAKE_SOURCE_DIR}/src/models/pcs/pcs.cpp
     ${CMAKE_SOURCE_DIR}/src/models/sampleModel/sampleModel.cpp)

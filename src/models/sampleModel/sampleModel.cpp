@@ -1,7 +1,9 @@
 #include <iostream>
+#include <string>
 
 #include "sampleModel.hpp"
 #include "services/serviceContainer.hpp"
+#include "services/timer/timer.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -36,8 +38,9 @@ SampleModel::SampleModel()
 }
 
 void SampleModel::step(int stepTime) {
-  auto now = std::chrono::steady_clock::now();
-  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_appStartTime).count();
+  m_logger.log(LogLevel::LOG_INFO,
+               std::to_string(stepTime) + " ms Step, Real Millis: " + std::to_string(Timer::getInstance().currentMillis()));
 
-  std::cout << stepTime << " ms Step " << std::to_string(milliseconds) << std::endl;
+  // std::cout << std::to_string(stepTime) + " ms Step, Real Millis: " + std::to_string(Timer::getInstance().currentMillis())
+  //           << std::endl;
 }
