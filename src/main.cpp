@@ -6,7 +6,8 @@
 #include "services/serviceContainer.hpp"
 
 int main(int /*argc*/, char ** /*argv*/) {
-  std::cout << "\n***** Simulation Start *****\n\n";
+  std::cout << "\n***** Simulation Start *****\n";
+  std::cout << "Press enter to stop the simulation\n\n";
 
   ServiceContainer::getInstance().scheduler()->start();
 

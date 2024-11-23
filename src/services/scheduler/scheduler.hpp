@@ -17,6 +17,8 @@ public:
         m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()),
         m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
+  ~Scheduler() { stop(); }
+
   void start();
   void stop();
 
