@@ -1,0 +1,27 @@
+name: Ubuntu CI
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  CI:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+      
+    steps:
+    - name: Install Libraries 
+      run:  |
+        sudo apt install build-essential                                    # Install GNU compilers.
+        sudo apt install libboost-all-dev                                   # Install Boost libraries.
+        sudo apt install libgtest-dev                                       # Install Google Test.
+        
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build & Run Unit Tests
+      run: |       
+        chmod -R 777 ${{ github.workspace }}/scripts/
+        ${{ github.workspace }}/scripts/test.sh
