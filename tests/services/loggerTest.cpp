@@ -15,7 +15,9 @@
 namespace fs = boost::filesystem;
 
 // The local date and time
-std::string localTime = boost::posix_time::to_simple_string(boost::posix_time::second_clock::local_time());
+std::string getLocalTime() {
+  return boost::posix_time::to_simple_string(boost::posix_time::second_clock::local_time());
+}
 
 // The local date
 std::string localDate = boost::gregorian::to_simple_string(boost::posix_time::second_clock::local_time().date());
@@ -35,12 +37,12 @@ std::stringstream getExpectedStream() {
   std::stringstream expectedLogStream;
 
   // Construct the expected log entries
-  expectedLogStream << localTime + " INFO test info log 1\n";
-  expectedLogStream << localTime + " INFO test info log 2\n";
-  expectedLogStream << localTime + " ERROR test error log 1\n";
-  expectedLogStream << localTime + " ERROR test error log 2\n";
-  expectedLogStream << localTime + " WARNING test warning log 1\n";
-  expectedLogStream << localTime + " WARNING test warning log 2\n";
+  expectedLogStream << getLocalTime() + " INFO test info log 1\n";
+  expectedLogStream << getLocalTime() + " INFO test info log 2\n";
+  expectedLogStream << getLocalTime() + " ERROR test error log 1\n";
+  expectedLogStream << getLocalTime() + " ERROR test error log 2\n";
+  expectedLogStream << getLocalTime() + " WARNING test warning log 1\n";
+  expectedLogStream << getLocalTime() + " WARNING test warning log 2\n";
 
   return expectedLogStream;
 }
@@ -51,8 +53,8 @@ std::stringstream getExpectedFaultyStream() {
   std::stringstream expectedFaultyLogStream;
 
   // Construct the expected log entries
-  expectedFaultyLogStream << localTime + " WARNING test warning log 1\n";
-  expectedFaultyLogStream << localTime + " WARNING test warning log 2\n";
+  expectedFaultyLogStream << getLocalTime() + " WARNING test warning log 1\n";
+  expectedFaultyLogStream << getLocalTime() + " WARNING test warning log 2\n";
 
   return expectedFaultyLogStream;
 }
