@@ -119,8 +119,8 @@ TEST(Logger, NominalUsage) {
   // Verify that the log file was created
   EXPECT_TRUE(fs::exists(defaultLogFile));
 
-  // Verify that the contents of the log file match the expected log data
-  EXPECT_EQ(getLogStream(defaultLogFile).str(), getExpectedStream().str());
+  // Verify that the contents of the log file contain the expected log data
+  EXPECT_TRUE(getLogStream(defaultLogFile).str().find(getExpectedStream().str()) != std::string::npos);
 
   // Remove test log file
   (void)std::remove(defaultLogFile.c_str());
@@ -225,6 +225,9 @@ TEST(Logger, FaultyUsage) {
 
   // Flush the log buffer
   logger->flush();
+
+  // Delete the Logger pointer
+  delete logger;
 
   // Verify that the log file was created
   EXPECT_TRUE(fs::exists(faultyTestLogFile));

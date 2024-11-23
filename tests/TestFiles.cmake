@@ -20,15 +20,15 @@ set(TESTFILES
     # Service Test Files
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/network/networkTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/eventManagerTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/simpleEventTest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/fileOperationsTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/jsonTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/loggerTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/fileOperationsTest.cpp
-    # Model Test Files
-    # ${CMAKE_CURRENT_LIST_DIR}/../tests/models/pcsTest.cpp
-    )
+    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/schedulerTest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/simpleEventTest.cpp
+    # Model Test Files ${CMAKE_CURRENT_LIST_DIR}/../tests/models/pcsTest.cpp //
+    # TODO(renda): Add test
+)
 
 set(INCLUDEDIRS
-    ${CMAKE_CURRENT_LIST_DIR}/../src/
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/
+    ${CMAKE_CURRENT_LIST_DIR}/../src/ ${CMAKE_CURRENT_LIST_DIR}/../src/models/
     ${CMAKE_CURRENT_LIST_DIR}/../tests/)
