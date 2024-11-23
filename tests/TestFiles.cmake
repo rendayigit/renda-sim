@@ -18,6 +18,7 @@ set(TESTFILES
     ${CMAKE_SOURCE_DIR}/tests/common/dataFlowTest.cpp
     ${CMAKE_SOURCE_DIR}/tests/common/failureTest.cpp
     # Service Test Files
+    ${CMAKE_SOURCE_DIR}/tests/services/network/networkTest.cpp
     ${CMAKE_SOURCE_DIR}/tests/services/eventManagerTest.cpp
     ${CMAKE_SOURCE_DIR}/tests/services/simpleEventTest.cpp
     ${CMAKE_SOURCE_DIR}/tests/services/jsonTest.cpp
