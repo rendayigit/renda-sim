@@ -1,4 +1,6 @@
-# Sample Cpp Project
+# Renda-Sim
+
+## How to build the project
 
 ### Install GNU compilers
 
