@@ -32,3 +32,29 @@ TEST(Scheduler, StartStop) {
 
   EXPECT_EQ(currentCount, count);
 }
+
+TEST(Scheduler, ProgressTime) {
+  EventManager eventManager;
+  Scheduler scheduler(&eventManager);
+
+  int count = 0;
+  SimpleEvent evt;
+  evt.setEventFunction([&] { count += 1; });
+  evt.setNextMillis(2);
+  evt.activate();
+  eventManager.addEvent(&evt);
+
+  EXPECT_EQ(count, 0);
+
+  scheduler.progressTime(1);
+
+  EXPECT_EQ(count, 0);
+
+  scheduler.progressTime(1);
+
+  EXPECT_EQ(count, 1);
+
+  scheduler.progressTime(10);
+
+  EXPECT_EQ(count, 1);
+}

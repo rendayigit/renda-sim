@@ -24,7 +24,6 @@ set(TESTFILES
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/jsonTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/loggerTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/schedulerTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/services/simpleEventTest.cpp
     # Model Test Files ${CMAKE_CURRENT_LIST_DIR}/../tests/models/pcsTest.cpp //
     # TODO(renda): Add test
 )
