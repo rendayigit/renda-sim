@@ -24,6 +24,8 @@ public:
 
   void progressTime(long millis);
 
+  bool isRunning() const { return m_isRunning; }
+
 private:
   void step(long currentMillis) const;
 

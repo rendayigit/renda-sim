@@ -17,7 +17,7 @@ PowerSubsystem::PowerSubsystem() {
 
   long i = 0;
   m_powerEvent.setEventFunction([&] {
-    std::cout << "Power Step Real Millis: " << std::to_string(Timer::getInstance().currentMillis())  << std::endl;
+    std::cout << "Power Step Real Millis: " << std::to_string(Timer::getInstance().currentMillis()) << std::endl;
 
     double sunAngle = (M_PI / 4.0) * (std::sin(i * 0.1) + 1.0); // Simulated sun angle
     double powerConsumption = 50.0 + 10.0 * std::cos(i * 0.2);  // Simulated power consumption
@@ -28,6 +28,7 @@ PowerSubsystem::PowerSubsystem() {
     step(sunAngle, powerConsumption);
     i++;
   });
+
   m_powerEvent.setCycleMillis(100);
   m_powerEvent.activate();
   ServiceContainer::getInstance().eventManager()->addEvent(&m_powerEvent);
