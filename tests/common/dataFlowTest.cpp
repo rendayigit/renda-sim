@@ -162,7 +162,7 @@ TEST(DataFlow, SumInFlowStates) {
   EXPECT_EQ(0, sumInFlow.getValue());
 }
 
-TEST(SumInflow, UnconnectedOutflowUsage) {
+TEST(DataFlow, SumInFlowUnconnectedOutflowUsage) {
   // Create sumInflowA Object with default Value
   SumInFlow<double> sumInflowA(0);
   // Set sumInflowA value to aIn
