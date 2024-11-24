@@ -5,3 +5,5 @@ double Timer::currentMillis() {
   auto currentMillis = std::chrono::duration<double, std::milli>(now - m_initialTime).count();
   return currentMillis;
 }
+
+void Timer::reset() { m_initialTime = std::chrono::high_resolution_clock::now(); }

@@ -10,6 +10,7 @@ public:
   }
 
   double currentMillis();
+  void reset();
 
 private:
   Timer() : m_initialTime(std::chrono::high_resolution_clock::now()) {}

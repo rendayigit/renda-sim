@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <iostream>
 
 #include "services/eventManager/simpleEvent.hpp"
@@ -31,11 +32,11 @@ class PowerSubsystem {
 public:
   PowerSubsystem();
 
-  void initialize(double batteryInitialCharge = 500.0, int batteryAgeYears = 0, int panelAgeYears = 0);
-
-  void step(double sunAngle, double powerConsumption);
-
+  void initialize();
+  void step();
   void printState() const;
+
+  std::function<void(const std::string &)> logMessage;
 
 private:
   double m_batteryCharge{};    // Current charge of the battery (Watt-hours)
@@ -47,6 +48,9 @@ private:
   double m_batteryCurrent{};   // Current from the battery (Amperes)
   int m_batteryAgeYears{};     // Age of the battery in years
   int m_panelAgeYears{};       // Age of the panels in years
+
+  double m_sunAngle{};         // Sun angle for the solar panels (radians)
+  double m_powerConsumption{}; // Power consumption of the system (Watts)
 
   SimpleEvent m_powerEvent;
 };

@@ -54,10 +54,9 @@ MyFrame::MyFrame()
       this, ID_RESTORE_BTN, "Restore", {},
       wxSize(100, TOP_BAR_COMP_HEIGHT)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-  auto *logs =
-      new wxTextCtrl(this, wxID_ANY, "", {},
-                     wxSize(400, 400), // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
-                     wxTE_READONLY | wxTE_MULTILINE); // NOLINT(hicpp-signed-bitwise)
+  m_logs = new wxTextCtrl(this, wxID_ANY, "", {},
+                          wxSize(400, 400), // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+                          wxTE_READONLY | wxTE_MULTILINE); // NOLINT(hicpp-signed-bitwise)
 
   topHorizontalSizer->Add(m_startStopButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -77,7 +76,7 @@ MyFrame::MyFrame()
   verticalSizer->Add(topHorizontalSizer, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-  verticalSizer->Add(logs, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+  verticalSizer->Add(m_logs, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   SetSizer(verticalSizer);
@@ -94,6 +93,26 @@ MyFrame::MyFrame()
   Bind(wxEVT_MENU, &MyFrame::onHello, this, ID_HELLO);
   Bind(wxEVT_MENU, &MyFrame::onAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &MyFrame::onExit, this, wxID_EXIT);
+}
+
+void MyFrame::logMessage(const std::string &message) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  wxTheApp->CallAfter([this, message] { // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+    wxString currentText = m_logs->GetValue() + message;
+    wxArrayString lines = wxSplit(currentText, '\n');
+
+    // If the number of lines exceeds limit, trim the excess lines
+    while (lines.size() > 1000) {
+      lines.RemoveAt(0, 1);
+    }
+
+    // Join the lines back together
+    wxString newText = wxJoin(lines, '\n');
+    m_logs->SetValue(newText);
+
+    // Auto-scroll to the end
+    m_logs->ShowPosition(m_logs->GetLastPosition());
+  });
 }
 
 void MyFrame::onStartStopClicked(wxCommandEvent & /*event*/) {

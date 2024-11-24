@@ -5,7 +5,11 @@
 #include "services/timer/timer.hpp"
 
 void Scheduler::start() {
+  // TODO(renda): correctly update time here
+  // Timer::getInstance().reset();
+
   m_isRunning = true;
+
   std::cout << "\n***** Simulation Start *****\n";
 
   m_schedulerThread = std::thread([&] {
@@ -31,6 +35,9 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
+  // TODO(renda): Added to debug scheduler stop function
+  std::cout << "TIME: " << currentMillis << " ms" << std::endl;
+
   while (true) {
     // Skip if no events in queue
     if (m_eventQueueInstance->empty()) {
