@@ -17,7 +17,7 @@ private:
   void onStepClicked(wxCommandEvent &event);
   void onStoreClicked(wxCommandEvent &event);
   void onRestoreClicked(wxCommandEvent &event);
-  void onHello(wxCommandEvent &event);
+
   void onExit(wxCommandEvent &event);
   void onAbout(wxCommandEvent &event);
 

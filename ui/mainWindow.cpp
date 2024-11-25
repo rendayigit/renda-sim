@@ -1,28 +1,45 @@
 #include "mainWindow.hpp"
 #include "services/serviceContainer.hpp"
 
-enum { ID_HELLO = 1, ID_START_STOP_BTN, ID_RESET_BTN, ID_STEP_BTN, ID_STORE_BTN, ID_RESTORE_BTN };
+enum { ID_START_STOP_BTN = 1, ID_START_STOP_MENU, ID_RESET_BTN, ID_STEP_BTN, ID_STORE_BTN, ID_RESTORE_BTN };
 
 constexpr int TOP_BAR_COMP_HEIGHT = 30;
 
-MyFrame::MyFrame()
-    : wxFrame(nullptr, wxID_ANY, "Hello World"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
+MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
   auto *menuFile = new wxMenu;
-  menuFile->Append(ID_HELLO, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
+  menuFile->Append(ID_START_STOP_MENU, "Start / Stop", "Start or stop simulation");
+  menuFile->Append(wxID_ANY, "Stop At", "Stop simulation at given time");
+  menuFile->Append(wxID_ANY, "Stop In", "Stop simulation in given amount of time");
+  menuFile->Append(wxID_ANY, "Reset", "Reset simulation");
+  menuFile->Append(wxID_ANY, "Step", "Run simulation 1 step");
+  menuFile->Append(wxID_ANY, "Run For", "Run simulation for given amount of time");
+  menuFile->Append(wxID_ANY, "Run Until", "Run simulation until given time");
+  menuFile->Append(wxID_ANY, "Store", "Store current simulation state");
+  menuFile->Append(wxID_ANY, "Restore", "Restore simulation state from file");
+  menuFile->Append(wxID_ANY, "Speed", "Set simulation speed");
+  menuFile->AppendSeparator();
+  menuFile->Append(wxID_ANY, "Settings", "Open settings");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
+
+  auto *menuVariables = new wxMenu;
+  menuVariables->Append(wxID_ANY, "Graph View", "Open Graph View");
+  menuVariables->Append(wxID_ANY, "Save Variables", "Save variables to file");
+  menuVariables->Append(wxID_ANY, "Load Variables", "Load variables from file");
+  menuVariables->Append(wxID_ANY, "Clear", "Clear variables");
 
   auto *menuHelp = new wxMenu;
   menuHelp->Append(wxID_ABOUT);
 
   auto *menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
+  menuBar->Append(menuVariables, "&Variable Display");
   menuBar->Append(menuHelp, "&Help");
 
   SetMenuBar(menuBar);
 
   CreateStatusBar();
-  SetStatusText("Welcome to wxWidgets!");
+  SetStatusText("Simulator ready");
 
   auto *verticalSizer = new wxBoxSizer(wxVERTICAL);
   auto *topHorizontalSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -90,7 +107,7 @@ MyFrame::MyFrame()
   Bind(wxEVT_BUTTON, &MyFrame::onStoreClicked, this, ID_STORE_BTN);
   Bind(wxEVT_BUTTON, &MyFrame::onRestoreClicked, this, ID_RESTORE_BTN);
 
-  Bind(wxEVT_MENU, &MyFrame::onHello, this, ID_HELLO);
+  Bind(wxEVT_MENU, &MyFrame::onStartStopClicked, this, ID_START_STOP_MENU);
   Bind(wxEVT_MENU, &MyFrame::onAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &MyFrame::onExit, this, wxID_EXIT);
 }
@@ -125,15 +142,22 @@ void MyFrame::onStartStopClicked(wxCommandEvent & /*event*/) {
   }
 }
 
-void MyFrame::onResetClicked(wxCommandEvent & /*event*/) {}
+void MyFrame::onResetClicked(wxCommandEvent & /*event*/) {
+  m_scheduler->stop();
+  m_startStopButton->SetLabel("Start");
+  m_scheduler->reset();
+}
+
 void MyFrame::onStepClicked(wxCommandEvent & /*event*/) {}
+
 void MyFrame::onStoreClicked(wxCommandEvent & /*event*/) {}
+
 void MyFrame::onRestoreClicked(wxCommandEvent & /*event*/) {}
 
 void MyFrame::onExit(wxCommandEvent & /*event*/) { Close(true); }
 
 void MyFrame::onAbout(wxCommandEvent & /*event*/) {
-  wxMessageBox("This is a wxWidgets Hello World example", "About Hello World", wxOK | wxICON_INFORMATION);
+  wxMessageBox(
+      "This is a simulator designed by Renda, see \nhttps://github.com/rendayigit/renda-sim \nfor more details.",
+      "About Renda Sim", wxOK | wxICON_INFORMATION);
 }
-
-void MyFrame::onHello(wxCommandEvent & /*event*/) { wxLogMessage("Hello world from wxWidgets!"); }
