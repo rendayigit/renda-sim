@@ -39,8 +39,9 @@ SampleModel::SampleModel()
 
 void SampleModel::step(int stepTime) {
   m_logger.log(LogLevel::LOG_INFO,
-               std::to_string(stepTime) + " ms Step, Real Millis: " + std::to_string(Timer::getInstance().currentMillis()));
+               std::to_string(stepTime) + " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
 
-  // std::cout << std::to_string(stepTime) + " ms Step, Real Millis: " + std::to_string(Timer::getInstance().currentMillis())
+  // std::cout << std::to_string(stepTime) + " ms Step, Real Millis: " +
+  // std::to_string(Timer::getInstance().simMillis())
   //           << std::endl;
 }

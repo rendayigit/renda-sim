@@ -79,7 +79,7 @@ void PowerSubsystem::printState() const {
   }
 
   logMessage("PowerSubsystem State:\n");
-  logMessage("Power Step Real Millis: " + std::to_string(Timer::getInstance().currentMillis()) + "\n");
+  logMessage("Power Step Real Millis: " + std::to_string(Timer::getInstance().simMillis()) + "\n");
   logMessage("Sun Angle: " + std::to_string(m_sunAngle) + "\n");
   logMessage("Power Needed: " + std::to_string(m_powerConsumption) + " W\n");
   logMessage("Battery Charge: " + std::to_string(m_batteryCharge) + " Wh\n");

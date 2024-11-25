@@ -4,9 +4,12 @@
 #include "services/scheduler/scheduler.hpp"
 #include "services/timer/timer.hpp"
 
+constexpr int MICROS_TO_MILLIS = 1000;
+
 void Scheduler::start() {
-  // TODO(renda): correctly update time here
-  // Timer::getInstance().reset();
+  if (m_lastStopTicks != 0) {
+    Timer::getInstance().updateInitialTicks(m_lastStopTicks);
+  }
 
   m_isRunning = true;
 
@@ -14,8 +17,8 @@ void Scheduler::start() {
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
-      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTime * 1000)));
-      step(Timer::getInstance().currentMillis() * m_rate);
+      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
+      step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
     }
   });
 }
@@ -27,6 +30,13 @@ void Scheduler::stop() {
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();
   }
+
+  m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+}
+
+void Scheduler::reset() {
+  Timer::getInstance().reset();
+  // TODO(renda): Reset all events and models
 }
 
 void Scheduler::progressTime(long millis) {
@@ -35,9 +45,6 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
-  // TODO(renda): Added to debug scheduler stop function
-  std::cout << "TIME: " << currentMillis << " ms" << std::endl;
-
   while (true) {
     // Skip if no events in queue
     if (m_eventQueueInstance->empty()) {
