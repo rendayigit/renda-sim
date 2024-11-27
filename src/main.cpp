@@ -6,24 +6,25 @@
 
 class MyApp : public wxApp {
 public:
-  MyApp() : m_sampleModel(new SampleModel), m_powerSubsystem(new PowerSubsystem) {
-    // TODO(renda): Call model init functions here
-  }
-
   bool OnInit() override {
     m_frame = new MyFrame;
-
-    m_powerSubsystem->logMessage = [&](const std::string &message) { m_frame->logMessage(message); };
-
     m_frame->Show(true);
+
+    instantiateModels();
+
     return true;
   }
 
 private:
+  void instantiateModels() {
+    m_sampleModel = new SampleModel;
+    m_powerSubsystem = new PowerSubsystem;
+  }
+
   MyFrame *m_frame{};
 
-  SampleModel *m_sampleModel;
-  PowerSubsystem *m_powerSubsystem;
+  SampleModel *m_sampleModel{};
+  PowerSubsystem *m_powerSubsystem{};
 };
 
 // Main function is set here

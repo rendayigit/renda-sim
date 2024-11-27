@@ -1,7 +1,17 @@
 #include "mainWindow.hpp"
 #include "services/serviceContainer.hpp"
+#include "ui/variableTreeItemsContainer.hpp"
 
-enum { ID_START_STOP_BTN = 1, ID_START_STOP_MENU, ID_RESET_BTN, ID_STEP_BTN, ID_STORE_BTN, ID_RESTORE_BTN };
+enum {
+  ID_START_STOP_BTN = 1,
+  ID_START_STOP_MENU,
+  ID_RESET_BTN,
+  ID_STEP_BTN,
+  ID_STORE_BTN,
+  ID_RESTORE_BTN,
+  ID_MODELS_TREE,
+  ID_VARIABLES_LIST
+};
 
 constexpr int TOP_BAR_COMP_HEIGHT = 30;
 
@@ -43,6 +53,7 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
 
   auto *verticalSizer = new wxBoxSizer(wxVERTICAL);
   auto *topHorizontalSizer = new wxBoxSizer(wxHORIZONTAL);
+  auto *middleHorizontalSizer = new wxBoxSizer(wxHORIZONTAL);
 
   m_startStopButton = new wxButton(
       this, ID_START_STOP_BTN, "Start", {},
@@ -72,8 +83,18 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
       wxSize(100, TOP_BAR_COMP_HEIGHT)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   m_logs = new wxTextCtrl(this, wxID_ANY, "", {},
-                          wxSize(400, 400), // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+                          wxSize(1200, 100), // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
                           wxTE_READONLY | wxTE_MULTILINE); // NOLINT(hicpp-signed-bitwise)
+
+  m_modelsTree =
+      new wxTreeCtrl(this, ID_MODELS_TREE, {},
+                     wxSize(200, 400)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  VariableTreeItemsContainer::getInstance().setModelsTree(m_modelsTree);
+
+  m_variableList =
+      new wxListCtrl(this, ID_VARIABLES_LIST, {},
+                     wxSize(1000, 400)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   topHorizontalSizer->Add(m_startStopButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -90,7 +111,16 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
   topHorizontalSizer->Add(m_restoreButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
+  middleHorizontalSizer->Add(m_modelsTree, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                             5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  middleHorizontalSizer->Add(m_variableList, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                             5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
   verticalSizer->Add(topHorizontalSizer, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                     5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  verticalSizer->Add(middleHorizontalSizer, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   verticalSizer->Add(m_logs, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)

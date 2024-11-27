@@ -1,6 +1,8 @@
 #pragma once
 
 #include <mutex>
+#include <wx/listctrl.h>
+#include <wx/treectrl.h>
 #include <wx/wx.h>
 
 #include "services/scheduler/scheduler.hpp"
@@ -30,5 +32,10 @@ private:
   wxButton *m_stepButton;
   wxButton *m_storeButton;
   wxButton *m_restoreButton;
+
+  wxTreeCtrl *m_modelsTree;
+
+  wxListCtrl *m_variableList;
+
   wxTextCtrl *m_logs;
 };
