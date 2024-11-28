@@ -15,7 +15,7 @@ public:
   }
 
   void logMessage(const std::string &message);
-  void updateSimTime(long time);
+  void updateSimTime(const std::string &time);
 
 private:
   MainWindow();

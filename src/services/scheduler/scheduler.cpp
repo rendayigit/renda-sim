@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <string>
 
 #include "services/scheduler/scheduler.hpp"
 #include "services/serviceContainer.hpp"
@@ -46,7 +47,7 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
-  MainWindow::getInstance().updateSimTime(currentMillis);
+  MainWindow::getInstance().updateSimTime(std::to_string(static_cast<double>(currentMillis) / 1000.0));
 
   while (true) {
     // Skip if no events in queue

@@ -187,9 +187,9 @@ void MainWindow::logMessage(const std::string &message) {
   });
 }
 
-void MainWindow::updateSimTime(long time) {
+void MainWindow::updateSimTime(const std::string &time) {
   wxTheApp->CallAfter( // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-      [this, time] { m_simTimeDisplay->SetValue(std::to_string(static_cast<double>(time) / 1000.0)); });
+      [this, time] { m_simTimeDisplay->SetValue(time); });
 }
 
 void MainWindow::onStartStopClicked(wxCommandEvent & /*event*/) {
