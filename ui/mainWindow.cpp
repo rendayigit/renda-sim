@@ -1,8 +1,8 @@
 #include <string>
 
-#include "mainWindow.hpp"
 #include "common/model.hpp"
 #include "common/modelVariable.hpp"
+#include "mainWindow.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
 #include "ui/variableTreeItemsContainer.hpp"
@@ -98,8 +98,12 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
   VariableTreeItemsContainer::getInstance().setModelsTree(m_modelsTree);
 
   m_variableList =
-      new wxListCtrl(this, ID_VARIABLES_LIST, {},
-                     wxSize(1000, 400)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+      new wxListCtrl(this, ID_VARIABLES_LIST, {}, wxSize(1000, 400),
+                     wxLC_REPORT); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  m_variableList->InsertColumn(0, "Variable", wxLIST_FORMAT_LEFT, 100);
+  m_variableList->InsertColumn(1, "Description", wxLIST_FORMAT_LEFT, 100);
+  m_variableList->InsertColumn(2, "Value", wxLIST_FORMAT_LEFT, 100);
 
   topHorizontalSizer->Add(m_startStopButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -194,23 +198,29 @@ void MyFrame::onRestoreClicked(wxCommandEvent & /*event*/) {}
 void MyFrame::onTreeItemClicked(wxTreeEvent &event) {
   wxTreeItemId selectedItem = event.GetItem();
   wxString selectedItemText = m_modelsTree->GetItemText(selectedItem);
-  std::cout << "Selected: " << selectedItemText << std::endl;
 
   ModelItem *modelItem = ModelContainer::getInstance().getModel(selectedItemText.ToStdString());
   if (modelItem != nullptr) {
     auto *model = dynamic_cast<Model *>(modelItem);
     auto *modelVariable = dynamic_cast<ModelVariable<double> *>(modelItem);
-    //TODO(renda): cast to other supported types as well.
-    
-    // TODO(renda): add watch if variable selected
+    // TODO(renda): cast to other supported types as well.
+
     if (model) {
-      std::cout << "Model children count: " << model->getItems().size() << std::endl;
-    } else if (modelVariable) {
-      std::cout << "Model variable value: " << modelVariable->getValue() << std::endl;
+      return;
     }
 
+    if (modelVariable) {
+      if (modelVariable->m_isMonitored) {
+        return;
+      }
+
+      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), modelVariable->getName());
+      m_variableList->SetItem(itemIndex, 1, modelVariable->getDescription());
+
+      modelVariable->setMonitor(itemIndex, m_variableList);
+    }
   } else {
-    std::cout << "nullptr" << std::endl;
+    std::cout << selectedItemText << " is nullptr" << std::endl;
   }
 }
 
