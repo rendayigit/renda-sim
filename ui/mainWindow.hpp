@@ -7,6 +7,7 @@
 
 #include "services/scheduler/scheduler.hpp"
 
+// TODO(renda): Rename MyFrame
 class MyFrame : public wxFrame {
 public:
   MyFrame();

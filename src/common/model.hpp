@@ -12,9 +12,9 @@ public:
 
   std::vector<ModelItem *> getItems() const { return m_items; }
 
-  // TODO(renda): Make only accessible by ModelVariable
+private:
+  template <typename t> friend class ModelVariable;
   void addChild(ModelItem *child) { m_items.push_back(child); }
 
-private:
   std::vector<ModelItem *> m_items;
 };

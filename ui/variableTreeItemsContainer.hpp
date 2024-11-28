@@ -28,14 +28,14 @@ public:
     m_modelsTree->AppendItem(parentTreeItem, modelItem->getName());
   }
 
-  // TODO(renda): Make private later
+private:
+  VariableTreeItemsContainer() = default;
+
+  friend class MyFrame;
   void setModelsTree(wxTreeCtrl *modelsTree) {
     m_modelsTree = modelsTree;
     m_treeRoot = m_modelsTree->AddRoot("Models");
   }
-
-private:
-  VariableTreeItemsContainer() = default;
 
   wxTreeCtrl *m_modelsTree{};
   wxTreeItemId m_treeRoot{};
