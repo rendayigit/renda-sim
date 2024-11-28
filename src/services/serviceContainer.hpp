@@ -2,6 +2,7 @@
 
 #include "services/eventManager/eventManager.hpp"
 #include "services/scheduler/scheduler.hpp"
+#include "ui/mainWindow.hpp"
 
 class ServiceContainer {
 public:
@@ -12,6 +13,7 @@ public:
 
   Scheduler *scheduler() const { return m_scheduler; }
   EventManager *eventManager() const { return m_eventManager; }
+  static MainWindow *ui() { return &MainWindow::getInstance(); }
 
 private:
   ServiceContainer() : m_eventManager(new EventManager), m_scheduler(new Scheduler(m_eventManager)) {}

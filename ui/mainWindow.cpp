@@ -109,6 +109,7 @@ MainWindow::MainWindow()
   m_variableList->InsertColumn(0, "Variable", wxLIST_FORMAT_LEFT, 200);
   m_variableList->InsertColumn(1, "Description", wxLIST_FORMAT_LEFT, 400);
   m_variableList->InsertColumn(2, "Value", wxLIST_FORMAT_LEFT, 150);
+  m_variableList->InsertColumn(3, "Type", wxLIST_FORMAT_LEFT, 100);
 
   topHorizontalSizer->Add(m_startStopButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -220,25 +221,63 @@ void MainWindow::onTreeItemClicked(wxTreeEvent &event) {
   ModelItem *modelItem = ModelContainer::getInstance().getModel(selectedItemText.ToStdString());
   if (modelItem != nullptr) {
     auto *model = dynamic_cast<Model *>(modelItem);
-    auto *modelVariable = dynamic_cast<ModelVariable<double> *>(modelItem);
-    // TODO(renda): cast to other supported types as well.
 
-    if (model) {
+    auto *doubleVariable = dynamic_cast<ModelVariable<double> *>(modelItem);
+    auto *integerVariable = dynamic_cast<ModelVariable<int> *>(modelItem);
+    auto *boolVariable = dynamic_cast<ModelVariable<bool> *>(modelItem);
+    auto *stringVariable = dynamic_cast<ModelVariable<std::string> *>(modelItem);
+
+    if (model != nullptr) {
       return;
     }
 
-    if (modelVariable) {
-      if (modelVariable->m_isMonitored) {
+    if (doubleVariable != nullptr) {
+      if (doubleVariable->m_isMonitored) {
         return;
       }
 
-      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), modelVariable->getName());
-      m_variableList->SetItem(itemIndex, 1, modelVariable->getDescription());
+      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), doubleVariable->getName());
+      m_variableList->SetItem(itemIndex, 1, doubleVariable->getDescription());
+      m_variableList->SetItem(itemIndex, 2, std::to_string(doubleVariable->getValue()));
+      m_variableList->SetItem(itemIndex, 3, "Double");
 
-      modelVariable->setMonitor(itemIndex, m_variableList);
+      doubleVariable->setMonitor(itemIndex, m_variableList);
+    } else if (integerVariable != nullptr) {
+      if (integerVariable->m_isMonitored) {
+        return;
+      }
+
+      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), integerVariable->getName());
+      m_variableList->SetItem(itemIndex, 1, integerVariable->getDescription());
+      m_variableList->SetItem(itemIndex, 2, std::to_string(integerVariable->getValue()));
+      m_variableList->SetItem(itemIndex, 3, "Integer");
+
+      integerVariable->setMonitor(itemIndex, m_variableList);
+    } else if (boolVariable != nullptr) {
+      if (boolVariable->m_isMonitored) {
+        return;
+      }
+
+      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), boolVariable->getName());
+      m_variableList->SetItem(itemIndex, 1, boolVariable->getDescription());
+      m_variableList->SetItem(itemIndex, 2, boolVariable->getValue() ? "True" : "False");
+      m_variableList->SetItem(itemIndex, 3, "Boolean");
+
+      boolVariable->setMonitor(itemIndex, m_variableList);
+    } else if (stringVariable != nullptr) {
+      if (stringVariable->m_isMonitored) {
+        return;
+      }
+
+      long itemIndex = m_variableList->InsertItem(m_variableList->GetItemCount(), stringVariable->getName());
+      m_variableList->SetItem(itemIndex, 1, stringVariable->getDescription());
+      m_variableList->SetItem(itemIndex, 2, stringVariable->getValue());
+      m_variableList->SetItem(itemIndex, 3, "String");
+
+      stringVariable->setMonitor(itemIndex, m_variableList);
     }
   } else {
-    std::cout << selectedItemText << " is nullptr" << std::endl;
+    std::cout << selectedItemText << " is nullptr" << std::endl; // TODO(renda): handle
   }
 }
 

@@ -38,6 +38,8 @@ PowerSubsystem::PowerSubsystem()
 void PowerSubsystem::initialize() {
   // TODO(renda): Initialize the power subsystem here
   // Read initial values from JSON
+
+  ServiceContainer::ui()->logMessage("Power Subsystem Initialized");
 }
 
 void PowerSubsystem::step() {

@@ -21,7 +21,7 @@ public:
     }
 
     wxTheApp->CallAfter( // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-        [&] { m_variableList->SetItem(m_treeIndex, 2, std::to_string(m_value)); });
+        [this, value] { m_variableList->SetItem(m_treeIndex, 2, std::to_string(value)); });
   }
 
   t getValue() { return m_value; }
