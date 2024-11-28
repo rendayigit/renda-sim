@@ -7,6 +7,7 @@
 #include "services/timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
+constexpr int MILLIS_TO_SECS = 1000;
 
 void Scheduler::start() {
   if (m_lastStopTicks != 0) {
@@ -47,7 +48,10 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
-  MainWindow::getInstance().updateSimTime(std::to_string(static_cast<double>(currentMillis) / 1000.0));
+  double timeInSeconds = static_cast<double>(currentMillis) / MILLIS_TO_SECS;
+  std::string timeStr = std::to_string(timeInSeconds);
+  timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
+  MainWindow::getInstance().updateSimTime(timeStr);
 
   while (true) {
     // Skip if no events in queue
