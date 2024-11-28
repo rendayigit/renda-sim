@@ -2,24 +2,19 @@
 
 #include <string>
 #include <utility>
-// #include <wx/treectrl.h>
-
-// #include "ui/variableTreeItemsContainer.hpp"
-
-// TODO(renda): Review commented code
+#include <wx/treectrl.h>
 
 class ModelItem {
 public:
   explicit ModelItem(std::string name, std::string description, ModelItem *parent)
-      : m_name(std::move(name)), m_description(std::move(description)), m_parent(parent) {
-
-    // VariableTreeItemsContainer::getInstance().addModel(this);
-  }
+      : m_name(std::move(name)), m_description(std::move(description)), m_parent(parent) {}
 
   std::string getName() const { return m_name; }
   std::string getDescription() const { return m_description; }
 
   ModelItem *getParent() const { return m_parent; }
+
+  wxTreeItemId getTreeParentId() const { return m_treeParentId; }
 
 private:
   std::string m_name;
@@ -27,5 +22,5 @@ private:
 
   ModelItem *m_parent;
 
-  // wxTreeItemId *m_treeParent{};
+  wxTreeItemId m_treeParentId{};
 };
