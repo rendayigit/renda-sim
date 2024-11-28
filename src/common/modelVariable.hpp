@@ -1,13 +1,13 @@
 #pragma once
 
+#include "common/model.hpp"
 #include "common/modelItem.hpp"
-#include "ui/variableTreeItemsContainer.hpp"
 
 template <typename t> class ModelVariable : public ModelItem {
 public:
-  explicit ModelVariable(std::string name, std::string description, t initialValue)
-      : ModelItem(name, description), m_value(initialValue) {
-    VariableTreeItemsContainer::getInstance().addVariable(this);
+  explicit ModelVariable(std::string name, std::string description, Model *parent, t initialValue)
+      : ModelItem(name, description, parent), m_value(initialValue) {
+    parent->addChild(this);
   }
 
   void setValue(t value) { m_value = value; }

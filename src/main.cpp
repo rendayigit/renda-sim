@@ -4,6 +4,8 @@
 #include "sampleModel/sampleModel.hpp"
 #include "ui/mainWindow.hpp"
 
+#include "ui/variableTreeItemsContainer.hpp" // TODO(renda): temporary
+
 class MyApp : public wxApp {
 public:
   bool OnInit() override {
@@ -19,6 +21,9 @@ private:
   void instantiateModels() {
     m_sampleModel = new SampleModel;
     m_powerSubsystem = new PowerSubsystem;
+
+    // TODO(renda): Move this line to model constructor
+    VariableTreeItemsContainer::getInstance().addModel(m_powerSubsystem);
   }
 
   MyFrame *m_frame{};

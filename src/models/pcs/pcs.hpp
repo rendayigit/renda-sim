@@ -15,6 +15,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "common/model.hpp"
 #include "common/modelVariable.hpp"
 #include "services/eventManager/simpleEvent.hpp"
 #include "services/serviceContainer.hpp"
@@ -28,7 +29,7 @@ constexpr double BATTERY_DEGRADATION_RATE = 0.98;     // Yearly degradation fact
 constexpr double PANEL_CURRENT_VOLTAGE_RATIO = 10.0;  // Ratio of current to voltage for panels (A/V)
 constexpr double BATTERY_CURRENT_VOLTAGE_RATIO = 5.0; // Ratio of current to voltage for battery (A/V)
 
-class PowerSubsystem {
+class PowerSubsystem : public Model {
 public:
   PowerSubsystem();
 

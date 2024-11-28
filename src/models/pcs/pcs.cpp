@@ -10,20 +10,22 @@
  */
 
 #include "pcs/pcs.hpp"
+#include "common/model.hpp"
 #include "services/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem()
-    : m_batteryCharge("batteryCharge", "Current charge of the battery (Watt-hours)", 500.0),
-      m_powerFromPanels("powerFromPanels", "Power drawn from solar panels (Watts)", {}),
-      m_powerFromBattery("powerFromBattery", "Power drawn from battery (Watts)", {}),
-      m_panelVoltage("panelVoltage", "Voltage of the solar panels (Volts)", {}),
-      m_panelCurrent("panelCurrent", "Current from the solar panels (Amperes)", {}),
-      m_batteryVoltage("batteryVoltage", "Voltage of the battery (Volts)", {}),
-      m_batteryCurrent("batteryCurrent", "Current from the battery (Amperes)", {}),
-      m_batteryAgeYears("batteryAgeYears", "Age of the battery in years", 3),
-      m_panelAgeYears("panelAgeYears", "Age of the panels in years", 5),
-      m_sunAngle("sunAngle", "Sun angle for the solar panels (radians)", {}),
-      m_powerConsumption("powerConsumption", "Power consumption of the system (Watts)", {}) {
+    : Model("PCS", "Power Subsystem", nullptr),
+      m_batteryCharge("batteryCharge", "Current charge of the battery (Watt-hours)", this, 500.0),
+      m_powerFromPanels("powerFromPanels", "Power drawn from solar panels (Watts)", this, {}),
+      m_powerFromBattery("powerFromBattery", "Power drawn from battery (Watts)", this, {}),
+      m_panelVoltage("panelVoltage", "Voltage of the solar panels (Volts)", this, {}),
+      m_panelCurrent("panelCurrent", "Current from the solar panels (Amperes)", this, {}),
+      m_batteryVoltage("batteryVoltage", "Voltage of the battery (Volts)", this, {}),
+      m_batteryCurrent("batteryCurrent", "Current from the battery (Amperes)", this, {}),
+      m_batteryAgeYears("batteryAgeYears", "Age of the battery in years", this, 3),
+      m_panelAgeYears("panelAgeYears", "Age of the panels in years", this, 5),
+      m_sunAngle("sunAngle", "Sun angle for the solar panels (radians)", this, {}),
+      m_powerConsumption("powerConsumption", "Power consumption of the system (Watts)", this, {}) {
 
   initialize();
 
