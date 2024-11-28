@@ -88,6 +88,10 @@ MainWindow::MainWindow()
       this, ID_RESTORE_BTN, "Restore", {},
       wxSize(100, TOP_BAR_COMP_HEIGHT)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
+  auto *simTimeLabel = new wxStaticText(this, wxID_ANY, "Simulation Time (s) ");
+
+  m_simTimeDisplay = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
+
   m_logs = new wxTextCtrl(this, wxID_ANY, "", {},
                           wxSize(1200, 100), // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
                           wxTE_READONLY | wxTE_MULTILINE); // NOLINT(hicpp-signed-bitwise)
@@ -119,6 +123,14 @@ MainWindow::MainWindow()
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   topHorizontalSizer->Add(m_restoreButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                          5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  topHorizontalSizer->AddStretchSpacer();
+
+  topHorizontalSizer->Add(simTimeLabel, 0, wxALIGN_CENTER_VERTICAL, // NOLINT(bugprone-suspicious-enum-usage)
+                          5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  topHorizontalSizer->Add(m_simTimeDisplay, 0, wxALIGN_CENTER_VERTICAL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   middleHorizontalSizer->Add(m_modelsTree, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
@@ -172,6 +184,11 @@ void MainWindow::logMessage(const std::string &message) {
     // Auto-scroll to the end
     m_logs->ShowPosition(m_logs->GetLastPosition());
   });
+}
+
+void MainWindow::updateSimTime(long time) {
+  wxTheApp->CallAfter( // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+      [this, time] { m_simTimeDisplay->SetValue(std::to_string(static_cast<double>(time) / 1000.0)); });
 }
 
 void MainWindow::onStartStopClicked(wxCommandEvent & /*event*/) {

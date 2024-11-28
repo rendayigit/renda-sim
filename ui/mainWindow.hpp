@@ -15,6 +15,7 @@ public:
   }
 
   void logMessage(const std::string &message);
+  void updateSimTime(long time);
 
 private:
   MainWindow();
@@ -38,6 +39,8 @@ private:
   wxButton *m_stepButton;
   wxButton *m_storeButton;
   wxButton *m_restoreButton;
+
+  wxTextCtrl *m_simTimeDisplay;
 
   wxTreeCtrl *m_modelsTree;
 

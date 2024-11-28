@@ -46,6 +46,8 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
+  MainWindow::getInstance().updateSimTime(currentMillis);
+
   while (true) {
     // Skip if no events in queue
     if (m_eventQueueInstance->empty()) {
