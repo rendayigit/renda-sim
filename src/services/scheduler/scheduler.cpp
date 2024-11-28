@@ -3,6 +3,7 @@
 
 #include "services/scheduler/scheduler.hpp"
 #include "services/timer/timer.hpp"
+#include "ui/mainWindow.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 
@@ -13,7 +14,7 @@ void Scheduler::start() {
 
   m_isRunning = true;
 
-  std::cout << "\n***** Simulation Start *****\n";
+  MainWindow::getInstance().logMessage("***** Simulation Start *****");
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
@@ -25,7 +26,7 @@ void Scheduler::start() {
 
 void Scheduler::stop() {
   m_isRunning = false;
-  std::cout << "\n****** Simulation End ******\n\n";
+  MainWindow::getInstance().logMessage("***** Simulation Stop *****");
 
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();

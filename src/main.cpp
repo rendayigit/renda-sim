@@ -7,7 +7,7 @@
 class MyApp : public wxApp {
 public:
   bool OnInit() override {
-    m_frame = new MyFrame;
+    m_frame = &MainWindow::getInstance();
     m_frame->Show(true);
 
     instantiateModels();
@@ -21,7 +21,7 @@ private:
     m_powerSubsystem = new PowerSubsystem;
   }
 
-  MyFrame *m_frame{};
+  MainWindow *m_frame{};
 
   SampleModel *m_sampleModel{};
   PowerSubsystem *m_powerSubsystem{};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <wx/treectrl.h>
+#include <wx/wx.h>
 
 #include "common/modelItem.hpp"
 
@@ -22,10 +23,13 @@ public:
 private:
   VariableTreeItemsContainer() = default;
 
-  friend class MyFrame;
+  friend class MainWindow;
   void setModelsTree(wxTreeCtrl *modelsTree) {
     m_modelsTree = modelsTree;
-    m_treeRoot = m_modelsTree->AddRoot("Models");
+    m_treeRoot = m_modelsTree->AddRoot("Simulation Models");
+
+    wxTheApp->CallAfter( // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
+        [&] { m_modelsTree->Expand(m_treeRoot); });
   }
 
   wxTreeCtrl *m_modelsTree{};

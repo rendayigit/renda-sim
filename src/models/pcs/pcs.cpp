@@ -14,18 +14,18 @@
 #include "services/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem()
-    : Model("PCS", "Power Subsystem", nullptr),
-      m_batteryCharge("batteryCharge", "Current charge of the battery (Watt-hours)", this, 500.0),
-      m_powerFromPanels("powerFromPanels", "Power drawn from solar panels (Watts)", this, {}),
-      m_powerFromBattery("powerFromBattery", "Power drawn from battery (Watts)", this, {}),
-      m_panelVoltage("panelVoltage", "Voltage of the solar panels (Volts)", this, {}),
-      m_panelCurrent("panelCurrent", "Current from the solar panels (Amperes)", this, {}),
-      m_batteryVoltage("batteryVoltage", "Voltage of the battery (Volts)", this, {}),
-      m_batteryCurrent("batteryCurrent", "Current from the battery (Amperes)", this, {}),
-      m_batteryAgeYears("batteryAgeYears", "Age of the battery in years", this, 3),
-      m_panelAgeYears("panelAgeYears", "Age of the panels in years", this, 5),
-      m_sunAngle("sunAngle", "Sun angle for the solar panels (radians)", this, {}),
-      m_powerConsumption("powerConsumption", "Power consumption of the system (Watts)", this, {}) {
+    : Model("Power Control Subsystem", "Power Control Subsystem", nullptr),
+      m_batteryCharge("Battery Charge", "Current charge of the battery (Watt-hours)", this, 500.0),
+      m_powerFromPanels("Power From Panels", "Power drawn from solar panels (Watts)", this, {}),
+      m_powerFromBattery("Power From Battery", "Power drawn from battery (Watts)", this, {}),
+      m_panelVoltage("Panel Voltage", "Voltage of the solar panels (Volts)", this, {}),
+      m_panelCurrent("Panel Current", "Current from the solar panels (Amperes)", this, {}),
+      m_batteryVoltage("Battery Voltage", "Voltage of the battery (Volts)", this, {}),
+      m_batteryCurrent("Battery Current", "Current from the battery (Amperes)", this, {}),
+      m_batteryAgeYears("Battery Age Years", "Age of the battery in years", this, 3),
+      m_panelAgeYears("Panel Age Years", "Age of the panels in years", this, 5),
+      m_sunAngle("Sun Angle", "Sun angle for the solar panels (radians)", this, {}),
+      m_powerConsumption("Power Consumption", "Power consumption of the system (Watts)", this, {}) {
 
   initialize();
 

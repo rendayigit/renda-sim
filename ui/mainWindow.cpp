@@ -20,7 +20,8 @@ enum {
 
 constexpr int TOP_BAR_COMP_HEIGHT = 30;
 
-MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
+MainWindow::MainWindow()
+    : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
   auto *menuFile = new wxMenu;
   menuFile->Append(ID_START_STOP_MENU, "Start / Stop", "Start or stop simulation");
   menuFile->Append(wxID_ANY, "Stop At", "Stop simulation at given time");
@@ -93,7 +94,7 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
 
   m_modelsTree =
       new wxTreeCtrl(this, ID_MODELS_TREE, {},
-                     wxSize(200, 400)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+                     wxSize(300, 400)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   VariableTreeItemsContainer::getInstance().setModelsTree(m_modelsTree);
 
@@ -101,9 +102,9 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
       new wxListCtrl(this, ID_VARIABLES_LIST, {}, wxSize(1000, 400),
                      wxLC_REPORT); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-  m_variableList->InsertColumn(0, "Variable", wxLIST_FORMAT_LEFT, 100);
-  m_variableList->InsertColumn(1, "Description", wxLIST_FORMAT_LEFT, 100);
-  m_variableList->InsertColumn(2, "Value", wxLIST_FORMAT_LEFT, 100);
+  m_variableList->InsertColumn(0, "Variable", wxLIST_FORMAT_LEFT, 200);
+  m_variableList->InsertColumn(1, "Description", wxLIST_FORMAT_LEFT, 400);
+  m_variableList->InsertColumn(2, "Value", wxLIST_FORMAT_LEFT, 150);
 
   topHorizontalSizer->Add(m_startStopButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -132,7 +133,7 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
   verticalSizer->Add(middleHorizontalSizer, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-  verticalSizer->Add(m_logs, 1, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+  verticalSizer->Add(m_logs, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   SetSizer(verticalSizer);
@@ -140,23 +141,23 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
   verticalSizer->Fit(this);
   verticalSizer->SetSizeHints(this);
 
-  Bind(wxEVT_BUTTON, &MyFrame::onStartStopClicked, this, ID_START_STOP_BTN);
-  Bind(wxEVT_BUTTON, &MyFrame::onResetClicked, this, ID_RESET_BTN);
-  Bind(wxEVT_BUTTON, &MyFrame::onStepClicked, this, ID_STEP_BTN);
-  Bind(wxEVT_BUTTON, &MyFrame::onStoreClicked, this, ID_STORE_BTN);
-  Bind(wxEVT_BUTTON, &MyFrame::onRestoreClicked, this, ID_RESTORE_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onStartStopClicked, this, ID_START_STOP_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onResetClicked, this, ID_RESET_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onStepClicked, this, ID_STEP_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onStoreClicked, this, ID_STORE_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onRestoreClicked, this, ID_RESTORE_BTN);
 
-  Bind(wxEVT_MENU, &MyFrame::onStartStopClicked, this, ID_START_STOP_MENU);
-  Bind(wxEVT_MENU, &MyFrame::onAbout, this, wxID_ABOUT);
-  Bind(wxEVT_MENU, &MyFrame::onExit, this, wxID_EXIT);
+  Bind(wxEVT_MENU, &MainWindow::onStartStopClicked, this, ID_START_STOP_MENU);
+  Bind(wxEVT_MENU, &MainWindow::onAbout, this, wxID_ABOUT);
+  Bind(wxEVT_MENU, &MainWindow::onExit, this, wxID_EXIT);
 
-  m_modelsTree->Bind(wxEVT_TREE_SEL_CHANGED, &MyFrame::onTreeItemClicked, this);
+  m_modelsTree->Bind(wxEVT_TREE_SEL_CHANGED, &MainWindow::onTreeItemClicked, this);
 }
 
-void MyFrame::logMessage(const std::string &message) {
+void MainWindow::logMessage(const std::string &message) {
   std::lock_guard<std::mutex> lock(m_mutex);
   wxTheApp->CallAfter([this, message] { // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
-    wxString currentText = m_logs->GetValue() + message;
+    wxString currentText = m_logs->GetValue() + message + "\n";
     wxArrayString lines = wxSplit(currentText, '\n');
 
     // If the number of lines exceeds limit, trim the excess lines
@@ -173,7 +174,7 @@ void MyFrame::logMessage(const std::string &message) {
   });
 }
 
-void MyFrame::onStartStopClicked(wxCommandEvent & /*event*/) {
+void MainWindow::onStartStopClicked(wxCommandEvent & /*event*/) {
   if (m_scheduler->isRunning()) {
     m_scheduler->stop();
     m_startStopButton->SetLabel("Start");
@@ -183,19 +184,19 @@ void MyFrame::onStartStopClicked(wxCommandEvent & /*event*/) {
   }
 }
 
-void MyFrame::onResetClicked(wxCommandEvent & /*event*/) {
+void MainWindow::onResetClicked(wxCommandEvent & /*event*/) {
   m_scheduler->stop();
   m_startStopButton->SetLabel("Start");
   m_scheduler->reset();
 }
 
-void MyFrame::onStepClicked(wxCommandEvent & /*event*/) {}
+void MainWindow::onStepClicked(wxCommandEvent & /*event*/) {}
 
-void MyFrame::onStoreClicked(wxCommandEvent & /*event*/) {}
+void MainWindow::onStoreClicked(wxCommandEvent & /*event*/) {}
 
-void MyFrame::onRestoreClicked(wxCommandEvent & /*event*/) {}
+void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
 
-void MyFrame::onTreeItemClicked(wxTreeEvent &event) {
+void MainWindow::onTreeItemClicked(wxTreeEvent &event) {
   wxTreeItemId selectedItem = event.GetItem();
   wxString selectedItemText = m_modelsTree->GetItemText(selectedItem);
 
@@ -224,9 +225,9 @@ void MyFrame::onTreeItemClicked(wxTreeEvent &event) {
   }
 }
 
-void MyFrame::onExit(wxCommandEvent & /*event*/) { Close(true); }
+void MainWindow::onExit(wxCommandEvent & /*event*/) { Close(true); }
 
-void MyFrame::onAbout(wxCommandEvent & /*event*/) {
+void MainWindow::onAbout(wxCommandEvent & /*event*/) {
   wxMessageBox(
       "This is a simulator designed by Renda, see \nhttps://github.com/rendayigit/renda-sim \nfor more details.",
       "About Renda Sim", wxOK | wxICON_INFORMATION);

@@ -7,14 +7,18 @@
 
 #include "services/scheduler/scheduler.hpp"
 
-// TODO(renda): Rename MyFrame
-class MyFrame : public wxFrame {
+class MainWindow : public wxFrame {
 public:
-  MyFrame();
+  static MainWindow &getInstance() {
+    static MainWindow instance;
+    return instance;
+  }
 
   void logMessage(const std::string &message);
 
 private:
+  MainWindow();
+
   void onStartStopClicked(wxCommandEvent &event);
   void onResetClicked(wxCommandEvent &event);
   void onStepClicked(wxCommandEvent &event);

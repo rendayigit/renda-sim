@@ -27,7 +27,7 @@ public:
   t getValue() { return m_value; }
 
 private:
-  friend class MyFrame;
+  friend class MainWindow;
   void setMonitor(long index, wxListCtrl *variableList) {
     m_treeIndex = index;
     m_variableList = variableList;
