@@ -57,7 +57,7 @@ void PowerSubsystem::step() {
   // Power distribution logic
   if (panelPower >= m_powerConsumption.getValue()) {
     // Panels provide all power; excess charges the battery
-    m_powerFromPanels = m_powerConsumption;
+    m_powerFromPanels.setValue(m_powerConsumption.getValue());
     m_powerFromBattery.setValue(0.0);
 
     double excessPower = panelPower - m_powerConsumption.getValue();
