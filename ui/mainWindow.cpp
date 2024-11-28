@@ -1,4 +1,9 @@
+#include <string>
+
 #include "mainWindow.hpp"
+#include "common/model.hpp"
+#include "common/modelVariable.hpp"
+#include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
 #include "ui/variableTreeItemsContainer.hpp"
 
@@ -140,6 +145,8 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(Servic
   Bind(wxEVT_MENU, &MyFrame::onStartStopClicked, this, ID_START_STOP_MENU);
   Bind(wxEVT_MENU, &MyFrame::onAbout, this, wxID_ABOUT);
   Bind(wxEVT_MENU, &MyFrame::onExit, this, wxID_EXIT);
+
+  m_modelsTree->Bind(wxEVT_TREE_SEL_CHANGED, &MyFrame::onTreeItemClicked, this);
 }
 
 void MyFrame::logMessage(const std::string &message) {
@@ -183,6 +190,29 @@ void MyFrame::onStepClicked(wxCommandEvent & /*event*/) {}
 void MyFrame::onStoreClicked(wxCommandEvent & /*event*/) {}
 
 void MyFrame::onRestoreClicked(wxCommandEvent & /*event*/) {}
+
+void MyFrame::onTreeItemClicked(wxTreeEvent &event) {
+  wxTreeItemId selectedItem = event.GetItem();
+  wxString selectedItemText = m_modelsTree->GetItemText(selectedItem);
+  std::cout << "Selected: " << selectedItemText << std::endl;
+
+  ModelItem *modelItem = ModelContainer::getInstance().getModel(selectedItemText.ToStdString());
+  if (modelItem != nullptr) {
+    auto *model = dynamic_cast<Model *>(modelItem);
+    auto *modelVariable = dynamic_cast<ModelVariable<double> *>(modelItem);
+    //TODO(renda): cast to other supported types as well.
+    
+    // TODO(renda): add watch if variable selected
+    if (model) {
+      std::cout << "Model children count: " << model->getItems().size() << std::endl;
+    } else if (modelVariable) {
+      std::cout << "Model variable value: " << modelVariable->getValue() << std::endl;
+    }
+
+  } else {
+    std::cout << "nullptr" << std::endl;
+  }
+}
 
 void MyFrame::onExit(wxCommandEvent & /*event*/) { Close(true); }
 

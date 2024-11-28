@@ -20,6 +20,7 @@ private:
   void onStepClicked(wxCommandEvent &event);
   void onStoreClicked(wxCommandEvent &event);
   void onRestoreClicked(wxCommandEvent &event);
+  void onTreeItemClicked(wxTreeEvent &event);
 
   void onExit(wxCommandEvent &event);
   void onAbout(wxCommandEvent &event);
