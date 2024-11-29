@@ -1,4 +1,6 @@
+#include <mathplot.h>
 #include <string>
+#include <vector>
 
 #include "common/model.hpp"
 #include "common/modelVariable.hpp"
@@ -22,6 +24,25 @@ constexpr int TOP_BAR_COMP_HEIGHT = 30;
 
 MainWindow::MainWindow()
     : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
+  auto *plotWindow = new mpWindow(this, wxID_ANY, wxPoint(0, 0), wxSize(800, 600));
+  { // TODO(renda): Clean this up
+    // Sample data
+    std::vector<double> x;
+    std::vector<double> y;
+    for (double i = 0; i < 100; i += 0.01) {
+      x.push_back(i);
+      y.push_back(sin(i));
+    }
+
+    auto *plot = new mpFXYVector();
+    plot->SetData(x, y);
+
+    plotWindow->AddLayer(plot);
+
+    plotWindow->Fit();
+    plotWindow->Show();
+  }
+
   auto *menuFile = new wxMenu;
   menuFile->Append(ID_START_STOP_MENU, "Start / Stop", "Start or stop simulation");
   menuFile->Append(wxID_ANY, "Stop At", "Stop simulation at given time");
@@ -147,6 +168,9 @@ MainWindow::MainWindow()
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   verticalSizer->Add(m_logs, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                     5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
+  verticalSizer->Add(plotWindow, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
   SetSizer(verticalSizer);

@@ -21,5 +21,6 @@ set(INCLUDEDIRS
     ${CMAKE_CURRENT_LIST_DIR}/../
     ${CMAKE_CURRENT_LIST_DIR}/../src/
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxMathPlot/include
     ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/include
     ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/wx/include/gtk3-unicode-3.2)
