@@ -1299,6 +1299,11 @@ public:
       */
     void Clear();
 
+    /** Add new Data points realtime
+     * https://stackoverflow.com/a/16916296
+     */
+    void AddData(float x, float y, std::vector<double> &xs, std::vector<double> &ys);
+
 protected:
     /** The internal copy of the set of data to draw.
       */

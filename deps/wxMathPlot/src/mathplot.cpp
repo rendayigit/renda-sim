@@ -1298,9 +1298,9 @@ mpWindow::mpWindow( wxWindow *parent, wxWindowID id, const wxPoint &pos, const w
     m_popmenu.Append( mpID_HELP_MOUSE,   _("Show mouse commands..."),    _("Show help about the mouse commands."));
 
     m_layers.clear();
-    SetBackgroundColour( *wxWHITE );
-	 m_bgColour = *wxWHITE;
-	 m_fgColour = *wxBLACK;
+    SetBackgroundColour( wxColour(32, 32, 32) );
+	 m_bgColour = wxColour(32, 32, 32);
+	 m_fgColour = *wxWHITE;
 
     m_enableScrollBars = false;
     SetSizeHints(128, 128);
@@ -2555,6 +2555,64 @@ void mpFXYVector::SetData( const std::vector<double> &xs,const std::vector<doubl
     m_xs = xs;
     m_ys = ys;
 
+
+    // Update internal variables for the bounding box.
+    if (xs.size()>0)
+    {
+        m_minX  = xs[0];
+        m_maxX  = xs[0];
+        m_minY  = ys[0];
+        m_maxY  = ys[0];
+
+        std::vector<double>::const_iterator  it;
+
+        for (it=xs.begin();it!=xs.end();it++)
+        {
+            if (*it<m_minX) m_minX=*it;
+            if (*it>m_maxX) m_maxX=*it;
+        }
+        for (it=ys.begin();it!=ys.end();it++)
+        {
+            if (*it<m_minY) m_minY=*it;
+            if (*it>m_maxY) m_maxY=*it;
+        }
+        m_minX-=0.5f;
+        m_minY-=0.5f;
+        m_maxX+=0.5f;
+        m_maxY+=0.5f;
+    }
+    else
+    {
+        m_minX  = -1;
+        m_maxX  = 1;
+        m_minY  = -1;
+        m_maxY  = 1;
+    }
+}
+
+void mpFXYVector::AddData(float x, float y, std::vector<double> &xs, std::vector<double> &ys)
+{
+    // Check if the data vectora are of the same size
+    if (xs.size() != ys.size()) {
+        wxLogError(_("wxMathPlot error: X and Y vector are not of the same length!"));
+        return;
+    }
+
+    //After a certain number of points implement a FIFO buffer
+    //As plotting too many points can cause missing data
+    if (x > 300)
+    {
+        xs.erase(xs.begin());
+        ys.erase(ys.begin());
+    }
+
+    //Add new Data points at the end
+    xs.push_back(x);
+    ys.push_back(y);
+
+    // Copy the data:
+    m_xs = xs;
+    m_ys = ys;
 
     // Update internal variables for the bounding box.
     if (xs.size()>0)
