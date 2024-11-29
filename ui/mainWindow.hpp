@@ -25,6 +25,7 @@ private:
   void onStepClicked(wxCommandEvent &event);
   void onStoreClicked(wxCommandEvent &event);
   void onRestoreClicked(wxCommandEvent &event);
+  void onPlotClicked(wxCommandEvent &event);
   void onTreeItemClicked(wxTreeEvent &event);
 
   void onExit(wxCommandEvent &event);
@@ -39,6 +40,7 @@ private:
   wxButton *m_stepButton;
   wxButton *m_storeButton;
   wxButton *m_restoreButton;
+  wxButton *m_plotButton;
 
   wxTextCtrl *m_simTimeDisplay;
 

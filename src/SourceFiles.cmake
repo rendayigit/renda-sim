@@ -2,6 +2,7 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/main.cpp
     # UI Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../ui/mainWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../ui/plotWindow.cpp
     # Common Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/common/load/load.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/common/load/loadState.cpp

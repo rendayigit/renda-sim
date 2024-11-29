@@ -1,4 +1,3 @@
-#include <mathplot.h>
 #include <string>
 #include <vector>
 
@@ -7,6 +6,7 @@
 #include "mainWindow.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
+#include "ui/plotWindow.hpp"
 #include "ui/variableTreeItemsContainer.hpp"
 
 enum {
@@ -16,6 +16,7 @@ enum {
   ID_STEP_BTN,
   ID_STORE_BTN,
   ID_RESTORE_BTN,
+  ID_PLOT_BTN,
   ID_MODELS_TREE,
   ID_VARIABLES_LIST
 };
@@ -24,25 +25,6 @@ constexpr int TOP_BAR_COMP_HEIGHT = 30;
 
 MainWindow::MainWindow()
     : wxFrame(nullptr, wxID_ANY, "Renda Sim"), m_scheduler(ServiceContainer::getInstance().scheduler()) {
-  auto *plotWindow = new mpWindow(this, wxID_ANY, wxPoint(0, 0), wxSize(800, 600));
-  { // TODO(renda): Clean this up
-    // Sample data
-    std::vector<double> x;
-    std::vector<double> y;
-    for (double i = 0; i < 100; i += 0.01) {
-      x.push_back(i);
-      y.push_back(sin(i));
-    }
-
-    auto *plot = new mpFXYVector();
-    plot->SetData(x, y);
-
-    plotWindow->AddLayer(plot);
-
-    plotWindow->Fit();
-    plotWindow->Show();
-  }
-
   auto *menuFile = new wxMenu;
   menuFile->Append(ID_START_STOP_MENU, "Start / Stop", "Start or stop simulation");
   menuFile->Append(wxID_ANY, "Stop At", "Stop simulation at given time");
@@ -109,6 +91,10 @@ MainWindow::MainWindow()
       this, ID_RESTORE_BTN, "Restore", {},
       wxSize(100, TOP_BAR_COMP_HEIGHT)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
+  m_plotButton = new wxButton(
+      this, ID_PLOT_BTN, "Plot", {},
+      wxSize(100, TOP_BAR_COMP_HEIGHT)); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
   auto *simTimeLabel = new wxStaticText(this, wxID_ANY, "Simulation Time (s) ");
 
   m_simTimeDisplay = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
@@ -147,6 +133,9 @@ MainWindow::MainWindow()
   topHorizontalSizer->Add(m_restoreButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                           5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
+  topHorizontalSizer->Add(m_plotButton, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
+                          5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
   topHorizontalSizer->AddStretchSpacer();
 
   topHorizontalSizer->Add(simTimeLabel, 0, wxALIGN_CENTER_VERTICAL, // NOLINT(bugprone-suspicious-enum-usage)
@@ -170,9 +159,6 @@ MainWindow::MainWindow()
   verticalSizer->Add(m_logs, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
                      5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-  verticalSizer->Add(plotWindow, 0, wxEXPAND | wxALL, // NOLINT(bugprone-suspicious-enum-usage)
-                     5); // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
-
   SetSizer(verticalSizer);
 
   verticalSizer->Fit(this);
@@ -183,6 +169,7 @@ MainWindow::MainWindow()
   Bind(wxEVT_BUTTON, &MainWindow::onStepClicked, this, ID_STEP_BTN);
   Bind(wxEVT_BUTTON, &MainWindow::onStoreClicked, this, ID_STORE_BTN);
   Bind(wxEVT_BUTTON, &MainWindow::onRestoreClicked, this, ID_RESTORE_BTN);
+  Bind(wxEVT_BUTTON, &MainWindow::onPlotClicked, this, ID_PLOT_BTN);
 
   Bind(wxEVT_MENU, &MainWindow::onStartStopClicked, this, ID_START_STOP_MENU);
   Bind(wxEVT_MENU, &MainWindow::onAbout, this, wxID_ABOUT);
@@ -237,6 +224,11 @@ void MainWindow::onStepClicked(wxCommandEvent & /*event*/) {}
 void MainWindow::onStoreClicked(wxCommandEvent & /*event*/) {}
 
 void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
+
+void MainWindow::onPlotClicked(wxCommandEvent &event) {
+  auto *plotWindow = new PlotWindow(this);
+  plotWindow->Show();
+}
 
 void MainWindow::onTreeItemClicked(wxTreeEvent &event) {
   wxTreeItemId selectedItem = event.GetItem();
