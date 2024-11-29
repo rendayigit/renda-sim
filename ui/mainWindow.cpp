@@ -6,7 +6,6 @@
 #include "mainWindow.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
-#include "ui/plotWindow.hpp"
 #include "ui/variableTreeItemsContainer.hpp"
 
 enum {
@@ -225,10 +224,32 @@ void MainWindow::onStoreClicked(wxCommandEvent & /*event*/) {}
 
 void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
 
+// TODO(renda): Bug if clicked twice
+// TODO(renda): Bug if exited
 void MainWindow::onPlotClicked(wxCommandEvent &event) {
-  // TODO(renda): Bug if clicked twice
-  auto *plotWindow = new PlotWindow(this);
-  plotWindow->Show();
+  auto *plots = new std::vector<mpFXYVector *>;
+  m_plotWindow = new PlotWindow(this);
+
+  for (auto &item : getListSelectedItems()) {
+    auto *model = ModelContainer::getInstance().getModel(m_variableList->GetItemText(item).ToStdString());
+    auto *doubleVariable = dynamic_cast<ModelVariable<double> *>(model);
+    auto *integerVariable = dynamic_cast<ModelVariable<int> *>(model);
+
+    if (doubleVariable != nullptr) {
+      auto *plot = new mpFXYVector();
+      plot->SetName(doubleVariable->getName());
+      doubleVariable->setPlot(plot, m_plotWindow);
+      plots->push_back(plot);
+    } else if (integerVariable != nullptr) {
+      auto *plot = new mpFXYVector();
+      plot->SetName(integerVariable->getName());
+      integerVariable->setPlot(plot, m_plotWindow);
+      plots->push_back(plot);
+    }
+  }
+
+  m_plotWindow->setPlots(plots);
+  m_plotWindow->Show();
 }
 
 void MainWindow::onTreeItemClicked(wxTreeEvent &event) {
@@ -304,4 +325,16 @@ void MainWindow::onAbout(wxCommandEvent & /*event*/) {
   wxMessageBox(
       "This is a simulator designed by Renda, see \nhttps://github.com/rendayigit/renda-sim \nfor more details.",
       "About Renda Sim", wxOK | wxICON_INFORMATION);
+}
+
+std::vector<long> MainWindow::getListSelectedItems() {
+  std::vector<long> selectedItems;
+  long item = -1;
+
+  // Iterate through selected items
+  while ((item = m_variableList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != wxNOT_FOUND) {
+    selectedItems.push_back(item);
+  }
+
+  return selectedItems;
 }

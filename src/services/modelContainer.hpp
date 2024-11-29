@@ -12,7 +12,8 @@ public:
     return instance;
   }
 
-  ModelItem *getModel(const std::string& modelName) {
+  // TODO(renda): Improve search by doing parent.children.grandchildren type of search
+  ModelItem *getModel(const std::string &modelName) {
     for (auto &model : m_models) {
       if (model->getName() == modelName) {
         return model;

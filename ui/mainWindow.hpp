@@ -6,6 +6,7 @@
 #include <wx/wx.h>
 
 #include "services/scheduler/scheduler.hpp"
+#include "ui/plotWindow.hpp"
 
 class MainWindow : public wxFrame {
 public:
@@ -31,6 +32,8 @@ private:
   void onExit(wxCommandEvent &event);
   void onAbout(wxCommandEvent &event);
 
+  std::vector<long> getListSelectedItems();
+
   std::mutex m_mutex;
 
   Scheduler *m_scheduler;
@@ -49,4 +52,6 @@ private:
   wxListCtrl *m_variableList;
 
   wxTextCtrl *m_logs;
+
+  PlotWindow *m_plotWindow{};
 };
