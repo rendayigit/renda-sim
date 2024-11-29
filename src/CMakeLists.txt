@@ -19,12 +19,11 @@ add_executable(renda-sim ${SOURCEFILES})
 target_compile_definitions(renda-sim PUBLIC _FILE_OFFSET_BITS=64 WXUSINGDLL
                                             __WXGTK__)
 
-target_link_libraries(
-  renda-sim
-  PRIVATE
+target_link_libraries(renda-sim PRIVATE
     Boost::filesystem
     ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/libwx_baseu_net-3.2.so.0
     ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/libwx_baseu-3.2.so.0
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/libwx_gtk3u_core-3.2.so.0)
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/libwx_gtk3u_core-3.2.so.0
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxMathPlot/lib/libwxMathPlot.a)
 
 target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})
