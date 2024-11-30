@@ -225,8 +225,8 @@ void MainWindow::onStoreClicked(wxCommandEvent & /*event*/) {}
 
 void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
 
-// TODO(renda): Bug if clicked twice
-// TODO(renda): Bug if exited
+// TODO(renda): Bug if plot same variable twice
+// TODO(renda): Bug if exit plotter
 void MainWindow::onPlotClicked(wxCommandEvent & /*event*/) {
   auto *plotWindow = new PlotWindow(this);
 
