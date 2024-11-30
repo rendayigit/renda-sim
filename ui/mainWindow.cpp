@@ -6,6 +6,7 @@
 #include "mainWindow.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
+#include "ui/plotWindow.hpp"
 #include "ui/variableTreeItemsContainer.hpp"
 
 enum {
@@ -227,8 +228,8 @@ void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
 // TODO(renda): Bug if clicked twice
 // TODO(renda): Bug if exited
 void MainWindow::onPlotClicked(wxCommandEvent &event) {
-  auto *plots = new std::vector<mpFXYVector *>;
-  m_plotWindow = new PlotWindow(this);
+  std::vector<mpFXYVector *> plots;
+  auto *plotWindow = new PlotWindow(this);
 
   for (auto &item : getListSelectedItems()) {
     auto *model = ModelContainer::getInstance().getModel(m_variableList->GetItemText(item).ToStdString());
@@ -238,18 +239,20 @@ void MainWindow::onPlotClicked(wxCommandEvent &event) {
     if (doubleVariable != nullptr) {
       auto *plot = new mpFXYVector();
       plot->SetName(doubleVariable->getName());
-      doubleVariable->setPlot(plot, m_plotWindow);
-      plots->push_back(plot);
+      doubleVariable->setPlot(plot, plotWindow);
+      plots.push_back(plot);
     } else if (integerVariable != nullptr) {
       auto *plot = new mpFXYVector();
       plot->SetName(integerVariable->getName());
-      integerVariable->setPlot(plot, m_plotWindow);
-      plots->push_back(plot);
+      integerVariable->setPlot(plot, plotWindow);
+      plots.push_back(plot);
     }
   }
 
-  m_plotWindow->setPlots(plots);
-  m_plotWindow->Show();
+  if (not plots.empty()) {
+    plotWindow->setPlots(plots);
+    plotWindow->Show();
+  }
 }
 
 void MainWindow::onTreeItemClicked(wxTreeEvent &event) {

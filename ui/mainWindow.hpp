@@ -6,7 +6,6 @@
 #include <wx/wx.h>
 
 #include "services/scheduler/scheduler.hpp"
-#include "ui/plotWindow.hpp"
 
 class MainWindow : public wxFrame {
 public:
@@ -52,6 +51,4 @@ private:
   wxListCtrl *m_variableList;
 
   wxTextCtrl *m_logs;
-
-  PlotWindow *m_plotWindow{};
 };

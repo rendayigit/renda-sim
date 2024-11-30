@@ -10,15 +10,14 @@ public:
   explicit PlotWindow(wxWindow *parent);
   ~PlotWindow() override;
 
-  void setPlots(std::vector<mpFXYVector *> *plots);
-  void fitPlot() { m_plotWindow->Fit(); }
+  void setPlots(std::vector<mpFXYVector *> plots);
+  void fitPlot();
 
 private:
   void drawSin() const;
   void drawCos() const;
 
   mpWindow *m_plotWindow;
-  std::vector<mpFXYVector *> *m_plots{};
 
   std::vector<std::vector<double>> m_data;
   std::vector<wxColour> m_colors;

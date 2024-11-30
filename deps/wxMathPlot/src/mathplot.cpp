@@ -2600,7 +2600,7 @@ void mpFXYVector::AddData(float x, float y, std::vector<double> &xs, std::vector
 
     //After a certain number of points implement a FIFO buffer
     //As plotting too many points can cause missing data
-    if (x > 300)
+    if (xs.size() > 300)
     {
         xs.erase(xs.begin());
         ys.erase(ys.begin());
