@@ -26,7 +26,7 @@ public:
     if (m_isPlotted) {
       static int i = 0;
 
-      if (m_plotWindow == nullptr or m_plot == nullptr) {
+      if (m_plotWindow == nullptr or m_plotWindow->getPlotCount() == 0) {
         m_isPlotted = false;
         return;
       }
@@ -52,8 +52,11 @@ private:
 
   void clearMonitor() { m_isMonitored = false; }
 
-  void setPlot(mpFXYVector *plot, PlotWindow *plotWindow) {
-    m_plot = plot;
+  void setPlot(PlotWindow *plotWindow) {
+    m_plot = new mpFXYVector();
+    m_plot->SetName(getName());
+    plotWindow->addPlot(m_plot);
+
     m_plotWindow = plotWindow;
     m_isPlotted = true;
   }

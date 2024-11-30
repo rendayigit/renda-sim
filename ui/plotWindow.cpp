@@ -5,18 +5,6 @@ PlotWindow::PlotWindow(wxWindow *parent)
       m_plotWindow(new mpWindow(this, wxID_ANY)) {
   srand(time(0));
 
-  m_plotWindow->SetBackgroundColour(wxColour(32, 32, 32));
-  m_plotWindow->SetMargins(0, 0, 30, 0);
-}
-
-PlotWindow::~PlotWindow() {
-  m_plotWindow->DelAllLayers(true);
-
-  m_plotWindow->Close();
-  delete m_plotWindow;
-}
-
-void PlotWindow::setPlots(std::vector<mpFXYVector *> plots) {
   m_colors.emplace_back(255, 0, 0);     // Red
   m_colors.emplace_back(0, 255, 0);     // Green
   m_colors.emplace_back(0, 0, 255);     // Blue
@@ -30,18 +18,32 @@ void PlotWindow::setPlots(std::vector<mpFXYVector *> plots) {
   m_colors.emplace_back(0, 128, 128);   // Teal
   m_colors.emplace_back(192, 192, 192); // Silver
 
-  auto font = wxFont(12, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  m_font = wxFont(12, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-  for (auto &plot : plots) {
-    plot->SetContinuity(true);
-    plot->SetPen(wxPen(m_colors.at(rand() % m_colors.size()), 3));
-    plot->SetFont(font);
-    m_plotWindow->AddLayer(plot);
-  }
+  m_plotWindow->SetBackgroundColour(wxColour(32, 32, 32));
+  m_plotWindow->SetMargins(0, 0, 30, 0);
+}
+
+PlotWindow::~PlotWindow() {
+  m_plotWindow->DelAllLayers(true);
+
+  m_plotWindow->Close();
+  delete m_plotWindow;
+}
+
+void PlotWindow::addPlot(mpFXYVector *plot) {
+  plot->SetContinuity(true);
+  plot->SetPen(wxPen(m_colors.at(rand() % m_colors.size()), 3));
+  plot->SetFont(m_font);
+  m_plotWindow->AddLayer(plot);
 }
 
 void PlotWindow::fitPlot() {
   if (m_plotWindow != nullptr and m_plotWindow->CountLayers() > 0) {
     m_plotWindow->Fit();
   }
+}
+
+unsigned int PlotWindow::getPlotCount() {
+    return m_plotWindow->CountAllLayers();
 }

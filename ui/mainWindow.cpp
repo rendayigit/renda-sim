@@ -227,8 +227,7 @@ void MainWindow::onRestoreClicked(wxCommandEvent & /*event*/) {}
 
 // TODO(renda): Bug if clicked twice
 // TODO(renda): Bug if exited
-void MainWindow::onPlotClicked(wxCommandEvent &event) {
-  std::vector<mpFXYVector *> plots;
+void MainWindow::onPlotClicked(wxCommandEvent & /*event*/) {
   auto *plotWindow = new PlotWindow(this);
 
   for (auto &item : getListSelectedItems()) {
@@ -237,20 +236,13 @@ void MainWindow::onPlotClicked(wxCommandEvent &event) {
     auto *integerVariable = dynamic_cast<ModelVariable<int> *>(model);
 
     if (doubleVariable != nullptr) {
-      auto *plot = new mpFXYVector();
-      plot->SetName(doubleVariable->getName());
-      doubleVariable->setPlot(plot, plotWindow);
-      plots.push_back(plot);
+      doubleVariable->setPlot(plotWindow);
     } else if (integerVariable != nullptr) {
-      auto *plot = new mpFXYVector();
-      plot->SetName(integerVariable->getName());
-      integerVariable->setPlot(plot, plotWindow);
-      plots.push_back(plot);
+      integerVariable->setPlot(plotWindow);
     }
   }
 
-  if (not plots.empty()) {
-    plotWindow->setPlots(plots);
+  if (plotWindow->getPlotCount() > 0) {
     plotWindow->Show();
   }
 }
