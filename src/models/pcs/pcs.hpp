@@ -15,6 +15,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "common/model.hpp"
+#include "common/modelVariable.hpp"
 #include "services/eventManager/simpleEvent.hpp"
 #include "services/serviceContainer.hpp"
 
@@ -27,26 +29,27 @@ constexpr double BATTERY_DEGRADATION_RATE = 0.98;     // Yearly degradation fact
 constexpr double PANEL_CURRENT_VOLTAGE_RATIO = 10.0;  // Ratio of current to voltage for panels (A/V)
 constexpr double BATTERY_CURRENT_VOLTAGE_RATIO = 5.0; // Ratio of current to voltage for battery (A/V)
 
-class PowerSubsystem {
+class PowerSubsystem : public Model {
 public:
   PowerSubsystem();
 
-  void initialize(double batteryInitialCharge = 500.0, int batteryAgeYears = 0, int panelAgeYears = 0);
-
-  void step(double sunAngle, double powerConsumption);
-
+  void initialize();
+  void step();
   void printState() const;
 
 private:
-  double m_batteryCharge{};    // Current charge of the battery (Watt-hours)
-  double m_powerFromPanels{};  // Power drawn from solar panels (Watts)
-  double m_powerFromBattery{}; // Power drawn from battery (Watts)
-  double m_panelVoltage{};     // Voltage of the solar panels (Volts)
-  double m_panelCurrent{};     // Current from the solar panels (Amperes)
-  double m_batteryVoltage{};   // Voltage of the battery (Volts)
-  double m_batteryCurrent{};   // Current from the battery (Amperes)
-  int m_batteryAgeYears{};     // Age of the battery in years
-  int m_panelAgeYears{};       // Age of the panels in years
+  ModelVariable<double> m_batteryCharge;    // Current charge of the battery (Watt-hours)
+  ModelVariable<double> m_powerFromPanels;  // Power drawn from solar panels (Watts)
+  ModelVariable<double> m_powerFromBattery; // Power drawn from battery (Watts)
+  ModelVariable<double> m_panelVoltage;     // Voltage of the solar panels (Volts)
+  ModelVariable<double> m_panelCurrent;     // Current from the solar panels (Amperes)
+  ModelVariable<double> m_batteryVoltage;   // Voltage of the battery (Volts)
+  ModelVariable<double> m_batteryCurrent;   // Current from the battery (Amperes)
+  ModelVariable<int> m_batteryAgeYears;     // Age of the battery in years
+  ModelVariable<int> m_panelAgeYears;       // Age of the panels in years
+
+  ModelVariable<double> m_sunAngle;         // Sun angle for the solar panels (radians)
+  ModelVariable<double> m_powerConsumption; // Power consumption of the system (Watts)
 
   SimpleEvent m_powerEvent;
 };

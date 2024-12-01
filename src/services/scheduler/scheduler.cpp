@@ -1,25 +1,45 @@
 #include <chrono>
+#include <iostream>
+#include <string>
 
 #include "services/scheduler/scheduler.hpp"
+#include "services/serviceContainer.hpp"
 #include "services/timer/timer.hpp"
 
+constexpr int MICROS_TO_MILLIS = 1000;
+constexpr int MILLIS_TO_SECS = 1000;
+
 void Scheduler::start() {
+  if (m_lastStopTicks != 0) {
+    Timer::getInstance().updateInitialTicks(m_lastStopTicks);
+  }
+
   m_isRunning = true;
+
+  ServiceContainer::ui()->logMessage("***** Simulation Start *****");
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
-      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTime * 1000)));
-      step(Timer::getInstance().currentMillis() * m_rate);
+      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
+      step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
     }
   });
 }
 
 void Scheduler::stop() {
   m_isRunning = false;
+  ServiceContainer::ui()->logMessage("***** Simulation Stop *****");
 
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();
   }
+
+  m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+}
+
+void Scheduler::reset() {
+  Timer::getInstance().reset();
+  // TODO(renda): Reset all events and models
 }
 
 void Scheduler::progressTime(long millis) {
@@ -28,21 +48,26 @@ void Scheduler::progressTime(long millis) {
 }
 
 void Scheduler::step(long currentMillis) const {
+  double timeInSeconds = static_cast<double>(currentMillis) / MILLIS_TO_SECS;
+  std::string timeStr = std::to_string(timeInSeconds);
+  timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
+  MainWindow::getInstance().updateSimTime(timeStr);
+
   while (true) {
-    // Skip if event no events in queue
+    // Skip if no events in queue
     if (m_eventQueueInstance->empty()) {
       return;
     }
 
-    // Get the event at the top of the event queue
+    // Get the nearest event
     Event *event = m_eventQueueInstance->at(0);
 
-    // Skip if event is null or is not active
+    // Skip if event is not active
     if (not event->isActive()) {
       return;
     }
 
-    // Skip if nearest event is not due
+    // Skip if event is not due
     if (event->getNextMillis() > currentMillis) {
       return;
     }
@@ -50,7 +75,7 @@ void Scheduler::step(long currentMillis) const {
     // Process the event
     event->process();
 
-    // Pop nearest event
+    // Pop event
     m_eventManagerInstance->removeEvent(event);
 
     // If the event is single shot do not reschedule event

@@ -50,3 +50,7 @@ pre-commit install                  # Activate pre-commit hooks
 - `coverage.sh`: Generate unit test code coverage.
 - `run.sh`: Run the sample application.
 - `test.sh`: Run the unit tests without code coverage.
+
+## For Developers
+
+See the readmes in `deps/` for more details about some of the project dependencies.

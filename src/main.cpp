@@ -1,28 +1,31 @@
-#include <iostream>
+#include <wx/wx.h>
 
 #include "pcs/pcs.hpp"
 #include "sampleModel/sampleModel.hpp"
-#include "services/eventManager/simpleEvent.hpp"
-#include "services/serviceContainer.hpp"
+#include "ui/mainWindow.hpp"
 
-int main(int /*argc*/, char ** /*argv*/) {
-  std::cout << "\n***** Simulation Start *****\n";
-  std::cout << "Press enter to stop the simulation\n\n";
+class MyApp : public wxApp {
+public:
+  bool OnInit() override {
+    m_frame = &MainWindow::getInstance();
+    m_frame->Show(true);
 
-  ServiceContainer::getInstance().scheduler()->start();
+    instantiateModels();
 
-  SampleModel sm;
-
-  PowerSubsystem powerSubsystem;
-
-  char input = 0;
-  while (input != '\n') {
-    std::cin.get(input);
+    return true;
   }
 
-  ServiceContainer::getInstance().scheduler()->stop();
+private:
+  void instantiateModels() {
+    m_sampleModel = new SampleModel;
+    m_powerSubsystem = new PowerSubsystem;
+  }
 
-  std::cout << "\n****** Simulation End ******\n\n";
+  MainWindow *m_frame{};
 
-  return 0;
-}
+  SampleModel *m_sampleModel{};
+  PowerSubsystem *m_powerSubsystem{};
+};
+
+// Main function is set here
+wxIMPLEMENT_APP(MyApp); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)

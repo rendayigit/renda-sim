@@ -13,7 +13,7 @@ const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirec
 class Scheduler {
 public:
   explicit Scheduler(EventManager *eventManager)
-      : m_stepTime(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME").getValue<double>()),
+      : m_stepTimeMicros(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME_MICROS").getValue<double>()),
         m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()),
         m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
@@ -21,19 +21,24 @@ public:
 
   void start();
   void stop();
+  void reset();
 
   void progressTime(long millis);
+
+  bool isRunning() const { return m_isRunning; }
 
 private:
   void step(long currentMillis) const;
 
-  double m_stepTime;
+  double m_stepTimeMicros;
   double m_rate;
 
   std::thread m_schedulerThread;
   bool m_isRunning = false;
 
+  long long m_lastStopTicks{};
+  long m_progressTimeLastMillis{};
+
   EventManager *m_eventManagerInstance;
   std::vector<Event *> *m_eventQueueInstance;
-  long m_progressTimeLastMillis{};
 };

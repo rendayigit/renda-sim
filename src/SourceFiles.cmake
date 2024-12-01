@@ -1,5 +1,8 @@
 set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/main.cpp
+    # UI Source Files
+    ${CMAKE_CURRENT_LIST_DIR}/../ui/mainWindow.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../ui/plotWindow.cpp
     # Common Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/common/load/load.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/common/load/loadState.cpp
@@ -16,5 +19,9 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/sampleModel/sampleModel.cpp)
 
 set(INCLUDEDIRS
+    ${CMAKE_CURRENT_LIST_DIR}/../
     ${CMAKE_CURRENT_LIST_DIR}/../src/
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/)
+    ${CMAKE_CURRENT_LIST_DIR}/../src/models/
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxMathPlot/include
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/include
+    ${CMAKE_CURRENT_LIST_DIR}/../deps/wxWidgets/lib/wx/include/gtk3-unicode-3.2)
