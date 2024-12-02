@@ -41,6 +41,9 @@ class MyFrame(wx.Frame):
         ID_MODELS_TREE = wx.NewIdRef()
         ID_VARIABLES_LIST = wx.NewIdRef()
 
+        self.CreateStatusBar()
+        self.SetStatusText("Simulator ready")
+
         # Create a MenuBar
         menuBar = wx.MenuBar()
         
