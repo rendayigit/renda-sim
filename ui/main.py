@@ -122,8 +122,23 @@ class MainWindow(wx.Frame):
         topHorizontalSizer.Add(restoreBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         topHorizontalSizer.Add(plotBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
+        # Create the models tree
+        modelsTree = wx.TreeCtrl(self, ID_MODELS_TREE, wx.DefaultPosition, wx.Size(300, 400), wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT)
+
+        # Create the variables list
+        variableList = wx.ListCtrl(self, ID_VARIABLES_LIST, wx.DefaultPosition, wx.Size(1000, 400), wx.LC_REPORT)
+
+        # Create the logs display
+        logs = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, wx.Size(1200, 100), wx.TE_READONLY | wx.TE_MULTILINE); 
+
+        middleHorizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
+        middleHorizontalSizer.Add(modelsTree, 0, wx.ALL | wx.EXPAND, 5)
+        middleHorizontalSizer.Add(variableList, 1, wx.ALL | wx.EXPAND, 5)
+
         verticalSizer = wx.BoxSizer(wx.VERTICAL)
         verticalSizer.Add(topHorizontalSizer, 0, wx.ALL | wx.EXPAND, 5)
+        verticalSizer.Add(middleHorizontalSizer, 1, wx.ALL | wx.EXPAND, 5)
+        verticalSizer.Add(logs, 0, wx.ALL | wx.EXPAND, 5)
         
         self.SetSizerAndFit(verticalSizer)
 
