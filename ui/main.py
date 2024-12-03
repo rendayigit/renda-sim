@@ -130,7 +130,6 @@ class MainWindow(wx.Frame):
         topHorizontalSizer.Add(simTimeLabel, 0, wx.ALIGN_CENTER_VERTICAL, 5)
         topHorizontalSizer.Add(simTimeDisplay, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
-
         # Create the models tree
         modelsTree = wx.TreeCtrl(self, ID_MODELS_TREE, wx.DefaultPosition, wx.Size(300, 400), wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT)
 

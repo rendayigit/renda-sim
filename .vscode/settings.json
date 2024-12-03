@@ -1,4 +1,5 @@
 {
     "C_Cpp.intelliSenseEngine": "disabled",
     "testMate.cpp.test.executables": "{bin}/**/*{tests}*",
+    "pylint.args": ["--extension-pkg-whitelist=wx"]
 }
