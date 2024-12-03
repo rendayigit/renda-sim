@@ -55,7 +55,15 @@ class MainWindow(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         self.start_btn = wx.Button(self, wx.ID_ANY, "Start", wx.DefaultPosition, wx.DefaultSize)
+
+        self.start_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
+        self.start_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
+
         self.reset_btn = wx.Button(self, wx.ID_ANY, "Reset", wx.DefaultPosition, wx.DefaultSize)
+
+        self.reset_btn.SetBackgroundColour(wx.Colour("#ff4545"))
+        self.reset_btn.SetForegroundColour(wx.Colour("white"))
+
         self.step_btn = wx.Button(self, wx.ID_ANY, "Step", wx.DefaultPosition, wx.DefaultSize)
         self.store_btn = wx.Button(self, wx.ID_ANY, "Store", wx.DefaultPosition, wx.DefaultSize)
         self.restore_btn = wx.Button(self, wx.ID_ANY, "Restore", wx.DefaultPosition, wx.DefaultSize)
@@ -85,7 +93,7 @@ class MainWindow(wx.Frame):
         top_horizontal_sizer.Add(sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
         # Create the models tree
-        models_tree = wx.TreeCtrl(
+        self.models_tree = wx.TreeCtrl(
             self,
             wx.ID_ANY,
             wx.DefaultPosition,
@@ -94,7 +102,7 @@ class MainWindow(wx.Frame):
         )
 
         # Create the variables list
-        variable_list = wx.ListCtrl(
+        self.variable_list = wx.ListCtrl(
             self,
             wx.ID_ANY,
             wx.DefaultPosition,
@@ -102,13 +110,13 @@ class MainWindow(wx.Frame):
             wx.LC_REPORT,
         )
 
-        variable_list.InsertColumn(0, "Variable", wx.LIST_FORMAT_LEFT, 200)
-        variable_list.InsertColumn(1, "Description", wx.LIST_FORMAT_LEFT, 400)
-        variable_list.InsertColumn(2, "Value", wx.LIST_FORMAT_LEFT, 150)
-        variable_list.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
+        self.variable_list.InsertColumn(0, "Variable", wx.LIST_FORMAT_LEFT, 200)
+        self.variable_list.InsertColumn(1, "Description", wx.LIST_FORMAT_LEFT, 400)
+        self.variable_list.InsertColumn(2, "Value", wx.LIST_FORMAT_LEFT, 150)
+        self.variable_list.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
 
         # Create the logs display
-        logs = wx.TextCtrl(
+        self.logs = wx.TextCtrl(
             self,
             wx.ID_ANY,
             "",
@@ -118,13 +126,13 @@ class MainWindow(wx.Frame):
         )
 
         middle_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        middle_horizontal_sizer.Add(models_tree, 0, wx.ALL | wx.EXPAND, 5)
-        middle_horizontal_sizer.Add(variable_list, 1, wx.ALL | wx.EXPAND, 5)
+        middle_horizontal_sizer.Add(self.models_tree, 0, wx.ALL | wx.EXPAND, 5)
+        middle_horizontal_sizer.Add(self.variable_list, 1, wx.ALL | wx.EXPAND, 5)
 
         vertical_sizer = wx.BoxSizer(wx.VERTICAL)
         vertical_sizer.Add(top_horizontal_sizer, 0, wx.ALL | wx.EXPAND, 5)
         vertical_sizer.Add(middle_horizontal_sizer, 1, wx.ALL | wx.EXPAND, 5)
-        vertical_sizer.Add(logs, 0, wx.ALL | wx.EXPAND, 5)
+        vertical_sizer.Add(self.logs, 0, wx.ALL | wx.EXPAND, 5)
 
         self.SetSizerAndFit(vertical_sizer)
 

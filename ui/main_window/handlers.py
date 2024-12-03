@@ -71,3 +71,7 @@ class MainWindowHandlers:
             "About",
             wx.OK | wx.ICON_INFORMATION,
         )
+
+    def on_tree(self, _event):
+        """Tree control callback"""
+        pass  # TODO: Implement

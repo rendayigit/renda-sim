@@ -35,3 +35,6 @@ class MainWindowEventBinder:
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_store, self.main_window.store_btn)
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_restore, self.main_window.restore_btn)
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_plot, self.main_window.plot_btn)
+
+        # Bind tree events
+        self.main_window.models_tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.handlers.on_tree)
