@@ -9,3 +9,6 @@ build/
 
 # coverage data
 coverage/
+
+# python residuals
+__pycache__
