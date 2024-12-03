@@ -2,13 +2,13 @@ import wx
 
 class Application(wx.App):
     def OnInit(self):
-        frame = MyFrame(None, title="Renda Sim GUI")
+        frame = MainWindow(None, title="Renda Sim GUI")
         frame.Show()
         return True
 
-class MyFrame(wx.Frame):
+class MainWindow(wx.Frame):
     def __init__(self, parent, title):
-        super().__init__(parent, title=title, size=(1200, 600))
+        super().__init__(parent, title=title)
 
         # Define custom IDs
         ID_START_STOP_BTN = wx.NewIdRef()
