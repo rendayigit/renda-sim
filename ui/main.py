@@ -1,7 +1,6 @@
 """Renda Sim GUI Main Application"""
 
 import wx
-from main_window.handlers import MainWindowHandlers
 from main_window.window import MainWindow
 
 
