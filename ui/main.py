@@ -99,11 +99,39 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onSettings, settingsMenuItem)
         self.Bind(wx.EVT_MENU, self.onQuit, quitMenuItem)
         self.Bind(wx.EVT_MENU, self.onAbout, aboutMenuItem)
+
+        startBtn = wx.Button(self, ID_START_STOP_BTN, "Start/Stop", wx.DefaultPosition, wx.DefaultSize)
+        resetBtn = wx.Button(self, ID_RESET_BTN, "Reset", wx.DefaultPosition, wx.DefaultSize)
+        stepBtn = wx.Button(self, ID_STEP_BTN, "Step", wx.DefaultPosition, wx.DefaultSize)
+        storeBtn = wx.Button(self, ID_STORE_BTN, "Store", wx.DefaultPosition, wx.DefaultSize)
+        restoreBtn = wx.Button(self, ID_RESTORE_BTN, "Restore", wx.DefaultPosition, wx.DefaultSize)
+        plotBtn = wx.Button(self, ID_PLOT_BTN, "Plot", wx.DefaultPosition, wx.DefaultSize)
+
+        self.Bind(wx.EVT_BUTTON, self.onStartStop, startBtn)
+        self.Bind(wx.EVT_BUTTON, self.onReset, resetBtn)
+        self.Bind(wx.EVT_BUTTON, self.onStep, stepBtn)
+        self.Bind(wx.EVT_BUTTON, self.onStore, storeBtn)
+        self.Bind(wx.EVT_BUTTON, self.onRestore, restoreBtn)
+        self.Bind(wx.EVT_BUTTON, self.onPlot, plotBtn)
     
+        topHorizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
+        topHorizontalSizer.Add(startBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(resetBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(stepBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(storeBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(restoreBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(plotBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        verticalSizer = wx.BoxSizer(wx.VERTICAL)
+        verticalSizer.Add(topHorizontalSizer, 0, wx.ALL | wx.EXPAND, 5)
+        
+        self.SetSizerAndFit(verticalSizer)
+
     # Event Handlers
 
     def onStartStop(self, event):
-        wx.MessageBox("Start", "Start Clicked", wx.OK | wx.ICON_INFORMATION)
+        #wx.MessageBox("Start", "Start Clicked", wx.OK | wx.ICON_INFORMATION)
+        self.SetLabel("Stop") # FIXME
 
     def onStopAttack(self, event):
         pass
@@ -127,6 +155,9 @@ class MyFrame(wx.Frame):
         pass
 
     def onRestore(self, event):
+        pass
+
+    def onPlot(self, event):
         pass
 
     def onSpeed(self, event):
