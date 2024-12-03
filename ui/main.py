@@ -51,7 +51,7 @@ class MainWindow(wx.Frame):
         fileMenu = wx.Menu()
         startStopMenuItem = fileMenu.Append(ID_START_STOP_MENU, "&Start/Stop\tCtrl+R", "Start/Stop the simulation")
         resetMenuItem = fileMenu.Append(ID_RESET_MENU, "Reset\tCtrl+X", "Reset the simulation")
-        stopAttackMenuItem = fileMenu.Append(ID_STOP_AT_MENU, "Stop At", "Stop the simulation at given time")
+        stopAtMenuItem = fileMenu.Append(ID_STOP_AT_MENU, "Stop At", "Stop the simulation at given time")
         stopInMenuItem = fileMenu.Append(ID_STOP_IN_MENU, "Stop In", "Stop the simulation in given amount of time")
         stepMenuItem = fileMenu.Append(ID_STEP_MENU, "Step", "Run the simulation 1 step")
         runForMenuItem = fileMenu.Append(ID_RUN_FOR_MENU, "Run For", "Run the simulation for given amount of time")
@@ -87,7 +87,7 @@ class MainWindow(wx.Frame):
         
         # Bind menu events
         self.Bind(wx.EVT_MENU, self.onStartStop, startStopMenuItem)
-        self.Bind(wx.EVT_MENU, self.onStopAttack, stopAttackMenuItem)
+        self.Bind(wx.EVT_MENU, self.onStopAt, stopAtMenuItem)
         self.Bind(wx.EVT_MENU, self.onStopIn, stopInMenuItem)
         self.Bind(wx.EVT_MENU, self.onReset, resetMenuItem)
         self.Bind(wx.EVT_MENU, self.onStep, stepMenuItem)
@@ -100,14 +100,14 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onQuit, quitMenuItem)
         self.Bind(wx.EVT_MENU, self.onAbout, aboutMenuItem)
 
-        startBtn = wx.Button(self, ID_START_STOP_BTN, "Start/Stop", wx.DefaultPosition, wx.DefaultSize)
+        self.startBtn = wx.Button(self, ID_START_STOP_BTN, "Start", wx.DefaultPosition, wx.DefaultSize)
         resetBtn = wx.Button(self, ID_RESET_BTN, "Reset", wx.DefaultPosition, wx.DefaultSize)
         stepBtn = wx.Button(self, ID_STEP_BTN, "Step", wx.DefaultPosition, wx.DefaultSize)
         storeBtn = wx.Button(self, ID_STORE_BTN, "Store", wx.DefaultPosition, wx.DefaultSize)
         restoreBtn = wx.Button(self, ID_RESTORE_BTN, "Restore", wx.DefaultPosition, wx.DefaultSize)
         plotBtn = wx.Button(self, ID_PLOT_BTN, "Plot", wx.DefaultPosition, wx.DefaultSize)
 
-        self.Bind(wx.EVT_BUTTON, self.onStartStop, startBtn)
+        self.Bind(wx.EVT_BUTTON, self.onStartStop, self.startBtn)
         self.Bind(wx.EVT_BUTTON, self.onReset, resetBtn)
         self.Bind(wx.EVT_BUTTON, self.onStep, stepBtn)
         self.Bind(wx.EVT_BUTTON, self.onStore, storeBtn)
@@ -115,7 +115,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.onPlot, plotBtn)
     
         topHorizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
-        topHorizontalSizer.Add(startBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        topHorizontalSizer.Add(self.startBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         topHorizontalSizer.Add(resetBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         topHorizontalSizer.Add(stepBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         topHorizontalSizer.Add(storeBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
@@ -130,41 +130,43 @@ class MainWindow(wx.Frame):
     # Event Handlers
 
     def onStartStop(self, event):
-        #wx.MessageBox("Start", "Start Clicked", wx.OK | wx.ICON_INFORMATION)
-        self.SetLabel("Stop") # FIXME
+        self.startBtn.SetLabel("Stop")
+        self.SetStatusText("Simulation running...")
 
-    def onStopAttack(self, event):
-        pass
+        # TODO: Implement
+
+    def onStopAt(self, event):
+        pass # TODO: Implement
 
     def onStopIn(self, event):
-        pass
+        pass # TODO: Implement
 
     def onReset(self, event):
-        pass
+        pass # TODO: Implement
 
     def onStep(self, event):
-        pass
+        pass # TODO: Implement
 
     def onRunFor(self, event):
-        pass
+        pass # TODO: Implement
 
     def onRunUntil(self, event):
-        pass
+        pass # TODO: Implement
 
     def onStore(self, event):
-        pass
+        pass # TODO: Implement
 
     def onRestore(self, event):
-        pass
+        pass # TODO: Implement
 
     def onPlot(self, event):
-        pass
+        pass # TODO: Implement
 
     def onSpeed(self, event):
-        pass
+        pass # TODO: Implement
 
     def onSettings(self, event):
-        pass
+        pass # TODO: Implement
     
     def onQuit(self, event):
         self.Close()
