@@ -75,16 +75,10 @@ class MainWindow(wx.Frame):
 
         # Create the Variable Display Menu
         variable_display_menu = wx.Menu()
-        plot_menu_item = variable_display_menu.Append(
-            id_plot_menu, "&Plot Selected Variables\tCtrl+P", "Plot the variables"
-        )
+        plot_menu_item = variable_display_menu.Append(id_plot_menu, "&Plot Selected Variables\tCtrl+P", "Plot the variables")
         variable_display_menu.AppendSeparator()
-        save_variables_menu_item = variable_display_menu.Append(
-            id_save_variables_menu, "&Save Variables", "Save the variables to file"
-        )
-        load_variables_menu_item = variable_display_menu.Append(
-            id_load_variables_menu, "&Load Variables", "Load the variables from file"
-        )
+        save_variables_menu_item = variable_display_menu.Append(id_save_variables_menu, "&Save Variables", "Save the variables to file")
+        load_variables_menu_item = variable_display_menu.Append(id_load_variables_menu, "&Load Variables", "Load the variables from file")
         variable_display_menu.AppendSeparator()
         clear_menu_item = variable_display_menu.Append(id_clear_variables_menu, "&Clear Table", "Clear the variables")
 
@@ -256,9 +250,7 @@ class MainWindow(wx.Frame):
     def on_about(self, _event):
         """About button callback"""
         wx.MessageBox(
-            "This is a simulator designed by Renda, see \n"
-            "https://github.com/rendayigit/renda-sim \n"
-            "for more details.",
+            "This is a simulator designed by Renda, see\nhttps://github.com/rendayigit/renda-sim\nfor more details.",
             "About",
             wx.OK | wx.ICON_INFORMATION,
         )
