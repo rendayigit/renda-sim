@@ -1,161 +1,130 @@
+"""Module wx GUI Framework """
+
 import wx
 
 
 class Application(wx.App):
-    def OnInit(self):
+    """Main Application Class"""
+
+    def OnInit(self):  # pylint: disable=invalid-name
+        """Function called when UI is ready"""
         frame = MainWindow(None, title="Renda Sim GUI")
         frame.Show()
         return True
 
 
 class MainWindow(wx.Frame):
+    """Main Window Class"""
+
     def __init__(self, parent, title):
         super().__init__(parent, title=title)
 
         # Define custom IDs
-        ID_START_STOP_BTN = wx.NewIdRef()
-        ID_START_STOP_MENU = wx.NewIdRef()
-        ID_STOP_AT = wx.NewIdRef()
-        ID_STOP_AT_MENU = wx.NewIdRef()
-        ID_STOP_IN = wx.NewIdRef()
-        ID_STOP_IN_MENU = wx.NewIdRef()
-        ID_RESET_BTN = wx.NewIdRef()
-        ID_RESET_MENU = wx.NewIdRef()
-        ID_STEP_BTN = wx.NewIdRef()
-        ID_STEP_MENU = wx.NewIdRef()
-        ID_RUN_FOR_BTN = wx.NewIdRef()
-        ID_RUN_FOR_MENU = wx.NewIdRef()
-        ID_RUN_UNTIL_BTN = wx.NewIdRef()
-        ID_RUN_UNTIL_MENU = wx.NewIdRef()
-        ID_STORE_BTN = wx.NewIdRef()
-        ID_STORE_MENU = wx.NewIdRef()
-        ID_RESTORE_BTN = wx.NewIdRef()
-        ID_RESTORE_MENU = wx.NewIdRef()
-        ID_SPEED_BTN = wx.NewIdRef()
-        ID_SPEED_MENU = wx.NewIdRef()
-        ID_SETTINGS_BTN = wx.NewIdRef()
-        ID_SETTINGS_MENU = wx.NewIdRef()
-        ID_PLOT_BTN = wx.NewIdRef()
-        ID_PLOT_MENU = wx.NewIdRef()
-        ID_SAVE_VARIABLES_MENU = wx.NewIdRef()
-        ID_LOAD_VARIABLES_MENU = wx.NewIdRef()
-        ID_CLEAR_VARIABLES_MENU = wx.NewIdRef()
-        ID_MODELS_TREE = wx.NewIdRef()
-        ID_VARIABLES_LIST = wx.NewIdRef()
+        id_start_stop_btn = wx.NewIdRef()
+        id_start_stop_menu = wx.NewIdRef()
+        id_stop_at = wx.NewIdRef()
+        id_stop_at_menu = wx.NewIdRef()
+        id_stop_in = wx.NewIdRef()
+        id_stop_in_menu = wx.NewIdRef()
+        id_reset_btn = wx.NewIdRef()
+        id_reset_menu = wx.NewIdRef()
+        id_step_btn = wx.NewIdRef()
+        id_step_menu = wx.NewIdRef()
+        id_run_for_btn = wx.NewIdRef()
+        id_run_for_menu = wx.NewIdRef()
+        id_run_until_btn = wx.NewIdRef()
+        id_run_until_menu = wx.NewIdRef()
+        id_store_btn = wx.NewIdRef()
+        id_store_menu = wx.NewIdRef()
+        id_restore_btn = wx.NewIdRef()
+        id_restore_menu = wx.NewIdRef()
+        id_speed_btn = wx.NewIdRef()
+        id_speed_menu = wx.NewIdRef()
+        id_settings_btn = wx.NewIdRef()
+        id_settings_menu = wx.NewIdRef()
+        id_plot_btn = wx.NewIdRef()
+        id_plot_menu = wx.NewIdRef()
+        id_save_variables_menu = wx.NewIdRef()
+        id_load_variables_menu = wx.NewIdRef()
+        id_clear_variables_menu = wx.NewIdRef()
+        id_models_tree = wx.NewIdRef()
+        id_variables_list = wx.NewIdRef()
 
         self.CreateStatusBar()
         self.SetStatusText("Simulator ready")
 
         # Create a MenuBar
-        menuBar = wx.MenuBar()
+        menu_bar = wx.MenuBar()
 
         # Create the File Menu
-        fileMenu = wx.Menu()
-        startStopMenuItem = fileMenu.Append(
-            ID_START_STOP_MENU, "&Start/Stop\tCtrl+R", "Start/Stop the simulation"
-        )
-        resetMenuItem = fileMenu.Append(
-            ID_RESET_MENU, "Reset\tCtrl+X", "Reset the simulation"
-        )
-        stopAtMenuItem = fileMenu.Append(
-            ID_STOP_AT_MENU, "Stop At", "Stop the simulation at given time"
-        )
-        stopInMenuItem = fileMenu.Append(
-            ID_STOP_IN_MENU, "Stop In", "Stop the simulation in given amount of time"
-        )
-        stepMenuItem = fileMenu.Append(
-            ID_STEP_MENU, "Step", "Run the simulation 1 step"
-        )
-        runForMenuItem = fileMenu.Append(
-            ID_RUN_FOR_MENU, "Run For", "Run the simulation for given amount of time"
-        )
-        runUntilMenuItem = fileMenu.Append(
-            ID_RUN_UNTIL_MENU, "Run Until", "Run the simulation until given time"
-        )
-        storeMenuItem = fileMenu.Append(
-            ID_STORE_MENU, "Store", "Store the current simulation state"
-        )
-        restoreMenuItem = fileMenu.Append(
-            ID_RESTORE_MENU, "Restore", "Restore the simulation state from file"
-        )
-        speedMenuItem = fileMenu.Append(
-            ID_SPEED_MENU, "Speed", "Change the simulation speed"
-        )
-        fileMenu.AppendSeparator()
-        settingsMenuItem = fileMenu.Append(
-            ID_SETTINGS_MENU, "Settings", "Change the simulation settings"
-        )
-        fileMenu.AppendSeparator()
-        quitMenuItem = fileMenu.Append(
-            wx.ID_EXIT, "&Quit\tCtrl+Q", "Quit the application"
-        )
+        file_menu = wx.Menu()
+        start_stop_menu_item = file_menu.Append(id_start_stop_menu, "&Start/Stop\tCtrl+R", "Start/Stop the simulation")
+        reset_menu_item = file_menu.Append(id_reset_menu, "Reset\tCtrl+X", "Reset the simulation")
+        stop_at_menu_item = file_menu.Append(id_stop_at_menu, "Stop At", "Stop the simulation at given time")
+        stop_in_menu_item = file_menu.Append(id_stop_in_menu, "Stop In", "Stop the simulation in given amount of time")
+        step_menu_item = file_menu.Append(id_step_menu, "Step", "Run the simulation 1 step")
+        run_for_menu_item = file_menu.Append(id_run_for_menu, "Run For", "Run the simulation for given amount of time")
+        run_until_menu_item = file_menu.Append(id_run_until_menu, "Run Until", "Run the simulation until given time")
+        store_menu_item = file_menu.Append(id_store_menu, "Store", "Store the current simulation state")
+        restore_menu_item = file_menu.Append(id_restore_menu, "Restore", "Restore the simulation state from file")
+        speed_menu_item = file_menu.Append(id_speed_menu, "Speed", "Change the simulation speed")
+        file_menu.AppendSeparator()
+        settings_menu_item = file_menu.Append(id_settings_menu, "Settings", "Change the simulation settings")
+        file_menu.AppendSeparator()
+        quit_menu_item = file_menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q", "Quit the application")
 
         # Create the Variable Display Menu
-        variableDisplayMenu = wx.Menu()
-        plotMenuItem = variableDisplayMenu.Append(
-            ID_PLOT_MENU, "&Plot Selected Variables\tCtrl+P", "Plot the variables"
+        variable_display_menu = wx.Menu()
+        plot_menu_item = variable_display_menu.Append(
+            id_plot_menu, "&Plot Selected Variables\tCtrl+P", "Plot the variables"
         )
-        variableDisplayMenu.AppendSeparator()
-        saveVariablesMenuItem = variableDisplayMenu.Append(
-            ID_SAVE_VARIABLES_MENU, "&Save Variables", "Save the variables to file"
+        variable_display_menu.AppendSeparator()
+        save_variables_menu_item = variable_display_menu.Append(
+            id_save_variables_menu, "&Save Variables", "Save the variables to file"
         )
-        loadVariablesMenuItem = variableDisplayMenu.Append(
-            ID_LOAD_VARIABLES_MENU, "&Load Variables", "Load the variables from file"
+        load_variables_menu_item = variable_display_menu.Append(
+            id_load_variables_menu, "&Load Variables", "Load the variables from file"
         )
-        variableDisplayMenu.AppendSeparator()
-        clearMenuItem = variableDisplayMenu.Append(
-            ID_CLEAR_VARIABLES_MENU, "&Clear Table", "Clear the variables"
-        )
+        variable_display_menu.AppendSeparator()
+        clear_menu_item = variable_display_menu.Append(id_clear_variables_menu, "&Clear Table", "Clear the variables")
 
         # Create the Help Menu
-        helpMenu = wx.Menu()
-        manualMenuItem = helpMenu.Append(wx.ID_HELP, "&Manual\tF1", "Open The Manual")
-        aboutMenuItem = helpMenu.Append(wx.ID_ABOUT, "&About", "About Renda Sim")
+        help_menu = wx.Menu()
+        manual_menu_item = help_menu.Append(wx.ID_HELP, "&Manual\tF1", "Open The Manual")
+        about_menu_item = help_menu.Append(wx.ID_ABOUT, "&About", "About Renda Sim")
 
-        menuBar.Append(fileMenu, "&File")
-        menuBar.Append(variableDisplayMenu, "&Variable Display")
-        menuBar.Append(helpMenu, "&Help")
+        menu_bar.Append(file_menu, "&File")
+        menu_bar.Append(variable_display_menu, "&Variable Display")
+        menu_bar.Append(help_menu, "&Help")
 
         # Set the MenuBar for the frame
-        self.SetMenuBar(menuBar)
+        self.SetMenuBar(menu_bar)
 
         # Bind menu events
-        self.Bind(wx.EVT_MENU, self.onStartStop, startStopMenuItem)
-        self.Bind(wx.EVT_MENU, self.onStopAt, stopAtMenuItem)
-        self.Bind(wx.EVT_MENU, self.onStopIn, stopInMenuItem)
-        self.Bind(wx.EVT_MENU, self.onReset, resetMenuItem)
-        self.Bind(wx.EVT_MENU, self.onStep, stepMenuItem)
-        self.Bind(wx.EVT_MENU, self.onRunFor, runForMenuItem)
-        self.Bind(wx.EVT_MENU, self.onRunUntil, runUntilMenuItem)
-        self.Bind(wx.EVT_MENU, self.onStore, storeMenuItem)
-        self.Bind(wx.EVT_MENU, self.onRestore, restoreMenuItem)
-        self.Bind(wx.EVT_MENU, self.onSpeed, speedMenuItem)
-        self.Bind(wx.EVT_MENU, self.onSettings, settingsMenuItem)
-        self.Bind(wx.EVT_MENU, self.onQuit, quitMenuItem)
-        self.Bind(wx.EVT_MENU, self.on_about, aboutMenuItem)
+        self.Bind(wx.EVT_MENU, self.on_start_stop, start_stop_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_stop_at, stop_at_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_stop_in, stop_in_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_reset, reset_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_step, step_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_run_for, run_for_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_run_until, run_until_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_store, store_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_restore, restore_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_speed, speed_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_settings, settings_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_quit, quit_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_about, about_menu_item)
 
-        self.startBtn = wx.Button(
-            self, ID_START_STOP_BTN, "Start", wx.DefaultPosition, wx.DefaultSize
-        )
-        resetBtn = wx.Button(
-            self, ID_RESET_BTN, "Reset", wx.DefaultPosition, wx.DefaultSize
-        )
-        stepBtn = wx.Button(
-            self, ID_STEP_BTN, "Step", wx.DefaultPosition, wx.DefaultSize
-        )
-        storeBtn = wx.Button(
-            self, ID_STORE_BTN, "Store", wx.DefaultPosition, wx.DefaultSize
-        )
-        restoreBtn = wx.Button(
-            self, ID_RESTORE_BTN, "Restore", wx.DefaultPosition, wx.DefaultSize
-        )
-        plotBtn = wx.Button(
-            self, ID_PLOT_BTN, "Plot", wx.DefaultPosition, wx.DefaultSize
-        )
+        self.start_btn = wx.Button(self, id_start_stop_btn, "Start", wx.DefaultPosition, wx.DefaultSize)
+        reset_btn = wx.Button(self, id_reset_btn, "Reset", wx.DefaultPosition, wx.DefaultSize)
+        step_btn = wx.Button(self, id_step_btn, "Step", wx.DefaultPosition, wx.DefaultSize)
+        store_btn = wx.Button(self, id_store_btn, "Store", wx.DefaultPosition, wx.DefaultSize)
+        restore_btn = wx.Button(self, id_restore_btn, "Restore", wx.DefaultPosition, wx.DefaultSize)
+        plot_btn = wx.Button(self, id_plot_btn, "Plot", wx.DefaultPosition, wx.DefaultSize)
 
-        simTimeLabel = wx.StaticText(self, wx.ID_ANY, "Simulation Time (s) ")
+        sim_time_label = wx.StaticText(self, wx.ID_ANY, "Simulation Time (s) ")
 
-        simTimeDisplay = wx.TextCtrl(
+        sim_time_display = wx.TextCtrl(
             self,
             wx.ID_ANY,
             wx.EmptyString,
@@ -164,47 +133,47 @@ class MainWindow(wx.Frame):
             wx.TE_READONLY,
         )
 
-        self.Bind(wx.EVT_BUTTON, self.onStartStop, self.startBtn)
-        self.Bind(wx.EVT_BUTTON, self.onReset, resetBtn)
-        self.Bind(wx.EVT_BUTTON, self.onStep, stepBtn)
-        self.Bind(wx.EVT_BUTTON, self.onStore, storeBtn)
-        self.Bind(wx.EVT_BUTTON, self.onRestore, restoreBtn)
-        self.Bind(wx.EVT_BUTTON, self.onPlot, plotBtn)
+        self.Bind(wx.EVT_BUTTON, self.on_start_stop, self.start_btn)
+        self.Bind(wx.EVT_BUTTON, self.on_reset, reset_btn)
+        self.Bind(wx.EVT_BUTTON, self.on_step, step_btn)
+        self.Bind(wx.EVT_BUTTON, self.on_store, store_btn)
+        self.Bind(wx.EVT_BUTTON, self.on_restore, restore_btn)
+        self.Bind(wx.EVT_BUTTON, self.on_plot, plot_btn)
 
-        topHorizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
-        topHorizontalSizer.Add(self.startBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(resetBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(stepBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(storeBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(restoreBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(plotBtn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        top_horizontal_sizer.Add(self.start_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(reset_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(step_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(store_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(restore_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(plot_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        topHorizontalSizer.AddStretchSpacer()
-        topHorizontalSizer.Add(simTimeLabel, 0, wx.ALIGN_CENTER_VERTICAL, 5)
-        topHorizontalSizer.Add(simTimeDisplay, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.AddStretchSpacer()
+        top_horizontal_sizer.Add(sim_time_label, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
         # Create the models tree
-        modelsTree = wx.TreeCtrl(
+        models_tree = wx.TreeCtrl(
             self,
-            ID_MODELS_TREE,
+            id_models_tree,
             wx.DefaultPosition,
             wx.Size(300, 400),
             wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT,
         )
 
         # Create the variables list
-        variableList = wx.ListCtrl(
+        variable_list = wx.ListCtrl(
             self,
-            ID_VARIABLES_LIST,
+            id_variables_list,
             wx.DefaultPosition,
             wx.Size(1000, 400),
             wx.LC_REPORT,
         )
 
-        variableList.InsertColumn(0, "Variable", wx.LIST_FORMAT_LEFT, 200)
-        variableList.InsertColumn(1, "Description", wx.LIST_FORMAT_LEFT, 400)
-        variableList.InsertColumn(2, "Value", wx.LIST_FORMAT_LEFT, 150)
-        variableList.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
+        variable_list.InsertColumn(0, "Variable", wx.LIST_FORMAT_LEFT, 200)
+        variable_list.InsertColumn(1, "Description", wx.LIST_FORMAT_LEFT, 400)
+        variable_list.InsertColumn(2, "Value", wx.LIST_FORMAT_LEFT, 150)
+        variable_list.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
 
         # Create the logs display
         logs = wx.TextCtrl(
@@ -216,59 +185,72 @@ class MainWindow(wx.Frame):
             wx.TE_READONLY | wx.TE_MULTILINE,
         )
 
-        middleHorizontalSizer = wx.BoxSizer(wx.HORIZONTAL)
-        middleHorizontalSizer.Add(modelsTree, 0, wx.ALL | wx.EXPAND, 5)
-        middleHorizontalSizer.Add(variableList, 1, wx.ALL | wx.EXPAND, 5)
+        middle_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        middle_horizontal_sizer.Add(models_tree, 0, wx.ALL | wx.EXPAND, 5)
+        middle_horizontal_sizer.Add(variable_list, 1, wx.ALL | wx.EXPAND, 5)
 
-        verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        verticalSizer.Add(topHorizontalSizer, 0, wx.ALL | wx.EXPAND, 5)
-        verticalSizer.Add(middleHorizontalSizer, 1, wx.ALL | wx.EXPAND, 5)
-        verticalSizer.Add(logs, 0, wx.ALL | wx.EXPAND, 5)
+        vertical_sizer = wx.BoxSizer(wx.VERTICAL)
+        vertical_sizer.Add(top_horizontal_sizer, 0, wx.ALL | wx.EXPAND, 5)
+        vertical_sizer.Add(middle_horizontal_sizer, 1, wx.ALL | wx.EXPAND, 5)
+        vertical_sizer.Add(logs, 0, wx.ALL | wx.EXPAND, 5)
 
-        self.SetSizerAndFit(verticalSizer)
+        self.SetSizerAndFit(vertical_sizer)
 
     # Event Handlers
 
-    def onStartStop(self, event):
-        self.startBtn.SetLabel("Stop")
+    def on_start_stop(self, _event):
+        """Start/Stop button callback"""
+        self.start_btn.SetLabel("Stop")
         self.SetStatusText("Simulation running...")
 
         # TODO: Implement
 
-    def onStopAt(self, event):
+    def on_stop_at(self, _event):
+        """Stop at button callback"""
         pass  # TODO: Implement
 
-    def onStopIn(self, event):
+    def on_stop_in(self, _event):
+        """Stop in button callback"""
         pass  # TODO: Implement
 
-    def onReset(self, event):
+    def on_reset(self, _event):
+        """Reset button callback"""
         pass  # TODO: Implement
 
-    def onStep(self, event):
+    def on_step(self, _event):
+        """Step button callback"""
         pass  # TODO: Implement
 
-    def onRunFor(self, event):
+    def on_run_for(self, _event):
+        """Run for button callback"""
         pass  # TODO: Implement
 
-    def onRunUntil(self, event):
+    def on_run_until(self, _event):
+        """Run until button callback"""
         pass  # TODO: Implement
 
-    def onStore(self, event):
+    def on_store(self, _event):
+        """Store button callback"""
         pass  # TODO: Implement
 
-    def onRestore(self, event):
+    def on_restore(self, _event):
+        """Restore button callback"""
         pass  # TODO: Implement
 
-    def onPlot(self, event):
+    def on_plot(self, _event):
+        """Plot button callback"""
         pass  # TODO: Implement
 
-    def onSpeed(self, event):
+    def on_speed(self, _event):
+        """Speed button callback"""
         pass  # TODO: Implement
 
-    def onSettings(self, event):
+    def on_settings(self, _event):
+        """Settings button callback"""
         pass  # TODO: Implement
 
-    def onQuit(self, event):
+    def on_quit(self, _event):
+        """Quit button callback"""
         self.Close()
 
     def on_about(self, _event):
