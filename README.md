@@ -9,6 +9,12 @@ sudo apt install build-essential    # Install GNU compilers.
 sudo apt install libboost-all-dev   # Install boost libraries.
 ```
 
+### Install Zeromq Message Queue Library
+
+``` bash
+sudo apt-get install libzmq3-dev    # Install zeromq message queue library
+```
+
 ### Install clangd language server
 
 ``` bash

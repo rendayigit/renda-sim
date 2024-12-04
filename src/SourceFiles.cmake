@@ -18,4 +18,5 @@ set(SOURCEFILES
 set(INCLUDEDIRS
     ${CMAKE_CURRENT_LIST_DIR}/../
     ${CMAKE_CURRENT_LIST_DIR}/../src/
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/)
+    ${CMAKE_CURRENT_LIST_DIR}/../src/models/
+    ${CMAKE_SOURCE_DIR}/deps/cppzmq-4.10.0)

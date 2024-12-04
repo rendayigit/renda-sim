@@ -17,6 +17,7 @@ add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 add_executable(renda-sim ${SOURCEFILES})
 
 target_link_libraries(renda-sim PRIVATE
-    Boost::filesystem)
+    Boost::filesystem
+    zmq)
 
 target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})
