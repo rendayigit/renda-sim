@@ -24,10 +24,12 @@ set(TESTFILES
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/jsonTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/loggerTest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../tests/services/schedulerTest.cpp
-    # Model Test Files ${CMAKE_CURRENT_LIST_DIR}/../tests/models/pcsTest.cpp //
+    # Model Test Files ${CMAKE_CURRENT_LIST_DIR}/../tests/models/pcsTest.cpp
     # TODO(renda): Add test
 )
 
 set(INCLUDEDIRS
-    ${CMAKE_CURRENT_LIST_DIR}/../src/ ${CMAKE_CURRENT_LIST_DIR}/../src/models/
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/)
+    ${CMAKE_CURRENT_LIST_DIR}/../src/ 
+    ${CMAKE_CURRENT_LIST_DIR}/../src/models/
+    ${CMAKE_CURRENT_LIST_DIR}/../tests/
+    ${CMAKE_SOURCE_DIR}/deps/cppzmq-4.10.0)

@@ -27,6 +27,7 @@ target_link_libraries(tests PRIVATE
     gtest_main
     gtest
     Boost::filesystem
+    zmq
 )
 
 include(GoogleTest)
