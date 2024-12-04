@@ -12,8 +12,8 @@ sudo apt install libboost-all-dev   # Install boost libraries.
 ### Install Zeromq Message Queue Library
 
 ``` bash
-sudo apt-get install libzmq3-dev    # Install zeromq message queue library for engine
-pip install pyzmq                   # Install zeromq message queue library for gui
+sudo apt-get install libzmq3-dev    # Install zeromq message queue library for engine.
+pip install pyzmq                   # Install zeromq message queue library for gui.
 ```
 
 ### Install clangd language server
@@ -25,7 +25,7 @@ sudo apt install clangd             # Install clangd language server.
 ### Install GTest for unit testing
 
 ``` bash
-sudo apt install libgtest-dev       # Install gtest unit testing framework
+sudo apt install libgtest-dev       # Install gtest unit testing framework.
 ```
 
 ### Install Gcovr for code coverage
@@ -47,7 +47,7 @@ sudo apt install gdb                # Install GNU GDB debugger.
 ``` bash
 sudo apt install clang-format       # Install clang-format.
 sudo apt install pre-commit         # Install pre-commit to run clang-format on commit.
-pre-commit install                  # Activate pre-commit hooks
+pre-commit install                  # Activate pre-commit hooks.
 ```
 
 ### Use the scripts under `scripts/`

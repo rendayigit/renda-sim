@@ -14,9 +14,10 @@ jobs:
     steps:
     - name: Install Libraries 
       run:  |
-        sudo apt install build-essential                                    # Install GNU compilers.
-        sudo apt install libboost-all-dev                                   # Install Boost libraries.
-        sudo apt install libgtest-dev                                       # Install Google Test.
+        sudo apt install build-essential    # Install GNU compilers.
+        sudo apt install libboost-all-dev   # Install Boost libraries.
+        sudo apt install libgtest-dev       # Install Google Test.
+        sudo apt-get install libzmq3-dev    # Install zeromq.
         
     - name: Checkout
       uses: actions/checkout@v3
