@@ -3,7 +3,6 @@
 #include <string>
 
 #include "services/scheduler/scheduler.hpp"
-#include "services/serviceContainer.hpp"
 #include "services/timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
@@ -15,8 +14,7 @@ void Scheduler::start() {
   }
 
   m_isRunning = true;
-
-  ServiceContainer::ui()->logMessage("***** Simulation Start *****");
+  std::cout << "***** Simulation Start *****" << std::endl;
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
@@ -28,7 +26,7 @@ void Scheduler::start() {
 
 void Scheduler::stop() {
   m_isRunning = false;
-  ServiceContainer::ui()->logMessage("***** Simulation Stop *****");
+  std::cout << "***** Simulation Stop *****" << std::endl;
 
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();
@@ -51,7 +49,7 @@ void Scheduler::step(long currentMillis) const {
   double timeInSeconds = static_cast<double>(currentMillis) / MILLIS_TO_SECS;
   std::string timeStr = std::to_string(timeInSeconds);
   timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
-  MainWindow::getInstance().updateSimTime(timeStr);
+  // TODO(renda): Transmit time
 
   while (true) {
     // Skip if no events in queue

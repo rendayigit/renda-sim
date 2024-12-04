@@ -2,7 +2,6 @@
 
 #include <string>
 #include <utility>
-#include <wx/treectrl.h>
 
 class ModelItem {
 public:
@@ -16,13 +15,9 @@ public:
 
   ModelItem *getParent() const { return m_parent; }
 
-  wxTreeItemId getTreeParentId() const { return m_treeParentId; }
-
 private:
   std::string m_name;
   std::string m_description;
 
   ModelItem *m_parent;
-
-  wxTreeItemId m_treeParentId{};
 };

@@ -38,7 +38,7 @@ SampleModel::SampleModel()
   ServiceContainer::getInstance().eventManager()->addEvent(m_eventFaster);
   ServiceContainer::getInstance().eventManager()->addEvent(m_eventFastest);
 
-  ServiceContainer::ui()->logMessage("Sample Model Initialized");
+  std::cout << "Sample Model Initialized" << std::endl;
 }
 
 void SampleModel::step(int stepTime) {

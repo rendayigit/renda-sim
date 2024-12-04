@@ -101,6 +101,9 @@ class MainWindow(wx.Frame):
             wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT,
         )
 
+        self.tree_root = self.models_tree.AddRoot("Simulation Models")
+        self.models_tree.Expand(self.tree_root)
+
         # Create the variables list
         self.variable_list = wx.ListCtrl(
             self,

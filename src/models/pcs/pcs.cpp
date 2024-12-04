@@ -39,7 +39,7 @@ void PowerSubsystem::initialize() {
   // TODO(renda): Initialize the power subsystem here
   // Read initial values from JSON
 
-  ServiceContainer::ui()->logMessage("Power Subsystem Initialized");
+  std::cout << "Power Subsystem Initialized" << std::endl;
 }
 
 void PowerSubsystem::step() {
