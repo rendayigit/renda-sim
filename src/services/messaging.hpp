@@ -5,6 +5,7 @@
 #include <zmq.hpp>
 
 constexpr int MESSAGING_THREAD_SLEEP_DURATION = 100;
+constexpr int MESSAGING_NO_CONNECTION_SLEEP_DURATION = 1000;
 
 class Messaging {
 public:
@@ -34,6 +35,7 @@ private:
 
         std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_THREAD_SLEEP_DURATION));
       } catch (std::exception const &e) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_NO_CONNECTION_SLEEP_DURATION));
         continue; // Waiting for a connection
       }
     }
