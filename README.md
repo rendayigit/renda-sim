@@ -12,7 +12,8 @@ sudo apt install libboost-all-dev   # Install boost libraries.
 ### Install Zeromq Message Queue Library
 
 ``` bash
-sudo apt-get install libzmq3-dev    # Install zeromq message queue library
+sudo apt-get install libzmq3-dev    # Install zeromq message queue library for engine
+pip install pyzmq                   # Install zeromq message queue library for gui
 ```
 
 ### Install clangd language server
