@@ -119,7 +119,7 @@ class MainWindow(wx.Frame):
         self.variable_list.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
 
         # Create the logs display
-        self.logs = wx.TextCtrl(
+        self.event_logs = wx.TextCtrl(
             self,
             wx.ID_ANY,
             "",
@@ -135,7 +135,7 @@ class MainWindow(wx.Frame):
         vertical_sizer = wx.BoxSizer(wx.VERTICAL)
         vertical_sizer.Add(top_horizontal_sizer, 0, wx.ALL | wx.EXPAND, 5)
         vertical_sizer.Add(middle_horizontal_sizer, 1, wx.ALL | wx.EXPAND, 5)
-        vertical_sizer.Add(self.logs, 0, wx.ALL | wx.EXPAND, 5)
+        vertical_sizer.Add(self.event_logs, 0, wx.ALL | wx.EXPAND, 5)
 
         self.SetSizerAndFit(vertical_sizer)
 

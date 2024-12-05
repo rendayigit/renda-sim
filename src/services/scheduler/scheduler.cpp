@@ -1,5 +1,4 @@
 #include <chrono>
-#include <iostream>
 #include <string>
 
 #include "services/scheduler/scheduler.hpp"
@@ -16,7 +15,7 @@ void Scheduler::start() {
   }
 
   m_isRunning = true;
-  std::cout << "***** Simulation Start *****" << std::endl;
+  Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Start *****\n");
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
@@ -28,7 +27,7 @@ void Scheduler::start() {
 
 void Scheduler::stop() {
   m_isRunning = false;
-  std::cout << "***** Simulation Stop *****" << std::endl;
+  Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Stop *****\n");
 
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();

@@ -11,6 +11,9 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
+        event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
+        event_logging.start()
+
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
