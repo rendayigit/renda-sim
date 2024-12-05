@@ -4,6 +4,8 @@
 #include <thread>
 #include <zmq.hpp>
 
+#include "services/serviceContainer.hpp"
+
 constexpr int MESSAGING_THREAD_SLEEP_DURATION = 100;
 constexpr int MESSAGING_NO_CONNECTION_SLEEP_DURATION = 1000;
 
@@ -30,8 +32,14 @@ private:
   void messagingStep() {
     while (m_isMessagingThreadRunning) {
       try {
-        m_publisher->send(zmq::str_buffer("HEART_BEAT"), zmq::send_flags::sndmore);
-        m_publisher->send(zmq::str_buffer("ENGINE IS LIVE"));
+        long simTime = ServiceContainer::timer().simMillis();
+        double timeInSeconds = static_cast<double>(simTime) / 1000;
+
+        m_publisher->send(zmq::str_buffer("SIM_TIME"), zmq::send_flags::sndmore);
+        std::string timeStr = std::to_string(timeInSeconds);
+        timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
+        zmq::message_t message(timeStr.data(), timeStr.size());
+        m_publisher->send(message, zmq::send_flags::none);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_THREAD_SLEEP_DURATION));
       } catch (std::exception const &e) {

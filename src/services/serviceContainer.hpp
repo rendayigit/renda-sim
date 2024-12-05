@@ -1,7 +1,7 @@
 #pragma once
 
 #include "services/eventManager/eventManager.hpp"
-#include "services/messaging.hpp"
+// #include "services/messaging.hpp"
 #include "services/scheduler/scheduler.hpp"
 #include "services/timer/timer.hpp"
 
@@ -18,9 +18,9 @@ public:
 
 private:
   ServiceContainer()
-      : m_eventManager(new EventManager), m_scheduler(new Scheduler(m_eventManager)), m_messaging(new Messaging) {}
+      : m_eventManager(new EventManager), m_scheduler(new Scheduler(m_eventManager))/*, m_messaging(new Messaging)*/ {}
 
   EventManager *m_eventManager;
   Scheduler *m_scheduler;
-  Messaging *m_messaging;
+  // Messaging *m_messaging;
 };

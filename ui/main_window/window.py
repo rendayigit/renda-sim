@@ -71,7 +71,7 @@ class MainWindow(wx.Frame):
 
         sim_time_label = wx.StaticText(self, wx.ID_ANY, "Simulation Time (s) ")
 
-        sim_time_display = wx.TextCtrl(
+        self.sim_time_display = wx.TextCtrl(
             self,
             wx.ID_ANY,
             wx.EmptyString,
@@ -90,7 +90,7 @@ class MainWindow(wx.Frame):
 
         top_horizontal_sizer.AddStretchSpacer()
         top_horizontal_sizer.Add(sim_time_label, 0, wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+        top_horizontal_sizer.Add(self.sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
 
         # Create the models tree
         self.models_tree = wx.TreeCtrl(
