@@ -1,6 +1,7 @@
 """Event handlers for Main Window"""
 
 import wx
+from messaging import Messaging
 
 
 class MainWindowHandlers:
@@ -11,6 +12,11 @@ class MainWindowHandlers:
 
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
+
+        # Start receiving sim time updates from the engine
+        messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
+        messaging.start()
+
         self.main_window.start_btn.SetLabel("Stop")
         self.main_window.SetStatusText("Simulation running...")
 

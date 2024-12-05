@@ -2,7 +2,6 @@
 
 import wx
 from main_window.window import MainWindow
-from messaging import Messaging
 
 
 class Application(wx.App):
@@ -12,7 +11,6 @@ class Application(wx.App):
         """Function called when UI is ready"""
         frame = MainWindow(None, title="Renda Sim GUI")
         frame.Show()
-        messaging = Messaging(frame)
         return True
 
 

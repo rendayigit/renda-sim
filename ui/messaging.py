@@ -9,27 +9,38 @@ import zmq
 class Messaging:
     """Messaging utilities for GUI"""
 
-    def __init__(self, main_window):
-        self.window = main_window
+    def __init__(self, topic, callable_func):
+        self.topic = topic
+        self.callable_func = callable_func
 
         context = zmq.Context(1)
 
         self.subscriber = context.socket(zmq.SUB)
         self.subscriber.connect("tcp://localhost:12345")
 
-        self.subscriber.set(zmq.SUBSCRIBE, "SIM_TIME".encode())
+        self.subscriber.set(zmq.SUBSCRIBE, topic.encode())
 
-        thread = threading.Thread(target=self.messaging_thread)
-        thread.start()
+        self.thread = threading.Thread(target=self._messaging_thread)
+        self.is_running = True
 
-    def messaging_thread(self):
+    def start(self):
+        """Starts the messaging thread"""
+        self.is_running = True
+        self.thread.start()
+
+    def stop(self):
+        """Stops the messaging thread"""
+        self.is_running = False
+        self.thread.join()
+
+    def _messaging_thread(self):
         """Messeging thread"""
-        while True:
+        while self.is_running:
             frames = self.subscriber.recv_multipart(copy=False)
             topic = bytes(frames[0]).decode()
             messagedata = bytes(frames[1]).decode()
 
-            if topic == "SIM_TIME":
-                wx.CallAfter(self.window.sim_time_display.ChangeValue, messagedata)
+            if topic == self.topic:
+                wx.CallAfter(self.callable_func, messagedata)
 
             time.sleep(0.01)
