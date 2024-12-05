@@ -5,6 +5,8 @@
 #include "services/scheduler/scheduler.hpp"
 #include "services/timer/timer.hpp"
 
+#include "services/messaging.hpp"
+
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 
@@ -50,6 +52,7 @@ void Scheduler::step(long currentMillis) const {
   std::string timeStr = std::to_string(timeInSeconds);
   timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
   // TODO(renda): Transmit time
+  Messaging::getInstance().queueMessage("SIM_TIME", timeStr);
 
   while (true) {
     // Skip if no events in queue
