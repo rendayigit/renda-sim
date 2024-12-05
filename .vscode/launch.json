@@ -1,13 +1,19 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Sim",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/renda-sim",
-            "args": [],
-            "cwd": "${workspaceFolder}/bin/"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python GUI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ui/main.py"
+    },
+    {
+      "name": "Sim",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/renda-sim",
+      "args": [],
+      "cwd": "${workspaceFolder}/bin/"
+    }
+  ]
 }

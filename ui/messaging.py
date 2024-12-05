@@ -1,9 +1,9 @@
 """Messaging utilities for GUI"""
 
-import wx
-import zmq
 import threading
 import time
+import wx
+import zmq
 
 
 class Messaging:
@@ -12,25 +12,24 @@ class Messaging:
     def __init__(self, main_window):
         self.window = main_window
 
-        self.context = zmq.Context(1)
+        context = zmq.Context(1)
 
-        self.subscriber = self.context.socket(zmq.SUB)
+        self.subscriber = context.socket(zmq.SUB)
         self.subscriber.connect("tcp://localhost:12345")
 
         self.subscriber.set(zmq.SUBSCRIBE, "SIM_TIME".encode())
 
-        self.thread = threading.Thread(target=self.messaging_thread)
-        self.thread.start()
+        thread = threading.Thread(target=self.messaging_thread)
+        thread.start()
 
     def messaging_thread(self):
         """Messeging thread"""
         while True:
-            # Receive a message from the server
-            message = self.subscriber.recv_string()
+            frames = self.subscriber.recv_multipart(copy=False)
+            topic = bytes(frames[0]).decode()
+            messagedata = bytes(frames[1]).decode()
 
-            if message == "SIM_TIME":
-                continue
-
-            wx.CallAfter(self.window.sim_time_display.ChangeValue, message)
+            if topic == "SIM_TIME":
+                wx.CallAfter(self.window.sim_time_display.ChangeValue, messagedata)
 
             time.sleep(0.01)
