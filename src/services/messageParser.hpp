@@ -35,6 +35,11 @@ private:
       // TODO(renda): Implement
       // Messaging::getInstance().reply("ENGINE ONLINE");
     };
+
+    m_functionMap["SCHEDULER_STATUS"] = [](const std::string & /*message*/) {
+      // TODO(renda): Implement
+      // ServiceContainer::getInstance().scheduler()->isRunning()
+    };
   }
 
   std::map<std::string, std::function<void(std::string)>> m_functionMap;

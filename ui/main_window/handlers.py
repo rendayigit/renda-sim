@@ -1,8 +1,8 @@
 """Event handlers for Main Window"""
 
 import wx
-import zmq # TODO: Remove after testing
 from messaging import Messaging
+from commanding import Commanding
 
 
 class MainWindowHandlers:
@@ -11,24 +11,21 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
+        self.messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
+
         event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
         event_logging.start()
 
-    # TODO(renda): Refactor
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        if self.main_window.start_btn.GetLabel() == "Start":
+        scheduler_running = Commanding().request("SCHEDULER_STATUS")
+
+        if scheduler_running == "STOPPED":
             # Start receiving sim time updates from the engine
-            self.messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
             self.messaging.start()
 
-            context = zmq.Context(1)
-
-            sock = context.socket(zmq.PAIR)
-            sock.connect("tcp://localhost:12340")
-
-            sock.send("START".encode())
+            Commanding().transmit("START")
 
             self.main_window.start_btn.SetLabel("Stop")
             self.main_window.SetStatusText("Simulation running...")
@@ -36,12 +33,7 @@ class MainWindowHandlers:
             # Stop receiving sim time updates from the engine
             self.messaging.stop()
 
-            context = zmq.Context(1)
-
-            sock = context.socket(zmq.PAIR)
-            sock.connect("tcp://localhost:12340")
-
-            sock.send("STOP".encode())
+            Commanding().transmit("STOP")
 
             self.main_window.start_btn.SetLabel("Start")
             self.main_window.SetStatusText("Simulation stopped.")

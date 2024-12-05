@@ -68,6 +68,11 @@ private:
         continue;
       }
 
+      if (command == "SCHEDULER_STATUS") {
+        Messaging::getInstance().reply(ServiceContainer::getInstance().scheduler()->isRunning() ? "RUNNING"
+                                                                                                : "STOPPED");
+      }
+
       MessageParser::getInstance().executeCommand(command);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION));
