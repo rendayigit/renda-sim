@@ -7,6 +7,7 @@
 #include <vector>
 #include <zmq.hpp>
 
+#include "services/messageParser.hpp"
 #include "services/serviceContainer.hpp"
 
 constexpr int MESSAGING_MAX_COMMAND_SIZE = 1024;
@@ -30,13 +31,15 @@ public:
     delete m_publisherContext;
   }
 
-  void queueMessage(const std::string &topic, const std::string &data) {
+  void queueMessage(const std::string &topic, const std::string &message) {
     zmq::message_t zTopic(topic.data(), topic.size());
-    zmq::message_t zData(data.data(), data.size());
+    zmq::message_t zMessage(message.data(), message.size());
 
     m_publisher->send(zTopic, zmq::send_flags::sndmore);
-    m_publisher->send(zData, zmq::send_flags::none);
+    m_publisher->send(zMessage, zmq::send_flags::none);
   }
+
+  void reply(const std::string &message) { m_commandReceiver->send(zmq::buffer(message)); }
 
 private:
   explicit Messaging()
@@ -59,14 +62,13 @@ private:
 
       std::cout << "Received: " << command << std::endl; // TODO(renda): Remove after testing
 
-      // TODO(renda): Refactor
-      if (command == "START") {
-        ServiceContainer::getInstance().scheduler()->start();
-      } else if (command == "STOP") {
-        ServiceContainer::getInstance().scheduler()->stop();
-      } else if (command == "STATUS") {
-        m_commandReceiver->send(zmq::str_buffer("ENGINE ONLINE"));
+      // TODO(renda): Move to MessageParser
+      if (command == "STATUS") {
+        Messaging::getInstance().reply("ENGINE ONLINE");
+        continue;
       }
+
+      MessageParser::getInstance().executeCommand(command);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION));
     }
