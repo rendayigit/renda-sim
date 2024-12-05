@@ -1,6 +1,7 @@
 """Event handlers for Main Window"""
 
 import wx
+import zmq # TODO: Remove after testing
 from messaging import Messaging
 
 
@@ -13,12 +14,33 @@ class MainWindowHandlers:
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        # Start receiving sim time updates from the engine
-        messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
-        messaging.start()
+        if self.main_window.start_btn.GetLabel() == "Start":
+            # Start receiving sim time updates from the engine
+            self.messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
+            self.messaging.start()
 
-        self.main_window.start_btn.SetLabel("Stop")
-        self.main_window.SetStatusText("Simulation running...")
+            context = zmq.Context(1)
+
+            sock = context.socket(zmq.PAIR)
+            sock.connect("tcp://localhost:12340")
+
+            sock.send("START".encode())
+
+            self.main_window.start_btn.SetLabel("Stop")
+            self.main_window.SetStatusText("Simulation running...")
+        else:
+            # Stop receiving sim time updates from the engine
+            self.messaging.stop()
+
+            context = zmq.Context(1)
+
+            sock = context.socket(zmq.PAIR)
+            sock.connect("tcp://localhost:12340")
+
+            sock.send("STOP".encode())
+
+            self.main_window.start_btn.SetLabel("Start")
+            self.main_window.SetStatusText("Simulation stopped.")
 
         # TODO: Implement
 
