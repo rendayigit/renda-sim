@@ -1,6 +1,7 @@
 """Renda Sim GUI Main Window"""
 
 import wx
+import zmq # TODO: Remove after testing
 from main_window.bind import MainWindowEventBinder
 
 
@@ -141,3 +142,11 @@ class MainWindow(wx.Frame):
 
         # Initialize binders
         self.binder = MainWindowEventBinder(self)
+
+        # TODO(renda): Refactor
+        context = zmq.Context(1)
+        sock = context.socket(zmq.PAIR)
+        sock.connect("tcp://localhost:12340")
+        sock.send("STATUS".encode())
+        resp = sock.recv()
+        self.SetStatusText(resp.decode())

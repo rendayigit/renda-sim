@@ -14,6 +14,7 @@ class MainWindowHandlers:
         event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
         event_logging.start()
 
+    # TODO(renda): Refactor
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
@@ -44,8 +45,6 @@ class MainWindowHandlers:
 
             self.main_window.start_btn.SetLabel("Start")
             self.main_window.SetStatusText("Simulation stopped.")
-
-        # TODO: Implement
 
     def on_stop_at(self, _event):
         """Stop at button callback"""

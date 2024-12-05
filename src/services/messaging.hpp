@@ -59,10 +59,13 @@ private:
 
       std::cout << "Received: " << command << std::endl; // TODO(renda): Remove after testing
 
+      // TODO(renda): Refactor
       if (command == "START") {
         ServiceContainer::getInstance().scheduler()->start();
       } else if (command == "STOP") {
         ServiceContainer::getInstance().scheduler()->stop();
+      } else if (command == "STATUS") {
+        m_commandReceiver->send(zmq::str_buffer("ENGINE ONLINE"));
       }
 
       std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION));
