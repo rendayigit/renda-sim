@@ -15,13 +15,17 @@ public:
   explicit Scheduler(EventManager *eventManager)
       : m_stepTimeMicros(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME_MICROS").getValue<double>()),
         m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()),
-        m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
+        m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {
+    setRate(m_rate);
+  }
 
   ~Scheduler() { stop(); }
 
   void start();
   void stop();
   void reset();
+
+  void setRate(double rate);
 
   void progressTime(long millis);
 

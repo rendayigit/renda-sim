@@ -2,6 +2,7 @@
 #include <string>
 
 #include "services/scheduler/scheduler.hpp"
+#include "services/serviceContainer.hpp"
 #include "services/timer/timer.hpp"
 
 #include "services/messaging.hpp"
@@ -39,6 +40,13 @@ void Scheduler::stop() {
 void Scheduler::reset() {
   Timer::getInstance().reset();
   // TODO(renda): Reset all events and models
+}
+
+void Scheduler::setRate(double rate) {
+  Logger *logger = ServiceContainer::getInstance().logger();
+  int currentLoggerBufferLimit = logger->getLogBufferLimit();
+  logger->setLogBufferLimit(currentLoggerBufferLimit + currentLoggerBufferLimit * (int)rate / 10);
+  m_rate = rate;
 }
 
 void Scheduler::progressTime(long millis) {

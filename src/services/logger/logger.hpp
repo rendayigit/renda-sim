@@ -5,8 +5,6 @@
 #include <mutex>
 #include <string>
 
-#define LOG_BUFFER__DEFAULT_LIMIT 50 // Limit for the log buffer before flushing
-
 // Enum to represent different levels of logging
 enum LogLevel {
   LOG_INFO,    // Informational messages
@@ -25,7 +23,7 @@ public:
    * @param logFilePath Full path of the log file
    * @param logBufferLimit Buffer limit to flush logs
    */
-  explicit Logger(std::string logFilePath = "", int logBufferLimit = LOG_BUFFER__DEFAULT_LIMIT);
+  explicit Logger(std::string logFilePath = "");
 
   /**
    * @brief Destroy the Logger object
@@ -46,6 +44,20 @@ public:
    *
    */
   void flush();
+
+  /**
+   * @brief Get logger buffer limit
+   *
+   * @return m_logBufferLimit logger buffer limit
+   */
+  int getLogBufferLimit() const { return m_logBufferLimit; }
+
+  /**
+   * @brief Set logger buffer limit
+   *
+   * @param logBufferLimit The new logger buffer limit
+   */
+  void setLogBufferLimit(int logBufferLimit) { m_logBufferLimit = logBufferLimit; }
 
 private:
   std::mutex m_mutex;         // Mutex to ensure thread-safe access to the logger
