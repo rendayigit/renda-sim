@@ -15,9 +15,7 @@ public:
   explicit Scheduler(EventManager *eventManager)
       : m_stepTimeMicros(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME_MICROS").getValue<double>()),
         m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()),
-        m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {
-    setRate(m_rate);
-  }
+        m_eventManagerInstance(eventManager), m_eventQueueInstance(m_eventManagerInstance->getEventQueue()) {}
 
   ~Scheduler() { stop(); }
 

@@ -18,6 +18,8 @@ void Scheduler::start() {
   m_isRunning = true;
   Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Start *****\n");
 
+  setRate(m_rate);
+
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
       std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
@@ -46,6 +48,8 @@ void Scheduler::setRate(double rate) {
   Logger *logger = ServiceContainer::getInstance().logger();
   int currentLoggerBufferLimit = logger->getLogBufferLimit();
   logger->setLogBufferLimit(currentLoggerBufferLimit + currentLoggerBufferLimit * (int)rate / 10);
+  std::cout << "Rate: " << rate << std::endl;
+  std::cout << "buffer limit: " << logger->getLogBufferLimit();
   m_rate = rate;
 }
 
