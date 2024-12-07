@@ -3,6 +3,7 @@
 import wx
 from messaging import Messaging
 from commanding import Commanding
+from engine_controls.window import EngineControls
 
 
 class MainWindowHandlers:
@@ -16,10 +17,15 @@ class MainWindowHandlers:
         event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
         event_logging.start()
 
-        scheduler_running = Commanding().request("SCHEDULER_STATUS")
+        scheduler_running = Commanding().request("SCHEDULER_STATUS")  # TODO(renda): Need timeout option or blocks forever
 
         if scheduler_running == "RUNNING":
             self._start()
+
+    def on_engine(self, _event):
+        """Engine button callback"""
+        engine_window = EngineControls(None, title="Engine Controls")
+        engine_window.Show()
 
     def on_start_stop(self, _event):
         """Start/Stop button callback"""

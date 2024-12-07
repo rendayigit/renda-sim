@@ -19,6 +19,7 @@ class MainWindow(wx.Frame):
 
         # Create the File Menu
         file_menu = wx.Menu()
+        self.engine_menu_item = file_menu.Append(wx.ID_ANY, "Engine Controls", "Start/Connect to the engine")
         self.start_stop_menu_item = file_menu.Append(wx.ID_ANY, "&Start/Stop\tCtrl+R", "Start/Stop the simulation")
         self.reset_menu_item = file_menu.Append(wx.ID_ANY, "Reset\tCtrl+X", "Reset the simulation")
         self.stop_at_menu_item = file_menu.Append(wx.ID_ANY, "Stop At", "Stop the simulation at given time")
@@ -55,6 +56,11 @@ class MainWindow(wx.Frame):
         # Set the MenuBar for the frame
         self.SetMenuBar(menu_bar)
 
+        self.engine_btn = wx.Button(self, wx.ID_ANY, "Engine Controls", wx.DefaultPosition, wx.DefaultSize)
+
+        self.engine_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
+        self.engine_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
+
         self.start_btn = wx.Button(self, wx.ID_ANY, "Start", wx.DefaultPosition, wx.DefaultSize)
 
         self.start_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
@@ -82,6 +88,7 @@ class MainWindow(wx.Frame):
         )
 
         top_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        top_horizontal_sizer.Add(self.engine_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         top_horizontal_sizer.Add(self.start_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         top_horizontal_sizer.Add(self.reset_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         top_horizontal_sizer.Add(self.step_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)

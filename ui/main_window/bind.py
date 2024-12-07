@@ -14,6 +14,7 @@ class MainWindowEventBinder:
         self.handlers = MainWindowHandlers(main_window)
 
         # Bind menu events
+        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_engine, self.main_window.engine_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_start_stop, self.main_window.start_stop_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_stop_at, self.main_window.stop_at_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_stop_in, self.main_window.stop_in_menu_item)
@@ -29,6 +30,7 @@ class MainWindowEventBinder:
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_about, self.main_window.about_menu_item)
 
         # Bind button events
+        self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_engine, self.main_window.engine_btn)
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_start_stop, self.main_window.start_btn)
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_reset, self.main_window.reset_btn)
         self.main_window.Bind(wx.EVT_BUTTON, self.handlers.on_step, self.main_window.step_btn)
