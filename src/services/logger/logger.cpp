@@ -1,17 +1,21 @@
-#include "logger.hpp"
-#include "services/fileOperations.hpp"
-
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <iostream>
 
+#include "logger.hpp"
+#include "services/fileOperations.hpp"
+#include "services/json/json.hpp"
+
+const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirectory() + "/../config.json";
+
 // Map to convert LogLevel enum values to string representations
 const std::map<LogLevel, std::string> LOG_LEVEL_MAP = {
     {LogLevel::LOG_ERROR, "ERROR"}, {LogLevel::LOG_INFO, "INFO"}, {LogLevel::LOG_WARNING, "WARNING"}};
 
-Logger::Logger(std::string logFilePath, int logBufferLimit)
-    : m_logFilePath(std::move(logFilePath)), m_logBufferLimit(logBufferLimit) {
+Logger::Logger(std::string logFilePath)
+    : m_logFilePath(std::move(logFilePath)),
+      m_logBufferLimit(Json(CONFIG_PATH).getNode("LOGGER_BUFFER_FLUSH_LIMIT").getValue<int>()) {
   // Get current date as string
   std::string localDate = boost::gregorian::to_simple_string(boost::posix_time::second_clock::local_time().date());
 
@@ -80,4 +84,3 @@ void Logger::flush() {
   // Close the file writer
   m_logFile.close();
 }
-

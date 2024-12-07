@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
+
 #include "common/modelVariable.hpp"
 #include "services/eventManager/eventManager.hpp"
 #include "services/eventManager/simpleEvent.hpp"
 #include "services/logger/logger.hpp"
-#include <string>
 
 class SampleModel : Model {
 public:
@@ -12,7 +13,7 @@ public:
   void step(int stepTime);
 
 private:
-  Logger m_logger;
+  Logger *m_logger;
 
   SimpleEvent *m_eventSlow;
   SimpleEvent *m_eventFast;

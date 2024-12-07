@@ -2,12 +2,14 @@
 #include <string>
 
 #include "services/scheduler/scheduler.hpp"
+#include "services/serviceContainer.hpp"
 #include "services/timer/timer.hpp"
 
 #include "services/messaging.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
+constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
 void Scheduler::start() {
   if (m_lastStopTicks != 0) {
@@ -16,6 +18,8 @@ void Scheduler::start() {
 
   m_isRunning = true;
   Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Start *****\n");
+
+  setRate(m_rate);
 
   m_schedulerThread = std::thread([&] {
     while (m_isRunning) {
@@ -39,6 +43,12 @@ void Scheduler::stop() {
 void Scheduler::reset() {
   Timer::getInstance().reset();
   // TODO(renda): Reset all events and models
+}
+
+void Scheduler::setRate(double rate) {
+  Logger *logger = ServiceContainer::getInstance().logger();
+  logger->setLogBufferLimit(static_cast<int>(rate) * LOGGER_RATE_MULTIPLIER);
+  m_rate = rate;
 }
 
 void Scheduler::progressTime(long millis) {

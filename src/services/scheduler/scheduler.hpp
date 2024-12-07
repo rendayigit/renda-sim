@@ -23,6 +23,8 @@ public:
   void stop();
   void reset();
 
+  void setRate(double rate);
+
   void progressTime(long millis);
 
   bool isRunning() const { return m_isRunning; }
