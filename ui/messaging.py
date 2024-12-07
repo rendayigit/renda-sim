@@ -25,13 +25,17 @@ class Messaging:
 
     def start(self):
         """Starts the messaging thread"""
-        self.is_running = True
+        if not self.is_running:
+            self.is_running = True
+            self.thread = threading.Thread(target=self._messaging_thread)
+
         self.thread.start()
 
     def stop(self):
         """Stops the messaging thread"""
-        self.is_running = False
-        self.thread.join()
+        if self.thread.is_alive():
+            self.is_running = False
+            self.thread.join()
 
     def _messaging_thread(self):
         """Messeging thread"""

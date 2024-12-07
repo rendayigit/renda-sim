@@ -9,6 +9,7 @@
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
+constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
 void Scheduler::start() {
   if (m_lastStopTicks != 0) {
@@ -46,10 +47,7 @@ void Scheduler::reset() {
 
 void Scheduler::setRate(double rate) {
   Logger *logger = ServiceContainer::getInstance().logger();
-  int currentLoggerBufferLimit = logger->getLogBufferLimit();
-  logger->setLogBufferLimit(currentLoggerBufferLimit + currentLoggerBufferLimit * (int)rate / 10);
-  std::cout << "Rate: " << rate << std::endl;
-  std::cout << "buffer limit: " << logger->getLogBufferLimit();
+  logger->setLogBufferLimit(static_cast<int>(rate) * LOGGER_RATE_MULTIPLIER);
   m_rate = rate;
 }
 

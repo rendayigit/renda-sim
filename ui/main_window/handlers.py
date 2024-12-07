@@ -16,27 +16,34 @@ class MainWindowHandlers:
         event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
         event_logging.start()
 
+        scheduler_running = Commanding().request("SCHEDULER_STATUS")
+
+        if scheduler_running == "RUNNING":
+            self._start()
+
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
         scheduler_running = Commanding().request("SCHEDULER_STATUS")
 
         if scheduler_running == "STOPPED":
-            # Start receiving sim time updates from the engine
-            self.messaging.start()
-
+            self._start()
             Commanding().transmit("START")
-
-            self.main_window.start_btn.SetLabel("Stop")
-            self.main_window.SetStatusText("Simulation running...")
         else:
-            # Stop receiving sim time updates from the engine
-            self.messaging.stop()
-
+            self._stop()
             Commanding().transmit("STOP")
 
-            self.main_window.start_btn.SetLabel("Start")
-            self.main_window.SetStatusText("Simulation stopped.")
+    def _start(self):
+        """Start receiving sim time updates from the engine"""
+        self.messaging.start()
+        self.main_window.start_btn.SetLabel("Stop")
+        self.main_window.SetStatusText("Simulation running...")
+
+    def _stop(self):
+        """Stop receiving sim time updates from the engine"""
+        self.messaging.stop()
+        self.main_window.start_btn.SetLabel("Start")
+        self.main_window.SetStatusText("Simulation stopped.")
 
     def on_stop_at(self, _event):
         """Stop at button callback"""
