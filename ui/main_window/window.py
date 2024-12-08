@@ -9,7 +9,7 @@ class MainWindow(wx.Frame):
     """Main Window Class"""
 
     def __init__(self, parent, title):
-        super().__init__(parent, title=title)
+        super().__init__(parent, title=title, size=(1200, 600))
 
         self.CreateStatusBar()
         self.SetStatusText("Simulator ready")
@@ -56,30 +56,32 @@ class MainWindow(wx.Frame):
         # Set the MenuBar for the frame
         self.SetMenuBar(menu_bar)
 
-        self.engine_btn = wx.Button(self, wx.ID_ANY, "Engine Controls", wx.DefaultPosition, wx.DefaultSize)
+        controls_panel = wx.Panel(self, wx.ID_ANY)
+
+        self.engine_btn = wx.Button(controls_panel, wx.ID_ANY, "Engine Controls", wx.DefaultPosition, wx.DefaultSize)
 
         self.engine_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
         self.engine_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
 
-        self.start_btn = wx.Button(self, wx.ID_ANY, "Start", wx.DefaultPosition, wx.DefaultSize)
+        self.start_btn = wx.Button(controls_panel, wx.ID_ANY, "Start", wx.DefaultPosition, wx.DefaultSize)
 
         self.start_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
         self.start_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
 
-        self.reset_btn = wx.Button(self, wx.ID_ANY, "Reset", wx.DefaultPosition, wx.DefaultSize)
+        self.reset_btn = wx.Button(controls_panel, wx.ID_ANY, "Reset", wx.DefaultPosition, wx.DefaultSize)
 
         self.reset_btn.SetBackgroundColour(wx.Colour("#ff4545"))
         self.reset_btn.SetForegroundColour(wx.Colour("white"))
 
-        self.step_btn = wx.Button(self, wx.ID_ANY, "Step", wx.DefaultPosition, wx.DefaultSize)
-        self.store_btn = wx.Button(self, wx.ID_ANY, "Store", wx.DefaultPosition, wx.DefaultSize)
-        self.restore_btn = wx.Button(self, wx.ID_ANY, "Restore", wx.DefaultPosition, wx.DefaultSize)
-        self.plot_btn = wx.Button(self, wx.ID_ANY, "Plot", wx.DefaultPosition, wx.DefaultSize)
+        self.step_btn = wx.Button(controls_panel, wx.ID_ANY, "Step", wx.DefaultPosition, wx.DefaultSize)
+        self.store_btn = wx.Button(controls_panel, wx.ID_ANY, "Store", wx.DefaultPosition, wx.DefaultSize)
+        self.restore_btn = wx.Button(controls_panel, wx.ID_ANY, "Restore", wx.DefaultPosition, wx.DefaultSize)
+        self.plot_btn = wx.Button(controls_panel, wx.ID_ANY, "Plot", wx.DefaultPosition, wx.DefaultSize)
 
-        sim_time_label = wx.StaticText(self, wx.ID_ANY, "Simulation Time (s) ")
+        sim_time_label = wx.StaticText(controls_panel, wx.ID_ANY, "Simulation Time (s) ")
 
         self.sim_time_display = wx.TextCtrl(
-            self,
+            controls_panel,
             wx.ID_ANY,
             wx.EmptyString,
             wx.DefaultPosition,
@@ -87,37 +89,57 @@ class MainWindow(wx.Frame):
             wx.TE_READONLY,
         )
 
-        top_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        top_horizontal_sizer.Add(self.engine_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.start_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.reset_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.step_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.store_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.restore_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.plot_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        controls_sizer.Add(self.engine_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.start_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.reset_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.step_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.store_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.restore_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.plot_btn, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        top_horizontal_sizer.AddStretchSpacer()
-        top_horizontal_sizer.Add(sim_time_label, 0, wx.ALIGN_CENTER_VERTICAL, 5)
-        top_horizontal_sizer.Add(self.sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.AddStretchSpacer()
+        controls_sizer.Add(sim_time_label, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+        controls_sizer.Add(self.sim_time_display, 0, wx.ALIGN_CENTER_VERTICAL, 5)
+
+        controls_panel.SetSizerAndFit(controls_sizer)
+
+        events_splitter = wx.SplitterWindow(self)
+
+        variables_panel = wx.Panel(events_splitter, wx.ID_ANY)
+
+        variables_splitter = wx.SplitterWindow(variables_panel, wx.ID_ANY)
+
+        variables_sizer = wx.BoxSizer(wx.VERTICAL)
+        variables_sizer.Add(variables_splitter, 1, wx.ALL | wx.EXPAND, 5)
+        variables_panel.SetSizer(variables_sizer)
+
+        self.tree_panel = wx.Panel(variables_splitter, wx.ID_ANY)
 
         # Create the models tree
         self.models_tree = wx.TreeCtrl(
-            self,
+            self.tree_panel,
             wx.ID_ANY,
             wx.DefaultPosition,
-            wx.Size(300, 400),
+            wx.DefaultSize,
             wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT,
         )
 
         self.tree_root = self.models_tree.AddRoot("Simulation Models")
         self.models_tree.Expand(self.tree_root)
 
+        tree_sizer = wx.BoxSizer(wx.VERTICAL)
+        tree_sizer.Add(self.models_tree, 1, wx.ALL | wx.EXPAND, 5)
+        self.tree_panel.SetSizer(tree_sizer)
+
+        self.variable_list_panel = wx.Panel(variables_splitter, wx.ID_ANY)
+
         # Create the variables list
         self.variable_list = wx.ListCtrl(
-            self,
+            self.variable_list_panel,
             wx.ID_ANY,
             wx.DefaultPosition,
-            wx.Size(1000, 400),
+            wx.DefaultSize,
             wx.LC_REPORT,
         )
 
@@ -126,26 +148,39 @@ class MainWindow(wx.Frame):
         self.variable_list.InsertColumn(2, "Value", wx.LIST_FORMAT_LEFT, 150)
         self.variable_list.InsertColumn(3, "Type", wx.LIST_FORMAT_LEFT, 100)
 
+        variable_list_sizer = wx.BoxSizer(wx.VERTICAL)
+        variable_list_sizer.Add(self.variable_list, 1, wx.ALL | wx.EXPAND, 5)
+        self.variable_list_panel.SetSizer(variable_list_sizer)
+
+        variables_splitter.SplitVertically(self.tree_panel, self.variable_list_panel)
+
+        self.events_panel = wx.Panel(events_splitter, wx.ID_ANY)
+
         # Create the logs display
         self.event_logs = wx.TextCtrl(
-            self,
+            self.events_panel,
             wx.ID_ANY,
-            "",
+            " Event Logs:\n",
             wx.DefaultPosition,
-            wx.Size(1200, 100),
+            wx.DefaultSize,
             wx.TE_READONLY | wx.TE_MULTILINE,
         )
 
-        middle_horizontal_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        middle_horizontal_sizer.Add(self.models_tree, 0, wx.ALL | wx.EXPAND, 5)
-        middle_horizontal_sizer.Add(self.variable_list, 1, wx.ALL | wx.EXPAND, 5)
+        self.events_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.events_sizer.Add(self.event_logs, 1, wx.ALL | wx.EXPAND, 5)
 
-        vertical_sizer = wx.BoxSizer(wx.VERTICAL)
-        vertical_sizer.Add(top_horizontal_sizer, 0, wx.ALL | wx.EXPAND, 5)
-        vertical_sizer.Add(middle_horizontal_sizer, 1, wx.ALL | wx.EXPAND, 5)
-        vertical_sizer.Add(self.event_logs, 0, wx.ALL | wx.EXPAND, 5)
+        self.events_panel.SetSizer(self.events_sizer)
 
-        self.SetSizerAndFit(vertical_sizer)
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        main_sizer.Add(controls_panel, 0, wx.EXPAND | wx.ALL, 5)
+        main_sizer.Add(events_splitter, 1, wx.EXPAND | wx.ALL, 5)
+        self.SetSizer(main_sizer)
+
+        variables_splitter.SplitVertically(self.tree_panel, self.variable_list_panel)
+        variables_splitter.SetMinimumPaneSize(300)
+
+        events_splitter.SplitHorizontally(variables_panel, self.events_panel)
+        events_splitter.SetMinimumPaneSize(350)
 
         # Initialize binders
         self.binder = MainWindowEventBinder(self)
