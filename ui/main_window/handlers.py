@@ -12,7 +12,11 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        self.messaging = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
+        self.sim_timing = Messaging("SIM_TIME", self.main_window.sim_time_display.ChangeValue)
+
+        model_tree_json = Commanding().request_json("MODEL_TREE")
+
+        self.populate_tree(self.main_window.models_tree, model_tree_json, self.main_window.tree_root)
 
         event_logging = Messaging("EVENT_LOG", self.main_window.event_logs.AppendText)
         event_logging.start()
@@ -21,6 +25,18 @@ class MainWindowHandlers:
 
         if scheduler_running == "RUNNING":
             self._start()
+
+    # TODO(renda): Make static
+    def populate_tree(self, tree_ctrl, json_data, parent_item=None):
+        """Populate tree control with JSON data"""
+        for key, value in json_data.items():
+            if isinstance(value, list):
+                item = tree_ctrl.AppendItem(parent_item, key)
+                for item_text in value:
+                    tree_ctrl.AppendItem(item, item_text)
+            elif isinstance(value, dict):
+                item = tree_ctrl.AppendItem(parent_item, key)
+                self.populate_tree(tree_ctrl, value, item)
 
     def on_engine(self, _event):
         """Engine button callback"""
@@ -41,13 +57,13 @@ class MainWindowHandlers:
 
     def _start(self):
         """Start receiving sim time updates from the engine"""
-        self.messaging.start()
+        self.sim_timing.start()
         self.main_window.start_btn.SetLabel("Stop")
         self.main_window.SetStatusText("Simulation running...")
 
     def _stop(self):
         """Stop receiving sim time updates from the engine"""
-        self.messaging.stop()
+        self.sim_timing.stop()
         self.main_window.start_btn.SetLabel("Start")
         self.main_window.SetStatusText("Simulation stopped.")
 

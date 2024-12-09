@@ -8,6 +8,7 @@
 #include <zmq.hpp>
 
 #include "services/messageParser.hpp"
+#include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
 
 constexpr int MESSAGING_MAX_COMMAND_SIZE = 1024;
@@ -68,9 +69,17 @@ private:
         continue;
       }
 
+      // TODO(renda): Move to MessageParser
       if (command == "SCHEDULER_STATUS") {
         Messaging::getInstance().reply(ServiceContainer::getInstance().scheduler()->isRunning() ? "RUNNING"
                                                                                                 : "STOPPED");
+        continue;
+      }
+
+      // TODO(renda): Move to MessageParser
+      if (command == "MODEL_TREE") {
+        Messaging::getInstance().reply(ModelContainer::getInstance().getModelTreeJson().dump());
+        continue;
       }
 
       MessageParser::getInstance().executeCommand(command);
