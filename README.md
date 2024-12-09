@@ -4,33 +4,39 @@
 
 ### Install GNU compilers
 
-``` bash
+```bash
 sudo apt install build-essential    # Install GNU compilers.
 sudo apt install libboost-all-dev   # Install boost libraries.
 ```
 
 ### Install Zeromq Message Queue Library
 
-``` bash
+```bash
 sudo apt-get install libzmq3-dev    # Install zeromq message queue library for engine.
 pip install pyzmq                   # Install zeromq message queue library for gui.
 ```
 
+### Install nlohmann JSON library
+
+```bash
+sudo apt install nlohmann-json3-dev # Install nlohmann json library.
+```
+
 ### Install clangd language server
 
-``` bash
+```bash
 sudo apt install clangd             # Install clangd language server.
 ```
 
 ### Install GTest for unit testing
 
-``` bash
+```bash
 sudo apt install libgtest-dev       # Install gtest unit testing framework.
 ```
 
 ### Install Gcovr for code coverage
 
-``` bash
+```bash
 cd ~
 sudo apt install python3-pip        # Install python package manager.
 pip install gcovr                   # Install gcovr code coverage tool.
@@ -38,13 +44,13 @@ pip install gcovr                   # Install gcovr code coverage tool.
 
 ### Install GDB for debugging
 
-``` bash
+```bash
 sudo apt install gdb                # Install GNU GDB debugger.
 ```
 
 ### Install clang-format and pre-commit for code formatting
 
-``` bash
+```bash
 sudo apt install clang-format       # Install clang-format.
 sudo apt install pre-commit         # Install pre-commit to run clang-format on commit.
 pre-commit install                  # Activate pre-commit hooks.

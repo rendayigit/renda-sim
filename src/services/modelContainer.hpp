@@ -1,9 +1,11 @@
 #pragma once
 
+#include <iostream>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
-#include "common/modelItem.hpp"
+#include "common/model.hpp"
 
 class ModelContainer {
 public:
@@ -13,7 +15,7 @@ public:
   }
 
   // TODO(renda): Improve search by doing parent.children.grandchildren type of search
-  ModelItem *getModel(const std::string &modelName) {
+  Object *getModel(const std::string &modelName) {
     for (auto &model : m_models) {
       if (model->getName() == modelName) {
         return model;
@@ -23,11 +25,20 @@ public:
     return nullptr;
   }
 
+  nlohmann::json getModelTreeJson() {
+    nlohmann::json modelTree;
+
+    for (auto &model : m_models) {
+      modelTree.update(model->getModelTreeJson());
+    }
+
+    return modelTree;
+  }
+
+  // TODO(renda): Should only be called by main.cpp for subsystems
+  void addModel(Model *model) { m_models.push_back(model); }
+
 private:
   ModelContainer() = default;
-
-  friend class Model;
-  void addModel(ModelItem *model) { m_models.push_back(model); }
-
-  std::vector<ModelItem *> m_models;
+  std::vector<Model *> m_models;
 };

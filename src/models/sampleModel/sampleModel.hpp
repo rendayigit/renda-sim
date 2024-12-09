@@ -7,7 +7,7 @@
 #include "services/eventManager/simpleEvent.hpp"
 #include "services/logger/logger.hpp"
 
-class SampleModel : Model {
+class SampleModel : public Model {
 public:
   SampleModel();
   void step(int stepTime);
