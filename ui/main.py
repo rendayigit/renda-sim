@@ -2,6 +2,10 @@
 
 import wx
 from main_window.window import MainWindow
+from main_window.window import populate_tree
+from main_window.bind import MainWindowEventBinder
+from commanding import Commanding
+from messaging import Messaging
 
 
 class Application(wx.App):
@@ -9,8 +13,24 @@ class Application(wx.App):
 
     def OnInit(self):  # pylint: disable=invalid-name
         """Function called when UI is ready"""
-        frame = MainWindow(None, title="Renda Sim GUI")
-        frame.Show()
+        main_window = MainWindow(None, title="Renda Sim GUI")
+        main_window.Show()
+
+        # Initialize binders
+        binder = MainWindowEventBinder(main_window)
+
+        # Contact engine
+        main_window.SetStatusText(Commanding().request("STATUS"))
+
+        model_tree_json = Commanding().request_json("MODEL_TREE")
+        populate_tree(main_window.models_tree, model_tree_json, main_window.tree_root)
+
+        sim_timing = Messaging("SIM_TIME", main_window.sim_time_display.ChangeValue)
+        sim_timing.start()
+
+        event_logging = Messaging("EVENT_LOG", main_window.event_logs.AppendText)
+        event_logging.start()
+
         return True
 
 

@@ -32,11 +32,13 @@ class Commanding:
 
         self.socket.send(command.encode())  # Send the command as bytes
 
+    # TODO(renda): Need timeout option or blocks forever
     def request(self, command: str) -> str:
         """Send a command and wait for a response from the engine"""
         self.transmit(command)  # Send the command
         return self.socket.recv().decode()  # Receive and decode the response
 
+    # TODO(renda): Need timeout option or blocks forever
     def request_json(self, command: str) -> str:
         """Send a command and wait for a response from the engine"""
         self.transmit(command)  # Send the command

@@ -1,8 +1,8 @@
 """Renda Sim GUI Main Window"""
 
 import wx
-from main_window.bind import MainWindowEventBinder
-from commanding import Commanding
+
+# TODO(renda): Separate panels into different files
 
 
 class MainWindow(wx.Frame):
@@ -182,8 +182,15 @@ class MainWindow(wx.Frame):
         events_splitter.SplitHorizontally(variables_panel, self.events_panel)
         events_splitter.SetMinimumPaneSize(350)
 
-        # Initialize binders
-        self.binder = MainWindowEventBinder(self)
 
-        self.SetStatusText(Commanding().request("STATUS"))
-        
+@staticmethod
+def populate_tree(tree_ctrl, json_data, parent_item=None):
+    """Populate tree control with JSON data"""
+    for key, value in json_data.items():
+        if isinstance(value, list):
+            item = tree_ctrl.AppendItem(parent_item, key)
+            for item_text in value:
+                tree_ctrl.AppendItem(item, item_text)
+        elif isinstance(value, dict):
+            item = tree_ctrl.AppendItem(parent_item, key)
+            populate_tree(tree_ctrl, value, item)
