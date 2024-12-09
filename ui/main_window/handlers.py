@@ -3,6 +3,7 @@
 import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
+from messaging import Messaging
 
 
 class MainWindowHandlers:
@@ -101,4 +102,23 @@ class MainWindowHandlers:
 
     def on_tree(self, _event):
         """Tree control callback"""
-        pass  # TODO: Implement
+        item = self.main_window.models_tree.GetSelection()
+        if item.IsOk():
+            # Check if the selected item has children
+            child, _ = self.main_window.models_tree.GetFirstChild(item)
+
+            if child.IsOk():  # If the item has a valid child, skip the rest of the logic
+                return
+
+            parts = []
+            while item.IsOk():
+                parent = self.main_window.models_tree.GetItemParent(item)  # Get the parent item
+                if not parent.IsOk():  # Skip if root item
+                    break
+                parts.insert(0, self.main_window.models_tree.GetItemText(item))  # Add the item's text at the beginning
+                item = parent  # Move to the parent item
+            path = ".".join(parts)  # Join all parts with a dot
+            print(f"Selected path: {path}")  # TODO(Renda): remove after testing
+            Commanding().transmit("START_LISTEN:" + path)
+            test = Messaging(path, print)  # TODO(Renda): Pass to variable display instead
+            test.start()

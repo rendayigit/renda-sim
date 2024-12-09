@@ -17,7 +17,7 @@ public:
     }
   }
 
-  std::vector<Object *> getItems() const { return m_children; }
+  std::vector<Object *> getChildren() const { return m_children; }
 
   nlohmann::json getModelTreeJson() {
     nlohmann::json modelTree;

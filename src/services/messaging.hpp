@@ -7,6 +7,7 @@
 #include <vector>
 #include <zmq.hpp>
 
+#include "common/variableProperties.hpp"
 #include "services/messageParser.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
@@ -80,6 +81,18 @@ private:
       if (command == "MODEL_TREE") {
         Messaging::getInstance().reply(ModelContainer::getInstance().getModelTreeJson().dump());
         continue;
+      }
+
+      // TODO(renda): Move to MessageParser
+      if (command.find("START_LISTEN") != std::string::npos) {
+        size_t colonPosition = command.find(':');
+
+        if (colonPosition != std::string::npos) {
+          // Get the substring after the colon
+          std::string variablePath = command.substr(colonPosition + 1);
+          auto *variable = dynamic_cast<VariableProperties *>(ModelContainer::getInstance().getModel(variablePath));
+          variable->setIsMonitored(true);
+        }
       }
 
       MessageParser::getInstance().executeCommand(command);
