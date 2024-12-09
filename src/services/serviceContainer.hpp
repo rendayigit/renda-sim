@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO(renda): This class is unnecessary, remove it
+
 #include "services/eventManager/eventManager.hpp"
 // #include "services/messaging.hpp"
 #include "services/logger/logger.hpp"

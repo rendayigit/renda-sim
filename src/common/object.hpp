@@ -12,6 +12,7 @@ public:
 
   std::string getName() const { return m_name; }
   std::string getDescription() const { return m_description; }
+  std::string getPath() const { return (m_parent == nullptr) ? m_name : m_parent->getPath() + "." + m_name; }
 
   Object *getParent() const { return m_parent; }
 

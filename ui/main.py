@@ -31,6 +31,10 @@ class Application(wx.App):
         event_logging = Messaging("EVENT_LOG", main_window.event_logs.AppendText)
         event_logging.start()
 
+        # TODO(renda): Remove after testing
+        test = Messaging("Sample Model.Integer Variable", print)
+        test.start()
+
         return True
 
 
