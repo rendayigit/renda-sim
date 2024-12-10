@@ -120,5 +120,9 @@ class MainWindowHandlers:
             path = ".".join(parts)  # Join all parts with a dot
             print(f"Selected path: {path}")  # TODO(Renda): remove after testing
             Commanding().transmit("START_LISTEN:" + path)
-            test = Messaging(path, print)  # TODO(Renda): Pass to variable display instead
+            item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
+            self.main_window.variable_list.SetItem(item_index, 1, "desc")  # TODO(renda): Implement
+            self.main_window.variable_list.SetItem(item_index, 2, "-")  # TODO(renda): get initial value from engine
+            self.main_window.variable_list.SetItem(item_index, 3, "double")  # TODO(renda): Implement
+            test = Messaging(path, self.main_window.variable_list.SetItem, item_index, 2)  # TODO(Renda): need a way to terminate if var removed
             test.start()

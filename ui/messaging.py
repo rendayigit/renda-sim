@@ -9,9 +9,10 @@ import zmq
 class Messaging:
     """Messaging utilities for GUI"""
 
-    def __init__(self, topic, callable_func):
+    def __init__(self, topic, callable_func, *args):
         self.topic = topic
         self.callable_func = callable_func
+        self.args = args
 
         context = zmq.Context(1)
 
@@ -45,6 +46,6 @@ class Messaging:
             messagedata = bytes(frames[1]).decode()
 
             if topic == self.topic:
-                wx.CallAfter(self.callable_func, messagedata)
+                wx.CallAfter(self.callable_func, *self.args, messagedata)
 
             # time.sleep(0.01)
