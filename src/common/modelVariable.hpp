@@ -29,8 +29,6 @@ public:
 
   t getValue() { return m_value; }
 
-  std::string getType() { return typeid(t).name(); }
-
 private:
   friend class MainWindow;
 
