@@ -119,10 +119,13 @@ class MainWindowHandlers:
                 item = parent  # Move to the parent item
             path = ".".join(parts)  # Join all parts with a dot
             print(f"Selected path: {path}")  # TODO(Renda): remove after testing
-            Commanding().transmit("START_LISTEN:" + path)
+            var = Commanding().request("START_LISTEN:" + path)
+            var_desc, var_value, var_type = var.split(":")
+            print(f"{var} -> {var_desc}, {var_value}, {type}")  # TODO(Renda): remove after testing
+
             item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
-            self.main_window.variable_list.SetItem(item_index, 1, "desc")  # TODO(renda): Implement
-            self.main_window.variable_list.SetItem(item_index, 2, "-")  # TODO(renda): get initial value from engine
-            self.main_window.variable_list.SetItem(item_index, 3, "double")  # TODO(renda): Implement
+            self.main_window.variable_list.SetItem(item_index, 1, var_desc)
+            self.main_window.variable_list.SetItem(item_index, 2, var_value)
+            self.main_window.variable_list.SetItem(item_index, 3, var_type)
             test = Messaging(path, self.main_window.variable_list.SetItem, item_index, 2)  # TODO(Renda): need a way to terminate if var removed
             test.start()

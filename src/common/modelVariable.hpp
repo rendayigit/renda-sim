@@ -13,7 +13,7 @@ public:
   explicit ModelVariable(std::string name, std::string description, Model *parent, t initialValue)
       : Object(name, description, parent), m_value(initialValue) {
     parent->addChild(this);
-    std::cout << getPath() << std::endl; // TODO(renda): Remove after testing
+    std::cout << getPath() << " " << getType() << std::endl; // TODO(renda): Remove after testing
   }
 
   void setValue(t value) {
@@ -29,6 +29,8 @@ public:
   }
 
   t getValue() { return m_value; }
+
+  std::string getType() { return typeid(t).name(); }
 
 private:
   friend class MainWindow;

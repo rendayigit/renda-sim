@@ -47,5 +47,3 @@ class Messaging:
 
             if topic == self.topic:
                 wx.CallAfter(self.callable_func, *self.args, messagedata)
-
-            # time.sleep(0.01)

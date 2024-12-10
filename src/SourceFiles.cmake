@@ -11,12 +11,12 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/network/server/server.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/scheduler/scheduler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/timer/timer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../src/services/messaging.cpp
     # Model Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/pcs/pcs.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/sampleModel/sampleModel.cpp)
 
 set(INCLUDEDIRS
-    ${CMAKE_CURRENT_LIST_DIR}/../
-    ${CMAKE_CURRENT_LIST_DIR}/../src/
+    ${CMAKE_CURRENT_LIST_DIR}/../ ${CMAKE_CURRENT_LIST_DIR}/../src/
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/
     ${CMAKE_SOURCE_DIR}/deps/cppzmq-4.10.0)
