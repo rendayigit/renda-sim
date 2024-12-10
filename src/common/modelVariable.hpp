@@ -13,7 +13,6 @@ public:
   explicit ModelVariable(std::string name, std::string description, Model *parent, t initialValue)
       : Object(name, description, parent), m_value(initialValue) {
     parent->addChild(this);
-    std::cout << getPath() << " " << getType() << std::endl; // TODO(renda): Remove after testing
   }
 
   void setValue(t value) {

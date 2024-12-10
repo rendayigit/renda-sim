@@ -43,62 +43,6 @@ void Messaging::commandReceiverStep() {
 
     std::cout << "Received: " << command << std::endl; // TODO(renda): Remove after testing
 
-    // TODO(renda): Move to MessageParser
-    if (command == "STATUS") {
-      Messaging::getInstance().reply("ENGINE ONLINE");
-      continue;
-    }
-
-    // TODO(renda): Move to MessageParser
-    if (command == "SCHEDULER_STATUS") {
-      Messaging::getInstance().reply(ServiceContainer::getInstance().scheduler()->isRunning() ? "RUNNING" : "STOPPED");
-      continue;
-    }
-
-    // TODO(renda): Move to MessageParser
-    if (command == "MODEL_TREE") {
-      Messaging::getInstance().reply(ModelContainer::getInstance().getModelTreeJson().dump());
-      continue;
-    }
-
-    // TODO(renda): Move to MessageParser
-    if (command.find("START_LISTEN") != std::string::npos) {
-      size_t colonPosition = command.find(':');
-
-      if (colonPosition != std::string::npos) {
-        // Get the substring after the colon
-        std::string variablePath = command.substr(colonPosition + 1);
-
-        auto *object = ModelContainer::getInstance().getModel(variablePath);
-
-        auto *doubleVariable = dynamic_cast<ModelVariable<double> *>(object);
-        auto *integerVariable = dynamic_cast<ModelVariable<int> *>(object);
-        auto *boolVariable = dynamic_cast<ModelVariable<bool> *>(object);
-        auto *stringVariable = dynamic_cast<ModelVariable<std::string> *>(object);
-
-        std::string reply;
-
-        if (doubleVariable != nullptr) {
-          reply = doubleVariable->getDescription() + ":" + std::to_string(doubleVariable->getValue()) + ":" + "Double";
-        } else if (integerVariable != nullptr) {
-          reply =
-              integerVariable->getDescription() + ":" + std::to_string(integerVariable->getValue()) + ":" + "Integer";
-        } else if (boolVariable != nullptr) {
-          reply =
-              boolVariable->getDescription() + ":" + (boolVariable->getValue() ? "True" : "False") + ":" + "Boolean";
-        } else if (stringVariable != nullptr) {
-          reply = stringVariable->getDescription() + ":" + stringVariable->getValue() + ":" + "String";
-        }
-
-        std::cout << reply << std::endl; // TODO(renda): Remove after testing
-        Messaging::getInstance().reply(reply);
-
-        // Start monitoring
-        auto *variable = dynamic_cast<VariableProperties *>(object);
-        variable->setIsMonitored(true);
-      }
-    }
-
     MessageParser::getInstance().executeCommand(command);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION));

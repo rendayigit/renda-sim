@@ -7,6 +7,7 @@
 class VariableProperties {
 public:
   bool isMonitored() const { return m_isMonitored; }
+
   void setIsMonitored(bool isMonitored) { m_isMonitored = isMonitored; }
 
   bool isPlotted() const { return m_isPlotted; }

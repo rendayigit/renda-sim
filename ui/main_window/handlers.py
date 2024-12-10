@@ -12,7 +12,7 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        scheduler_running = Commanding().request("SCHEDULER_STATUS")
+        scheduler_running = Commanding().request("SCHEDULER")
 
         if scheduler_running == "RUNNING":
             self._start()
@@ -25,7 +25,7 @@ class MainWindowHandlers:
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        scheduler_running = Commanding().request("SCHEDULER_STATUS")
+        scheduler_running = Commanding().request("SCHEDULER")
 
         if scheduler_running == "STOPPED":
             self._start()
@@ -119,8 +119,8 @@ class MainWindowHandlers:
                 item = parent  # Move to the parent item
             path = ".".join(parts)  # Join all parts with a dot
             print(f"Selected path: {path}")  # TODO(Renda): remove after testing
-            var = Commanding().request("START_LISTEN:" + path)
-            var_desc, var_value, var_type = var.split(":")
+            var = Commanding().request("VARIABLE:" + path)
+            var_desc, var_value, var_type = var.split(",")
             print(f"{var} -> {var_desc}, {var_value}, {type}")  # TODO(Renda): remove after testing
 
             item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)

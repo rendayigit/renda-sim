@@ -12,6 +12,7 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/scheduler/scheduler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/timer/timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/services/messaging.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../src/services/messageParser.cpp
     # Model Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/pcs/pcs.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/sampleModel/sampleModel.cpp)

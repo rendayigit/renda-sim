@@ -19,9 +19,6 @@ class Application(wx.App):
         # Initialize binders
         binder = MainWindowEventBinder(main_window)
 
-        # Contact engine
-        main_window.SetStatusText(Commanding().request("STATUS"))
-
         model_tree_json = Commanding().request_json("MODEL_TREE")
         populate_tree(main_window.models_tree, model_tree_json, main_window.tree_root)
 
