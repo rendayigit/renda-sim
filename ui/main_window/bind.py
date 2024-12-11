@@ -40,3 +40,6 @@ class MainWindowEventBinder:
 
         # Bind tree events
         self.main_window.models_tree.Bind(wx.EVT_LEFT_DCLICK, self.handlers.on_tree)
+
+        # Bind list events
+        self.main_window.variable_list.Bind(wx.EVT_RIGHT_DOWN, self.handlers.on_list)

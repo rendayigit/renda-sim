@@ -129,3 +129,22 @@ class MainWindowHandlers:
             self.main_window.variable_list.SetItem(item_index, 3, var_type)
             test = Messaging(path, self.main_window.variable_list.SetItem, item_index, 2)  # TODO(Renda): need a way to terminate if var removed
             test.start()
+
+    def on_list(self, event):
+        """List control callback"""
+        # Get selection
+        selection = []
+        item = self.main_window.variable_list.GetFirstSelected()
+        while item != -1:
+            selection.append(self.main_window.variable_list.GetItemText(item))
+            item = self.main_window.variable_list.GetNextSelected(item)
+        print(f"Selected items: {selection}")  # TODO(Renda): remove after testing
+
+        menu = wx.Menu()
+        item = wx.MenuItem(menu, wx.NewId(), "Remove All")
+        menu.Append(item)
+        if len(selection) != 0:
+            item = wx.MenuItem(menu, wx.NewId(), "Remove Selection")
+            menu.Append(item)
+
+        self.main_window.variable_list.PopupMenu(menu, event.GetPosition())
