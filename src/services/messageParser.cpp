@@ -1,6 +1,7 @@
 #include "services/messageParser.hpp"
 
 #include "common/modelVariable.hpp"
+#include "common/variableProperties.hpp"
 #include "services/messaging.hpp"
 #include "services/modelContainer.hpp"
 #include "services/serviceContainer.hpp"
@@ -38,7 +39,7 @@ MessageParser::MessageParser() {
     Messaging::getInstance().reply(ModelContainer::getInstance().getModelTreeJson().dump());
   };
 
-  m_functionMap["VARIABLE"] = [](const std::string &variablePath) {
+  m_functionMap["VARIABLE_ADD"] = [](const std::string &variablePath) {
     auto *object = ModelContainer::getInstance().getModel(variablePath);
 
     auto *doubleVariable = dynamic_cast<ModelVariable<double> *>(object);
@@ -65,5 +66,16 @@ MessageParser::MessageParser() {
     }
 
     Messaging::getInstance().reply(reply);
+  };
+
+  m_functionMap["VARIABLE_REMOVE"] = [](const std::string &variablePath) {
+    auto *object = ModelContainer::getInstance().getModel(variablePath);
+    auto *variable = dynamic_cast<VariableProperties *>(object);
+
+    if (variable != nullptr) {
+      variable->setIsMonitored(false);
+      std::cout << "Removed " << variablePath << " from the monitor list."
+                << std::endl; // TODO(renda): remove after testing
+    }
   };
 }

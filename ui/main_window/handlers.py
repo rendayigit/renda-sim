@@ -119,7 +119,7 @@ class MainWindowHandlers:
                 item = parent  # Move to the parent item
             path = ".".join(parts)  # Join all parts with a dot
             print(f"Selected path: {path}")  # TODO(Renda): remove after testing
-            var = Commanding().request("VARIABLE:" + path)
+            var = Commanding().request("VARIABLE_ADD:" + path)
             var_desc, var_value, var_type = var.split(",")
             print(f"{var} -> {var_desc}, {var_value}, {type}")  # TODO(Renda): remove after testing
 
@@ -143,8 +143,37 @@ class MainWindowHandlers:
         menu = wx.Menu()
         item = wx.MenuItem(menu, wx.NewId(), "Remove All")
         menu.Append(item)
+        self.main_window.Bind(wx.EVT_MENU, handler=lambda _: self._delete_all_items(self.main_window.variable_list), id=item.GetId())
+
         if len(selection) != 0:
             item = wx.MenuItem(menu, wx.NewId(), "Remove Selection")
             menu.Append(item)
+            self.main_window.Bind(
+                wx.EVT_MENU, lambda _: [self._delete_item_by_name(self.main_window.variable_list, i) for i in selection], id=item.GetId()
+            )
 
         self.main_window.variable_list.PopupMenu(menu, event.GetPosition())
+
+    def _get_all_items(self, list_ctrl):
+        item_list = []
+        item_count = list_ctrl.GetItemCount()
+        for i in range(item_count):
+            item = list_ctrl.GetItem(i)
+            item_list.append(item)
+        return item_list
+
+    def _delete_all_items(self, list_ctrl):
+        for item in self._get_all_items(list_ctrl):
+            Commanding().transmit("VARIABLE_REMOVE:" + item.GetText())
+
+        list_ctrl.DeleteAllItems()
+
+    def _delete_item_by_name(self, list_ctrl, item_name):
+        Commanding().transmit("VARIABLE_REMOVE:" + item_name)
+
+        item_count = list_ctrl.GetItemCount()
+        for i in range(item_count):
+            item_text = list_ctrl.GetItemText(i)
+            if item_text == item_name:
+                list_ctrl.DeleteItem(i)
+                break
