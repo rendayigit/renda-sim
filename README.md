@@ -22,6 +22,12 @@ pip install pyzmq                   # Install zeromq message queue library for g
 sudo apt install nlohmann-json3-dev # Install nlohmann json library.
 ```
 
+### Install spdlog logging library
+
+```bash
+sudo apt install libspdlog-dev      # Install spdlog logging library.
+```
+
 ### Install clangd language server
 
 ```bash

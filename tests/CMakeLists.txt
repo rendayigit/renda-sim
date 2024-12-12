@@ -15,7 +15,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../bin/)
 # Include SourceFiles.cmake to access the SOURCEFILES and INCLUDEDIRS variables
 include(${CMAKE_CURRENT_LIST_DIR}/TestFiles.cmake)
 
-find_package(Boost 1.74.0 COMPONENTS filesystem REQUIRED)
+find_package(
+  Boost 1.74.0
+  COMPONENTS filesystem
+  REQUIRED)
+find_package(spdlog REQUIRED)
 
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
@@ -23,12 +27,8 @@ add_executable(tests ${TESTFILES})
 
 target_include_directories(tests PUBLIC ${INCLUDEDIRS})
 
-target_link_libraries(tests PRIVATE 
-    gtest_main
-    gtest
-    Boost::filesystem
-    zmq
-)
+target_link_libraries(tests PRIVATE gtest_main gtest Boost::filesystem zmq
+                                    spdlog::spdlog)
 
 include(GoogleTest)
 gtest_discover_tests(tests)

@@ -12,12 +12,12 @@ find_package(
   COMPONENTS filesystem
   REQUIRED)
 
+find_package(spdlog REQUIRED)
+
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
 add_executable(renda-sim ${SOURCEFILES})
 
-target_link_libraries(renda-sim PRIVATE
-    Boost::filesystem
-    zmq)
+target_link_libraries(renda-sim PRIVATE Boost::filesystem zmq spdlog::spdlog)
 
 target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})
