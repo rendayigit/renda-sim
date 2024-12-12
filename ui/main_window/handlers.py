@@ -118,9 +118,17 @@ class MainWindowHandlers:
                 parts.insert(0, self.main_window.models_tree.GetItemText(item))  # Add the item's text at the beginning
                 item = parent  # Move to the parent item
             path = ".".join(parts)  # Join all parts with a dot
+
             print(f"Selected path: {path}")  # TODO(Renda): remove after testing
+
+            # If child is already being monitored, skip the rest of the logic
+            for item in self._get_all_items(self.main_window.variable_list):
+                if path == item.GetText():
+                    return
+
             var = Commanding().request("VARIABLE_ADD:" + path)
             var_desc, var_value, var_type = var.split(",")
+
             print(f"{var} -> {var_desc}, {var_value}, {type}")  # TODO(Renda): remove after testing
 
             item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
