@@ -47,6 +47,8 @@ class Messaging:
 
         self.subscriber.set(zmq.SUBSCRIBE, topic.encode())
 
+    # TODO(renda): Add option to remove topic handlers
+
     def start(self):
         """Starts the messaging thread"""
         if not self.is_running:
