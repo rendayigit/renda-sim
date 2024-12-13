@@ -22,11 +22,9 @@ class Application(wx.App):
         model_tree_json = Commanding().request_json("MODEL_TREE")
         populate_tree(main_window.models_tree, model_tree_json, main_window.tree_root)
 
-        sim_timing = Messaging("SIM_TIME", main_window.sim_time_display.ChangeValue)
-        sim_timing.start()
+        Messaging().add_topic_handler("SIM_TIME", main_window.sim_time_display.ChangeValue)
 
-        event_logging = Messaging("EVENT_LOG", main_window.event_logs.AppendText)
-        event_logging.start()
+        Messaging().add_topic_handler("EVENT_LOG", main_window.event_logs.AppendText)
 
         return True
 

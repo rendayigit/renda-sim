@@ -135,8 +135,7 @@ class MainWindowHandlers:
             self.main_window.variable_list.SetItem(item_index, 1, var_desc)
             self.main_window.variable_list.SetItem(item_index, 2, var_value)
             self.main_window.variable_list.SetItem(item_index, 3, var_type)
-            test = Messaging(path, self.main_window.variable_list.SetItem, item_index, 2)  # TODO(Renda): need a way to terminate if var removed
-            test.start()
+            Messaging().add_topic_handler(path, self.main_window.variable_list.SetItem, item_index, 2)
 
     def on_list(self, event):
         """List control callback"""
