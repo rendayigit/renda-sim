@@ -28,6 +28,12 @@ sudo apt install nlohmann-json3-dev # Install nlohmann json library.
 sudo apt install libspdlog-dev      # Install spdlog logging library.
 ```
 
+### Install matplotlib for plotting
+
+```bash
+pip install matplotlib              # Install matplotlib for plotting.
+```
+
 ### Install clangd language server
 
 ```bash
