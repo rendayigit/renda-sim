@@ -3,14 +3,15 @@
 #include "models/pcs/pcs.hpp"
 #include "models/sampleModel/sampleModel.hpp"
 
-#include "engine/messaging/messaging.hpp" // TODO(renda): Move somewhere else
+#include "engine/messaging/messaging.hpp"
 
 int main(int /*argc*/, char ** /*argv*/) {
   // Instantiate models
   SampleModel sm;
   PowerSubsystem powerSubsystem;
 
-  Messaging::getInstance().queueMessage("SIM_TIME", "-"); // TODO(renda): Move somewhere else
+  // Instantiate messaging
+  Messaging::getInstance();
 
   std::cout << "\nPress enter to stop the simulation\n\n";
   char input = 0;
