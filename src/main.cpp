@@ -3,8 +3,8 @@
 #include "pcs/pcs.hpp"
 #include "sampleModel/sampleModel.hpp"
 
-#include "services/messaging.hpp"      // TODO(renda): Move somewhere else
-#include "services/modelContainer.hpp" // TODO(renda): Remove after testing
+#include "services/messaging/messaging.hpp"      // TODO(renda): Move somewhere else
+#include "services/model/modelContainer.hpp" // TODO(renda): Remove after testing
 
 int main(int /*argc*/, char ** /*argv*/) {
   // Instantiate models

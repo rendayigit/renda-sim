@@ -6,23 +6,20 @@
 #include "services/scheduler/scheduler.hpp"
 
 TEST(Scheduler, StartStop) {
-  EventManager eventManager;
-  Scheduler scheduler(&eventManager);
-
   int count = 0;
   SimpleEvent evt;
   evt.setEventFunction([&] { count += 1; });
   evt.setNextMillis(0);
   evt.activate();
-  eventManager.addEvent(&evt);
+  EventManager::getInstance().addEvent(&evt);
 
   EXPECT_EQ(count, 0);
 
-  scheduler.start();
+  Scheduler::getInstance().start();
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  scheduler.stop();
+  Scheduler::getInstance().stop();
 
   int currentCount = count;
 
@@ -34,27 +31,24 @@ TEST(Scheduler, StartStop) {
 }
 
 TEST(Scheduler, ProgressTime) {
-  EventManager eventManager;
-  Scheduler scheduler(&eventManager);
-
   int count = 0;
   SimpleEvent evt;
   evt.setEventFunction([&] { count += 1; });
   evt.setNextMillis(2);
   evt.activate();
-  eventManager.addEvent(&evt);
+  EventManager::getInstance().addEvent(&evt);
 
   EXPECT_EQ(count, 0);
 
-  scheduler.progressTime(1);
+  Scheduler::getInstance().progressTime(1);
 
   EXPECT_EQ(count, 0);
 
-  scheduler.progressTime(1);
+  Scheduler::getInstance().progressTime(1);
 
   EXPECT_EQ(count, 1);
 
-  scheduler.progressTime(10);
+  Scheduler::getInstance().progressTime(10);
 
   EXPECT_EQ(count, 1);
 }

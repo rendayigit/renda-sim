@@ -1,10 +1,10 @@
-#include "services/messageParser.hpp"
+#include "services/messaging/messageParser.hpp"
 
-#include "common/modelVariable.hpp"
-#include "common/variableProperties.hpp"
-#include "services/messaging.hpp"
-#include "services/modelContainer.hpp"
-#include "services/serviceContainer.hpp"
+#include "services/model/modelVariable.hpp"
+#include "services/model/variableProperties.hpp"
+#include "services/messaging/messaging.hpp"
+#include "services/model/modelContainer.hpp"
+#include "services/scheduler/scheduler.hpp"
 
 void MessageParser::executeCommand(const std::string &command) {
   for (auto &function : m_functionMap) {
@@ -25,14 +25,12 @@ void MessageParser::executeCommand(const std::string &command) {
 }
 
 MessageParser::MessageParser() {
-  m_functionMap["START"] = [](const std::string & /*message*/) {
-    ServiceContainer::getInstance().scheduler()->start();
-  };
+  m_functionMap["START"] = [](const std::string & /*message*/) { Scheduler::getInstance().start(); };
 
-  m_functionMap["STOP"] = [](const std::string & /*message*/) { ServiceContainer::getInstance().scheduler()->stop(); };
+  m_functionMap["STOP"] = [](const std::string & /*message*/) { Scheduler::getInstance().stop(); };
 
   m_functionMap["SCHEDULER"] = [](const std::string & /*message*/) {
-    Messaging::getInstance().reply(ServiceContainer::getInstance().scheduler()->isRunning() ? "RUNNING" : "STOPPED");
+    Messaging::getInstance().reply(Scheduler::getInstance().isRunning() ? "RUNNING" : "STOPPED");
   };
 
   m_functionMap["MODEL_TREE"] = [](const std::string & /*message*/) {

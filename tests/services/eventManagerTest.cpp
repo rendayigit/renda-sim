@@ -22,34 +22,29 @@ TEST(EventManager, BasicEventFunctionality) {
 }
 
 TEST(EventManager, EventQueue) {
-  EventManager eventManager;
-
   SimpleEvent evt1;
   evt1.setNextMillis(1);
   evt1.activate();
-  eventManager.addEvent(&evt1);
+  EventManager::getInstance().addEvent(&evt1);
 
   SimpleEvent evt2;
   evt2.setNextMillis(3);
   evt2.activate();
-  eventManager.addEvent(&evt2);
+  EventManager::getInstance().addEvent(&evt2);
 
   SimpleEvent evt3;
   evt3.setNextMillis(2);
   evt3.activate();
-  eventManager.addEvent(&evt3);
+  EventManager::getInstance().addEvent(&evt3);
 
   // Test order
-  EXPECT_EQ(eventManager.getEventQueue()->at(0)->getNextMillis(), 1);
-  EXPECT_EQ(eventManager.getEventQueue()->at(1)->getNextMillis(), 2);
-  EXPECT_EQ(eventManager.getEventQueue()->at(2)->getNextMillis(), 3);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(0)->getNextMillis(), 1);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(1)->getNextMillis(), 2);
+  EXPECT_EQ(EventManager::getInstance().getEventQueue()->at(2)->getNextMillis(), 3);
 }
 
 TEST(EventManager, SingleShotEvents) {
   SimpleEvent singleShotEvent;
-
-  EventManager eventManager;
-  Scheduler scheduler(&eventManager);
 
   // Set event function to progess a counter
   int singleShotCounter = 0;
@@ -63,26 +58,23 @@ TEST(EventManager, SingleShotEvents) {
   singleShotEvent.activate();
 
   // Add event to the event manager
-  eventManager.addEvent(&singleShotEvent);
+  EventManager::getInstance().addEvent(&singleShotEvent);
 
   // Progress the simulation for one millisecond and verify if the event function was not yet called
-  scheduler.progressTime(1);
+  Scheduler::getInstance().progressTime(1);
   EXPECT_EQ(singleShotCounter, 0);
 
   // Progress the simulation for another millisecond and verify if the event function was called
-  scheduler.progressTime(1);
+  Scheduler::getInstance().progressTime(1);
   EXPECT_EQ(singleShotCounter, 1);
 
   // Progress the simulation for a second and verify if the event function was not called again
-  scheduler.progressTime(1000);
+  Scheduler::getInstance().progressTime(1000);
   EXPECT_EQ(singleShotCounter, 1);
 }
 
 TEST(EventManager, CyclicEvents) {
   SimpleEvent cyclicEvent;
-
-  EventManager eventManager;
-  Scheduler scheduler(&eventManager);
 
   // Set event function to progess a counter
   int cyclicCounter = 0;
@@ -106,54 +98,52 @@ TEST(EventManager, CyclicEvents) {
   cyclicEvent.activate();
 
   // Add event to the event manager
-  eventManager.addEvent(&cyclicEvent);
+  EventManager::getInstance().addEvent(&cyclicEvent);
 
   // Verify event is not yet triggered
   EXPECT_EQ(cyclicCounter, 0);
 
   // Progress the simulation by 1 millisecond and verify the event was is still not triggered
-  scheduler.progressTime(1);
+  Scheduler::getInstance().progressTime(1);
   EXPECT_EQ(cyclicCounter, 0);
 
   // Progress the simulation by 2 more milliseconds and verify the event is still not triggered
-  scheduler.progressTime(2);
+  Scheduler::getInstance().progressTime(2);
   EXPECT_EQ(cyclicCounter, 0);
 
   // Progress the simulation by 2 more milliseconds (making the time 5 milliseconds) and verify the event is triggered
-  scheduler.progressTime(2);
+  Scheduler::getInstance().progressTime(2);
   EXPECT_EQ(cyclicCounter, 1);
 
   // Progress the simulation by 3 more milliseconds and verify the event is not yet triggered a second time
-  scheduler.progressTime(3);
+  Scheduler::getInstance().progressTime(3);
   EXPECT_EQ(cyclicCounter, 1);
 
   // Progress the simulation by 2 more milliseconds and verify the event is triggered a second time
-  scheduler.progressTime(2);
+  Scheduler::getInstance().progressTime(2);
   EXPECT_EQ(cyclicCounter, 2);
 
   // Progress the simulation by 5 more milliseconds and verify the event is triggered a third time
-  scheduler.progressTime(5);
+  Scheduler::getInstance().progressTime(5);
   EXPECT_EQ(cyclicCounter, 3);
 
   // Progress the simulation by 4 more milliseconds and verify the event is not triggered a fourth time
-  scheduler.progressTime(4);
+  Scheduler::getInstance().progressTime(4);
   EXPECT_EQ(cyclicCounter, 3);
 }
 
 TEST(EventManager, NoTriggering) {
   int triggerCount = 0;
-  EventManager eventManager;
-  Scheduler scheduler(&eventManager);
 
   SimpleEvent evt;
   evt.setEventFunction([&] { triggerCount += 1; });
   evt.setNextMillis(5);
   evt.setCycleMillis(5);
-  eventManager.addEvent(&evt);
+  EventManager::getInstance().addEvent(&evt);
 
   EXPECT_FALSE(evt.isActive());
 
-  scheduler.progressTime(100);
+  Scheduler::getInstance().progressTime(100);
 
   EXPECT_EQ(triggerCount, 0);
 }

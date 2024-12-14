@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "common/model.hpp"
-#include "common/object.hpp"
-#include "common/variableProperties.hpp"
-#include "services/messaging.hpp"
+#include "services/messaging/messaging.hpp"
+#include "services/model/model.hpp"
+#include "services/model/object.hpp"
+#include "services/model/variableProperties.hpp"
 
 template <typename t> class ModelVariable : public Object, public VariableProperties {
 public:

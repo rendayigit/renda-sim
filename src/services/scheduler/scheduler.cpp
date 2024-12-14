@@ -1,11 +1,11 @@
 #include <chrono>
 #include <string>
 
+#include "services/eventManager/eventManager.hpp"
+#include "services/logger/logger.hpp"
+#include "services/messaging/messaging.hpp"
 #include "services/scheduler/scheduler.hpp"
-#include "services/serviceContainer.hpp"
 #include "services/timer/timer.hpp"
-
-#include "services/messaging.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
@@ -45,11 +45,7 @@ void Scheduler::reset() {
   // TODO(renda): Reset all events and models
 }
 
-void Scheduler::setRate(double rate) {
-  Logger *logger = ServiceContainer::getInstance().logger();
-  logger->setLogBufferLimit(static_cast<int>(rate) * LOGGER_RATE_MULTIPLIER);
-  m_rate = rate;
-}
+void Scheduler::setRate(double rate) { m_rate = rate; }
 
 void Scheduler::progressTime(long millis) {
   m_progressTimeLastMillis += millis;
@@ -63,14 +59,17 @@ void Scheduler::step(long currentMillis) const {
   // TODO(renda): Transmit time
   Messaging::getInstance().queueMessage("SIM_TIME", timeStr);
 
+  EventManager *eventManagerInstance = &EventManager::getInstance();
+  std::vector<Event *> *eventQueueInstance = EventManager::getInstance().getEventQueue();
+
   while (true) {
     // Skip if no events in queue
-    if (m_eventQueueInstance->empty()) {
+    if (eventQueueInstance->empty()) {
       return;
     }
 
     // Get the nearest event
-    Event *event = m_eventQueueInstance->at(0);
+    Event *event = eventQueueInstance->at(0);
 
     // Skip if event is not active
     if (not event->isActive()) {
@@ -86,7 +85,7 @@ void Scheduler::step(long currentMillis) const {
     event->process();
 
     // Pop event
-    m_eventManagerInstance->removeEvent(event);
+    eventManagerInstance->removeEvent(event);
 
     // If the event is single shot do not reschedule event
     if (event->getCycleMillis() < 0) {
@@ -95,6 +94,6 @@ void Scheduler::step(long currentMillis) const {
 
     // Reschedule event if event is cyclic and repeat loop
     event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
-    m_eventManagerInstance->addEvent(event);
+    eventManagerInstance->addEvent(event);
   }
 }

@@ -2,9 +2,9 @@
 #include <string>
 
 #include "sampleModel.hpp"
-#include "services/serviceContainer.hpp"
+#include "services/eventManager/eventManager.hpp"
+#include "services/logger/logger.hpp"
 #include "services/timer/timer.hpp"
-#include <spdlog/spdlog.h>
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -34,20 +34,17 @@ SampleModel::SampleModel()
   m_eventFastest->setCycleMillis(TIME_STEP_1_MSEC);
   m_eventFastest->activate();
 
-  ServiceContainer::getInstance().eventManager()->addEvent(m_eventSlow);
-  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFast);
-  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFaster);
-  ServiceContainer::getInstance().eventManager()->addEvent(m_eventFastest);
+  EventManager::getInstance().addEvent(m_eventSlow);
+  EventManager::getInstance().addEvent(m_eventFast);
+  EventManager::getInstance().addEvent(m_eventFaster);
+  EventManager::getInstance().addEvent(m_eventFastest);
 
   std::cout << "Sample Model Initialized" << std::endl;
-
-  m_logger = spdlog::daily_logger_mt("ENGINE", "Engine.log", 0, 0);
-  m_logger->set_pattern("[%H:%M:%S.%f %z] [%n] [%l] [thread %t] %v");
 }
 
 void SampleModel::step(int stepTime) {
-  m_logger->info(std::to_string(stepTime) +
-                 " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
+  Logger::log()->info(std::to_string(stepTime) +
+                      " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
 
   if (stepTime == TIME_STEP_1_SEC) {
     m_integerValue.setValue(m_integerValue.getValue() + 1);

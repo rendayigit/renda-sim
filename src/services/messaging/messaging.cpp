@@ -1,13 +1,12 @@
-#include "services/messaging.hpp"
+#include "services/messaging/messaging.hpp"
 
 #include <iostream> // TODO(renda): Remove after testing
 #include <string>
 
-#include "common/modelVariable.hpp"
-#include "common/variableProperties.hpp"
-#include "services/messageParser.hpp"
-#include "services/modelContainer.hpp"
-#include "services/serviceContainer.hpp"
+#include "services/model/modelVariable.hpp"
+#include "services/model/variableProperties.hpp"
+#include "services/messaging/messageParser.hpp"
+#include "services/model/modelContainer.hpp"
 
 constexpr int MESSAGING_MAX_COMMAND_SIZE = 1024;
 constexpr int MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION = 100;

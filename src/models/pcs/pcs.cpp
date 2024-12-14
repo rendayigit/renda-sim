@@ -10,7 +10,8 @@
  */
 
 #include "pcs/pcs.hpp"
-#include "common/model.hpp"
+#include "services/model/model.hpp"
+#include "services/eventManager/eventManager.hpp"
 #include "services/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem()
@@ -32,7 +33,7 @@ PowerSubsystem::PowerSubsystem()
   m_powerEvent.setEventFunction([&] { step(); });
   m_powerEvent.setCycleMillis(100);
   m_powerEvent.activate();
-  ServiceContainer::getInstance().eventManager()->addEvent(&m_powerEvent);
+  EventManager::getInstance().addEvent(&m_powerEvent);
 }
 
 void PowerSubsystem::initialize() {

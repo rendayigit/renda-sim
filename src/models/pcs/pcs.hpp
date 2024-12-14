@@ -15,10 +15,9 @@
 #include <cmath>
 #include <iostream>
 
-#include "common/model.hpp"
-#include "common/modelVariable.hpp"
 #include "services/eventManager/simpleEvent.hpp"
-#include "services/serviceContainer.hpp"
+#include "services/model/model.hpp"
+#include "services/model/modelVariable.hpp"
 
 // Global variables for customization
 constexpr double MAX_PANEL_POWER = 100.0;             // Maximum power solar panels can generate (Watts)
