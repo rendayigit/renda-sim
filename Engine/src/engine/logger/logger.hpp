@@ -13,6 +13,9 @@ public:
     return instance.m_logger;
   }
 
+  // TODO(renda): Logger does not flush on program exit
+  ~Logger() { m_logger->flush(); }
+
 private:
   Logger();
   std::shared_ptr<spdlog::logger> m_logger;
