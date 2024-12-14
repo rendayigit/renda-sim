@@ -23,4 +23,3 @@ void EventManager::removeEvent(Event *event) {
     m_eventQueue->erase(it);
   }
 }
-

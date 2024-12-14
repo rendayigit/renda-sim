@@ -28,13 +28,9 @@ class TestServer : public Server {
 public:
   explicit TestServer(uint16_t port) : Server(port) {}
 
-  void onConnect(boost::asio::ip::tcp::socket * /*socket*/) override {
-    m_isConnectTriggered = true;
-  }
+  void onConnect(boost::asio::ip::tcp::socket * /*socket*/) override { m_isConnectTriggered = true; }
 
-  void onDisconnect(boost::asio::ip::tcp::socket * /*socket*/) override {
-    m_isDisconnectTriggered = true;
-  }
+  void onDisconnect(boost::asio::ip::tcp::socket * /*socket*/) override { m_isDisconnectTriggered = true; }
 
   void onReceive(boost::asio::ip::tcp::socket * /*socket*/, const std::string &message) override {
     m_lastReceivedMessage = message;

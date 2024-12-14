@@ -1,0 +1,3 @@
+{
+    "pylint.args": ["--extension-pkg-whitelist=wx", "--max-line-length=150"],
+}

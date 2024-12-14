@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "engine/model/modelVariable.hpp"
 #include "engine/eventManager/simpleEvent.hpp"
+#include "engine/model/modelVariable.hpp"
 
 class SampleModel : public Model {
 public:

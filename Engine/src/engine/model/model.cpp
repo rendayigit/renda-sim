@@ -24,4 +24,3 @@ nlohmann::json Model::getModelTreeJson() {
 
   return modelTree;
 }
-

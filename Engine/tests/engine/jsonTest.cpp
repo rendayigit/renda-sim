@@ -4,8 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-std::string testJsonFilePath =
-    FileOperations::getInstance().getExecutableDirectory() + "../tests/test.json";
+std::string testJsonFilePath = FileOperations::getInstance().getExecutableDirectory() + "../tests/test.json";
 
 TEST(Json, GetValue) {
   // Get node "first_name"
