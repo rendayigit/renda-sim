@@ -2,9 +2,9 @@
 #include <string>
 
 #include "sampleModel.hpp"
-#include "services/eventManager/eventManager.hpp"
-#include "services/logger/logger.hpp"
-#include "services/timer/timer.hpp"
+#include "engine/eventManager/eventManager.hpp"
+#include "engine/logger/logger.hpp"
+#include "engine/timer/timer.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;

@@ -10,9 +10,9 @@
  */
 
 #include "pcs/pcs.hpp"
-#include "services/model/model.hpp"
-#include "services/eventManager/eventManager.hpp"
-#include "services/timer/timer.hpp"
+#include "engine/model/model.hpp"
+#include "engine/eventManager/eventManager.hpp"
+#include "engine/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem()
     : Model("Power Control Subsystem", "Power Control Subsystem", nullptr),
