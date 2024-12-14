@@ -1,11 +1,36 @@
 {
-	"folders": [
-		{
-			"path": "Engine"
-		},
-		{
-			"path": "Python_GUI"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "Engine"
+    },
+    {
+      "path": "Python_GUI"
+    }
+  ],
+  "settings": {},
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Sim",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder:Engine}/bin/renda-sim",
+        "args": [],
+        "cwd": "${workspaceFolder:Engine}/bin/"
+      },
+      {
+        "name": "Python GUI",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder:Python_GUI}/main.py"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Sim and Python GUI",
+        "configurations": ["Sim", "Python GUI"]
+      }
+    ]
+  }
 }
