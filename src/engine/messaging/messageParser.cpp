@@ -1,9 +1,10 @@
 #include "engine/messaging/messageParser.hpp"
 
-#include "engine/model/modelVariable.hpp"
-#include "engine/model/variableProperties.hpp"
+#include "engine/logger/logger.hpp"
 #include "engine/messaging/messaging.hpp"
 #include "engine/model/modelContainer.hpp"
+#include "engine/model/modelVariable.hpp"
+#include "engine/model/variableProperties.hpp"
 #include "engine/scheduler/scheduler.hpp"
 
 void MessageParser::executeCommand(const std::string &command) {
@@ -60,7 +61,7 @@ MessageParser::MessageParser() {
       reply = stringVariable->getDescription() + "," + stringVariable->getValue() + "," + "String";
       stringVariable->setIsMonitored(true);
     } else {
-      std::cout << variablePath << " is not a valid variable path." << std::endl;
+      Logger::log()->debug(variablePath + " is not a valid variable path.");
     }
 
     Messaging::getInstance().reply(reply);
@@ -72,8 +73,7 @@ MessageParser::MessageParser() {
 
     if (variable != nullptr) {
       variable->setIsMonitored(false);
-      std::cout << "Removed " << variablePath << " from the monitor list."
-                << std::endl; // TODO(renda): remove after testing
+      Logger::log()->debug("Removed " + variablePath + " from the monitor list.");
     }
   };
 }

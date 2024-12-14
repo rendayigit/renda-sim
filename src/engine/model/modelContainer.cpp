@@ -1,7 +1,5 @@
 #include "engine/model/modelContainer.hpp"
 
-#include <iostream>
-
 Object *ModelContainer::getModel(const std::string &modelPath) {
   if (modelPath.empty()) {
     return nullptr;

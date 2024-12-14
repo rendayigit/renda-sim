@@ -1,12 +1,12 @@
 #include "engine/messaging/messaging.hpp"
 
-#include <iostream> // TODO(renda): Remove after testing
 #include <string>
 
-#include "engine/model/modelVariable.hpp"
-#include "engine/model/variableProperties.hpp"
+#include "engine/logger/logger.hpp"
 #include "engine/messaging/messageParser.hpp"
 #include "engine/model/modelContainer.hpp"
+#include "engine/model/modelVariable.hpp"
+#include "engine/model/variableProperties.hpp"
 
 constexpr int MESSAGING_MAX_COMMAND_SIZE = 1024;
 constexpr int MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION = 100;
@@ -26,11 +26,19 @@ void Messaging::queueMessage(const std::string &topic, const std::string &messag
   zmq::message_t zTopic(topic.data(), topic.size());
   zmq::message_t zMessage(message.data(), message.size());
 
+  if (topic != "SIM_TIME") {
+    Logger::log()->debug("Queuing: [" + topic + "] " + message);
+  }
+
   m_publisher->send(zTopic, zmq::send_flags::sndmore);
   m_publisher->send(zMessage, zmq::send_flags::none);
 }
 
-void Messaging::reply(const std::string &message) { m_commandReceiver->send(zmq::buffer(message)); }
+void Messaging::reply(const std::string &message) {
+  Logger::log()->debug("Replying: " + message);
+
+  m_commandReceiver->send(zmq::buffer(message));
+}
 
 void Messaging::commandReceiverStep() {
   while (m_isCommandReceiverThreadRunning) {
@@ -40,7 +48,7 @@ void Messaging::commandReceiverStep() {
 
     std::string command = static_cast<char *>(request.data());
 
-    std::cout << "Received: " << command << std::endl; // TODO(renda): Remove after testing
+    Logger::log()->debug("Received command: " + command);
 
     MessageParser::getInstance().executeCommand(command);
 

@@ -9,9 +9,10 @@
  * https://chatgpt.com/share/673f8749-9590-800d-9d4f-1f7a66885255
  */
 
-#include "pcs/pcs.hpp"
-#include "engine/model/model.hpp"
+#include "models/pcs/pcs.hpp"
 #include "engine/eventManager/eventManager.hpp"
+#include "engine/logger/logger.hpp"
+#include "engine/model/model.hpp"
 #include "engine/timer/timer.hpp"
 
 PowerSubsystem::PowerSubsystem()
@@ -40,7 +41,7 @@ void PowerSubsystem::initialize() {
   // TODO(renda): Initialize the power subsystem here
   // Read initial values from JSON
 
-  std::cout << "Power Subsystem Initialized" << std::endl;
+  Logger::log()->info("Power Subsystem Initialized");
 }
 
 void PowerSubsystem::step() {

@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "pcs/pcs.hpp"
-#include "sampleModel/sampleModel.hpp"
+#include "models/pcs/pcs.hpp"
+#include "models/sampleModel/sampleModel.hpp"
 
-#include "engine/messaging/messaging.hpp"      // TODO(renda): Move somewhere else
+#include "engine/messaging/messaging.hpp"  // TODO(renda): Move somewhere else
 #include "engine/model/modelContainer.hpp" // TODO(renda): Remove after testing
 
 int main(int /*argc*/, char ** /*argv*/) {
@@ -14,10 +14,6 @@ int main(int /*argc*/, char ** /*argv*/) {
   // TODO(renda): All subsystems must be added to model container
   ModelContainer::getInstance().addModel(&sm);
   ModelContainer::getInstance().addModel(&powerSubsystem);
-
-  // TODO(renda): Remove after testing
-  std::cout << "Model Tree:" << std::endl;
-  std::cout << ModelContainer::getInstance().getModelTreeJson().dump(2) << std::endl;
 
   Messaging::getInstance().queueMessage("SIM_TIME", "-"); // TODO(renda): Move somewhere else
 

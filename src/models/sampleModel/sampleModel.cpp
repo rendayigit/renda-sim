@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "sampleModel.hpp"
 #include "engine/eventManager/eventManager.hpp"
 #include "engine/logger/logger.hpp"
 #include "engine/timer/timer.hpp"
+#include "models/sampleModel/sampleModel.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -39,7 +39,7 @@ SampleModel::SampleModel()
   EventManager::getInstance().addEvent(m_eventFaster);
   EventManager::getInstance().addEvent(m_eventFastest);
 
-  std::cout << "Sample Model Initialized" << std::endl;
+  Logger::log()->info("Sample Model Initialized");
 }
 
 void SampleModel::step(int stepTime) {
@@ -48,5 +48,13 @@ void SampleModel::step(int stepTime) {
 
   if (stepTime == TIME_STEP_1_SEC) {
     m_integerValue.setValue(m_integerValue.getValue() + 1);
+  }
+
+  // TODO(renda): This doesn't solve the issue of having a cluttered log file
+  if (Timer::getInstance().simMillis() >= 1200) {
+    m_eventSlow->deactivate();
+    m_eventFast->deactivate();
+    m_eventFaster->deactivate();
+    m_eventFastest->deactivate();
   }
 }
