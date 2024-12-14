@@ -17,11 +17,11 @@ public:
 
   nlohmann::json getModelTreeJson();
 
-  // TODO(renda): Should only be called by main.cpp for subsystems
-  void addModel(Model *model) { m_models.push_back(model); }
-
 private:
   ModelContainer() = default;
+
+  friend class Model;
+  void addRootModel(Model *model) { m_models.push_back(model); }
 
   Object *findModel(Model *currentModel, std::stringstream &ss);
 

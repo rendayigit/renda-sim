@@ -1,10 +1,13 @@
 #include "engine/model/model.hpp"
+#include "engine/model/modelContainer.hpp"
 
 Model::Model(std::string name, std::string description, Object *parent)
     : Object(std::move(name), std::move(description), parent) {
   auto *parentModel = dynamic_cast<Model *>(parent);
   if (parentModel != nullptr) {
     parentModel->addChild(this);
+  } else {
+    ModelContainer::getInstance().addRootModel(this);
   }
 }
 
