@@ -4,6 +4,9 @@
       "path": "Engine"
     },
     {
+      "path": "Models"
+    },
+    {
       "path": "Python_GUI"
     }
   ],

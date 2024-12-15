@@ -1,9 +1,5 @@
 set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/root.cpp
-    # Common Source Files
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/load.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/loadState.cpp
     # Engine Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/eventManager/eventManager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/fileOperations/fileOperations.cpp
@@ -16,10 +12,7 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/messaging/messaging.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/messaging/messageParser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/model/model.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/model/modelContainer.cpp
-    # Model Source Files
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/pcs/pcs.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/models/sampleModel/sampleModel.cpp)
+    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/model/modelContainer.cpp)
 
 set(INCLUDEDIRS
     ${CMAKE_CURRENT_LIST_DIR}/../ ${CMAKE_CURRENT_LIST_DIR}/../src/

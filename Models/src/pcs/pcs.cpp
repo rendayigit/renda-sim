@@ -9,11 +9,10 @@
  * https://chatgpt.com/share/673f8749-9590-800d-9d4f-1f7a66885255
  */
 
-#include "models/pcs/pcs.hpp"
-#include "engine/eventManager/eventManager.hpp"
+#include "pcs/pcs.hpp"
 #include "engine/logger/logger.hpp"
-#include "engine/model/model.hpp"
-#include "engine/timer/timer.hpp"
+#include "eventManager.hpp"
+#include "model.hpp"
 
 PowerSubsystem::PowerSubsystem()
     : Model("Power Control Subsystem", "Power Control Subsystem", nullptr),

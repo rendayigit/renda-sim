@@ -1,7 +1,7 @@
 #pragma once
 
-#include "models/pcs/pcs.hpp"
-#include "models/sampleModel/sampleModel.hpp"
+#include "pcs/pcs.hpp"
+#include "sampleModel/sampleModel.hpp"
 
 class Root {
 public:
