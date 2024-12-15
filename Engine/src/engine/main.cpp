@@ -1,14 +1,15 @@
 #include <iostream>
 
-#include "models/pcs/pcs.hpp"
-#include "models/sampleModel/sampleModel.hpp"
-
 #include "engine/messaging/messaging.hpp"
+#include "root.hpp"
 
 int main(int /*argc*/, char ** /*argv*/) {
   // Instantiate models
-  SampleModel sm;
-  PowerSubsystem powerSubsystem;
+  Root root;
+  root.init();
+
+  // Run the model
+  root.run();
 
   // Instantiate messaging
   Messaging::getInstance();

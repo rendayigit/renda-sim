@@ -1,5 +1,6 @@
 set(SOURCEFILES
-    ${CMAKE_CURRENT_LIST_DIR}/../src/main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../src/models/root.cpp
     # Common Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/load.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/loadState.cpp
@@ -21,7 +22,6 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/sampleModel/sampleModel.cpp)
 
 set(INCLUDEDIRS
-    ${CMAKE_CURRENT_LIST_DIR}/../ 
-    ${CMAKE_CURRENT_LIST_DIR}/../src/
+    ${CMAKE_CURRENT_LIST_DIR}/../ ${CMAKE_CURRENT_LIST_DIR}/../src/
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/
     ${CMAKE_SOURCE_DIR}/deps/cppzmq-4.10.0)
