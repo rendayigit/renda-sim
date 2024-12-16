@@ -10,8 +10,8 @@
  */
 
 #include "pcs/pcs.hpp"
-#include "engine/logger/logger.hpp"
 #include "eventManager.hpp"
+#include "logger.hpp"
 #include "model.hpp"
 
 PowerSubsystem::PowerSubsystem()

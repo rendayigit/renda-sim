@@ -1,6 +1,6 @@
-#include "models/common/load/load.hpp"
-#include "engine/json/json.hpp"
-#include "models/common/load/loadContainer.hpp"
+#include "common/load/load.hpp"
+#include "common/load/loadContainer.hpp"
+#include "json.hpp"
 
 #include <cmath>
 #include <stdexcept>

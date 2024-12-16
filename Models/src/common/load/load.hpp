@@ -1,7 +1,7 @@
 #pragma once
 
-#include "models/common/dataFlow.hpp"
-#include "models/common/load/loadState.hpp"
+#include "common/dataFlow.hpp"
+#include "common/load/loadState.hpp"
 
 #include <cfloat>
 #include <map>

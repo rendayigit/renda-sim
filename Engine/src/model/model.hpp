@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "engine/model/object.hpp"
+#include "model/object.hpp"
 
 class Model : public Object {
 public:

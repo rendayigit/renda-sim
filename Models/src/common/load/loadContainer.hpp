@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models/common/load/load.hpp"
+#include "common/load/load.hpp"
 
 class LoadContainer {
 public:

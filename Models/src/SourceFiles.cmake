@@ -7,5 +7,6 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/pcs/pcs.cpp
     ${CMAKE_CURRENT_LIST_DIR}/sampleModel/sampleModel.cpp)
 
-set(INCLUDEDIRS ${CMAKE_CURRENT_LIST_DIR}/
-                ${CMAKE_CURRENT_LIST_DIR}/../../Engine/include/)
+set(INCLUDEDIRS
+    ${CMAKE_CURRENT_LIST_DIR}/ ${CMAKE_CURRENT_LIST_DIR}/../../Engine/src/
+    ${CMAKE_CURRENT_LIST_DIR}/../../Engine/include/)

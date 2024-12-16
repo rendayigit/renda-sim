@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "engine/eventManager/eventManager.hpp"
-#include "engine/logger/logger.hpp"
-#include "engine/timer/timer.hpp"
-#include "models/sampleModel/sampleModel.hpp"
+#include "eventManager/eventManager.hpp"
+#include "logger/logger.hpp"
+#include "sampleModel/sampleModel.hpp"
+#include "timer/timer.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
