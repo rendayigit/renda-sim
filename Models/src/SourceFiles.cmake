@@ -1,5 +1,6 @@
 set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/root.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
     # Common Source Files
     ${CMAKE_CURRENT_LIST_DIR}/common/load/load.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/load/loadState.cpp

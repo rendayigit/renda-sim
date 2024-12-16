@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "engine/fileOperations/fileOperations.hpp"
-#include "engine/json/json.hpp"
+#include "fileOperations/fileOperations.hpp"
 #include "logger.hpp"
+#include "json/json.hpp"
 
 const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirectory() + "/../config.json";
 

@@ -1,18 +1,17 @@
 #include <iostream>
 
-#include "engine/messaging/messaging.hpp"
-#include "root.hpp"
+#include "engine.hpp"
+
+#include "pcs/pcs.hpp"
+#include "sampleModel/sampleModel.hpp"
 
 int main(int /*argc*/, char ** /*argv*/) {
   // Instantiate models
-  Root root;
-  root.init();
+  SampleModel sampleModel;
+  PowerSubsystem powerSubsystem;
 
-  // Run the model
-  root.run();
-
-  // Instantiate messaging
-  Messaging::getInstance();
+  Engine engine;
+  engine.run();
 
   std::cout << "\nPress enter to stop the simulation\n\n";
   char input = 0;

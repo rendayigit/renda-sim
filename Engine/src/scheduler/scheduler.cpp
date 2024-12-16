@@ -1,11 +1,11 @@
 #include <chrono>
 #include <string>
 
-#include "engine/eventManager/eventManager.hpp"
-#include "engine/logger/logger.hpp"
-#include "engine/messaging/messaging.hpp"
-#include "engine/scheduler/scheduler.hpp"
-#include "engine/timer/timer.hpp"
+#include "eventManager/eventManager.hpp"
+#include "logger/logger.hpp"
+#include "messaging/messaging.hpp"
+#include "scheduler/scheduler.hpp"
+#include "timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;

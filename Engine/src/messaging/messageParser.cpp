@@ -1,11 +1,11 @@
-#include "engine/messaging/messageParser.hpp"
+#include "messaging/messageParser.hpp"
 
-#include "engine/logger/logger.hpp"
-#include "engine/messaging/messaging.hpp"
-#include "engine/model/modelContainer.hpp"
-#include "engine/model/modelVariable.hpp"
-#include "engine/model/variableProperties.hpp"
-#include "engine/scheduler/scheduler.hpp"
+#include "logger/logger.hpp"
+#include "messaging/messaging.hpp"
+#include "model/modelContainer.hpp"
+#include "model/modelVariable.hpp"
+#include "model/variableProperties.hpp"
+#include "scheduler/scheduler.hpp"
 
 void MessageParser::executeCommand(const std::string &command) {
   for (auto &function : m_functionMap) {

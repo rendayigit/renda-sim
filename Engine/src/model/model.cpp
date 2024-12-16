@@ -1,5 +1,5 @@
-#include "engine/model/model.hpp"
-#include "engine/model/modelContainer.hpp"
+#include "model/model.hpp"
+#include "model/modelContainer.hpp"
 
 Model::Model(std::string name, std::string description, Object *parent)
     : Object(std::move(name), std::move(description), parent) {

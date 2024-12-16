@@ -1,4 +1,4 @@
-#include "engine/model/modelContainer.hpp"
+#include "model/modelContainer.hpp"
 
 Object *ModelContainer::getModel(const std::string &modelPath) {
   if (modelPath.empty()) {

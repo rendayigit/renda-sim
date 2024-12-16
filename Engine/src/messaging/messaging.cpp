@@ -1,12 +1,12 @@
-#include "engine/messaging/messaging.hpp"
+#include "messaging/messaging.hpp"
 
 #include <string>
 
-#include "engine/logger/logger.hpp"
-#include "engine/messaging/messageParser.hpp"
-#include "engine/model/modelContainer.hpp"
-#include "engine/model/modelVariable.hpp"
-#include "engine/model/variableProperties.hpp"
+#include "logger/logger.hpp"
+#include "messaging/messageParser.hpp"
+#include "model/modelContainer.hpp"
+#include "model/modelVariable.hpp"
+#include "model/variableProperties.hpp"
 
 constexpr int MESSAGING_MAX_COMMAND_SIZE = 1024;
 constexpr int MESSAGING_COMMAND_RECEIVER_SLEEP_DURATION = 100;

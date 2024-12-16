@@ -18,6 +18,8 @@ add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
 add_executable(renda-sim ${SOURCEFILES})
 
-target_link_libraries(renda-sim PRIVATE Boost::filesystem zmq spdlog::spdlog)
+target_link_libraries(
+  renda-sim PRIVATE Boost::filesystem zmq spdlog::spdlog
+                    ${CMAKE_CURRENT_LIST_DIR}/../../Engine/bin/librenda-sim.a)
 
 target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})
