@@ -18,9 +18,9 @@
         "name": "Sim",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder:Engine}/bin/renda-sim",
+        "program": "${workspaceFolder:Models}/bin/renda-sim",
         "args": [],
-        "cwd": "${workspaceFolder:Engine}/bin/"
+        "cwd": "${workspaceFolder:Models}/bin/"
       },
       {
         "name": "Python GUI",

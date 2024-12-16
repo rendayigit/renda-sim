@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(renda-sim LANGUAGES CXX)
+project(renda-sim-models LANGUAGES CXX)
 
 # Set target directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../bin/)
@@ -16,10 +16,11 @@ find_package(spdlog REQUIRED)
 
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
-add_executable(renda-sim ${SOURCEFILES})
+add_executable(renda-sim-models ${SOURCEFILES})
 
 target_link_libraries(
-  renda-sim PRIVATE Boost::filesystem zmq spdlog::spdlog
-                    ${CMAKE_CURRENT_LIST_DIR}/../../Engine/bin/librenda-sim.a)
+  renda-sim-models
+  PRIVATE Boost::filesystem zmq spdlog::spdlog
+          ${CMAKE_CURRENT_LIST_DIR}/../../Engine/bin/librenda-sim-models.a)
 
-target_include_directories(renda-sim PUBLIC ${INCLUDEDIRS})
+target_include_directories(renda-sim-models PUBLIC ${INCLUDEDIRS})
