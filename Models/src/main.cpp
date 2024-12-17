@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "engine.hpp"
 
 #include "pcs/pcs.hpp"
@@ -12,12 +10,6 @@ int main(int /*argc*/, char ** /*argv*/) {
 
   Engine engine;
   engine.run();
-
-  std::cout << "\nPress enter to stop the simulation\n\n";
-  char input = 0;
-  while (input != '\n') {
-    std::cin.get(input);
-  }
 
   return 0;
 }
