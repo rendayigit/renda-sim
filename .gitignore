@@ -1,6 +1,9 @@
 # Executables
 bin/
 
+# Libraries
+lib/
+
 # CMake build directory
 build/
 

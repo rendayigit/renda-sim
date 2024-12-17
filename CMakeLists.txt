@@ -3,3 +3,5 @@ project(renda-sim)
 
 add_subdirectory(Engine/)
 add_subdirectory(Models/)
+
+add_dependencies(renda-sim-models renda-sim-engine)
