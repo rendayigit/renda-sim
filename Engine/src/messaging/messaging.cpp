@@ -22,6 +22,19 @@ Messaging::~Messaging() {
   delete m_publisherContext;
 }
 
+void Messaging::start() {
+  m_isCommandReceiverThreadRunning = true;
+  m_commandReceiverThread = std::thread([&] { commandReceiverStep(); });
+}
+
+void Messaging::stop() {
+  m_isCommandReceiverThreadRunning = false;
+
+  if (m_commandReceiverThread.joinable()) {
+    m_commandReceiverThread.join();
+  }
+}
+
 void Messaging::queueMessage(const std::string &topic, const std::string &message) {
   zmq::message_t zTopic(topic.data(), topic.size());
   zmq::message_t zMessage(message.data(), message.size());
