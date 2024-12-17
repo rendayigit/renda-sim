@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build App",
+            "label": "Build Models",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -19,7 +19,7 @@
             "runOptions": {"reevaluateOnRerun": false},
         },
         {
-            "label": "Run App",
+            "label": "Run Models",
             "type": "shell",
             "group": "test",
             "command": [
@@ -58,7 +58,7 @@
             "runOptions": {"reevaluateOnRerun": false},
         },
         {
-            "label": "Clean App",
+            "label": "Clean Models",
             "type": "shell",
             "group": "test",
             "command": [

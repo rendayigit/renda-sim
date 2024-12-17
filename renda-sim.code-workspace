@@ -10,7 +10,38 @@
       "path": "Python_GUI"
     }
   ],
-  "settings": {},
+  "settings": {
+    "cmake.automaticReconfigure": false
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build App",
+        "type": "shell",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "command": ["chmod -R 777 ./scripts/;", "./scripts/build.sh"],
+        "options": {
+          "cwd": "${workspaceFolder:Models}/../"
+        },
+        "problemMatcher": "$gcc",
+        "runOptions": { "reevaluateOnRerun": false }
+      },
+      {
+        "label": "Clean App",
+        "type": "shell",
+        "group": "test",
+        "command": ["chmod -R 777 ./scripts/;", "./scripts/clean.sh"],
+        "options": {
+          "cwd": "${workspaceFolder:Models}/../"
+        },
+        "runOptions": { "reevaluateOnRerun": false }
+      }
+    ]
+  },
   "launch": {
     "version": "0.2.0",
     "configurations": [
@@ -18,9 +49,9 @@
         "name": "Sim",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder:Models}/bin/renda-sim",
+        "program": "${workspaceFolder:Models}/../bin/renda-sim-models",
         "args": [],
-        "cwd": "${workspaceFolder:Models}/bin/"
+        "cwd": "${workspaceFolder:Models}/../bin/"
       },
       {
         "name": "Python GUI",

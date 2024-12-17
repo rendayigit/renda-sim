@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build App",
+            "label": "Build Engine",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -16,19 +16,6 @@
                 "cwd": "${workspaceFolder}/"
             },
             "problemMatcher": "$gcc",
-            "runOptions": {"reevaluateOnRerun": false},
-        },
-        {
-            "label": "Run App",
-            "type": "shell",
-            "group": "test",
-            "command": [
-                "chmod -R 777 ./scripts/;",
-                "./scripts/run.sh"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/"
-            },
             "runOptions": {"reevaluateOnRerun": false},
         },
         {
@@ -58,7 +45,7 @@
             "runOptions": {"reevaluateOnRerun": false},
         },
         {
-            "label": "Clean App",
+            "label": "Clean Engine",
             "type": "shell",
             "group": "test",
             "command": [
