@@ -43,18 +43,11 @@ SampleModel::SampleModel()
 }
 
 void SampleModel::step(int stepTime) {
-  Logger::log()->info(std::to_string(stepTime) +
-                      " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
+  // TODO(renda): Do something about below code
+  // Logger::log()->info(std::to_string(stepTime) +
+  //                     " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
 
   if (stepTime == TIME_STEP_1_SEC) {
     m_integerValue.setValue(m_integerValue.getValue() + 1);
-  }
-
-  // TODO(renda): This doesn't solve the issue of having a cluttered log file
-  if (Timer::getInstance().simMillis() >= 1200) {
-    m_eventSlow->deactivate();
-    m_eventFast->deactivate();
-    m_eventFaster->deactivate();
-    m_eventFastest->deactivate();
   }
 }
