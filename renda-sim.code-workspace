@@ -43,23 +43,6 @@
     ]
   },
   "launch": {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Sim",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${workspaceFolder:Models}/../bin/renda-sim-models",
-        "args": [],
-        "cwd": "${workspaceFolder:Models}/../bin/"
-      },
-      {
-        "name": "Python GUI",
-        "type": "debugpy",
-        "request": "launch",
-        "program": "${workspaceFolder:Python_GUI}/main.py"
-      }
-    ],
     "compounds": [
       {
         "name": "Sim and Python GUI",
