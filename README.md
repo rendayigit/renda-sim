@@ -26,6 +26,7 @@ sudo apt install libgtest-dev       # Install gtest unit testing framework.
 sudo apt install clangd             # Install clangd language server.
 sudo apt install clang-format       # Install clang-format.
 sudo apt install pre-commit         # Install pre-commit to run clang-format on commit.
+pre-commit install                  # Activate pre-commit hooks
 ```
 
 ### Use the scripts under `scripts/`
