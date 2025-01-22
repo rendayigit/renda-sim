@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 #include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
@@ -39,6 +38,11 @@ SampleModel::SampleModel()
   EventManager::getInstance().addEvent(m_eventFaster);
   EventManager::getInstance().addEvent(m_eventFastest);
 
+  m_arrayValue.push_back(new ModelVariable<int>("Array Variable[0]", "Sample Array Variable 0", this, -1));
+  m_arrayValue.push_back(new ModelVariable<int>("Array Variable[1]", "Sample Array Variable 1", this, -1));
+  m_arrayValue.push_back(new ModelVariable<int>("Array Variable[2]", "Sample Array Variable 2", this, -1));
+  m_arrayValue.push_back(new ModelVariable<int>("Array Variable[3]", "Sample Array Variable 3", this, -1));
+
   Logger::log()->info("Sample Model Initialized");
 }
 
@@ -49,5 +53,9 @@ void SampleModel::step(int stepTime) {
 
   if (stepTime == TIME_STEP_1_SEC) {
     m_integerValue.setValue(m_integerValue.getValue() + 1);
+    m_arrayValue.at(0)->setValue(m_integerValue.getValue());
+    m_arrayValue.at(1)->setValue(m_integerValue.getValue() * 2);
+    m_arrayValue.at(2)->setValue(m_integerValue.getValue() * 3);
+    m_arrayValue.at(3)->setValue(m_integerValue.getValue() * 4);
   }
 }
