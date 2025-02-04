@@ -46,6 +46,25 @@ MessageParser::MessageParser() {
     auto *boolVariable = dynamic_cast<ModelVariable<bool> *>(object);
     auto *stringVariable = dynamic_cast<ModelVariable<std::string> *>(object);
 
+    // TODO(renda): Add all primitive types
+    /*
+    void
+    bool
+    char
+    short
+    int
+    long long
+    long
+    unsigned char
+    unsigned short
+    unsigned int
+    unsigned long long
+    unsigned long
+    wchar_t
+    float
+    double
+    */
+
     std::string reply;
 
     if (doubleVariable != nullptr) {

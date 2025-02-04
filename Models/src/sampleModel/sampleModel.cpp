@@ -16,7 +16,8 @@ SampleModel::SampleModel()
       m_doubleValue("Double Variable", "Sample Double Variable", this, 123.4),
       m_integerValue("Integer Variable", "Sample Integer Variable", this, -1),
       m_booleanValue("Boolean Variable", "Sample Boolean Variable", this, true),
-      m_stringValue("String Variable", "Sample String Variable", this, "ABCD") {
+      m_stringValue("String Variable", "Sample String Variable", this, "ABCD"),
+      m_uintValue("Uint", "Sample Uint", this, 15) {
   m_eventSlow->setEventFunction([&] { step(1000); });
   m_eventSlow->setCycleMillis(TIME_STEP_1_SEC);
   m_eventSlow->activate();
@@ -42,6 +43,16 @@ SampleModel::SampleModel()
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[1]", "Sample Array Variable 1", this, -1));
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[2]", "Sample Array Variable 2", this, -1));
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[3]", "Sample Array Variable 3", this, -1));
+
+  // FIXME(renda): Why does this not work?
+  // m_arrayValue.emplace_back("Array Variable[0]", "Sample Array Variable 0", this, -1);
+  // m_arrayValue.emplace_back("Array Variable[1]", "Sample Array Variable 1", this, -1);
+  // m_arrayValue.emplace_back("Array Variable[2]", "Sample Array Variable 2", this, -1);
+  // m_arrayValue.emplace_back("Array Variable[3]", "Sample Array Variable 3", this, -1);
+
+  // FIXME(renda): Variable display cannot view this because uint is not defined in messageparser, add all primitive
+  // types to messageparser
+  m_uintValue.setValue(15);
 
   Logger::log()->info("Sample Model Initialized");
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -12,7 +13,12 @@ template <typename t> class ModelVariable : public Object, public VariableProper
 public:
   explicit ModelVariable(std::string name, std::string description, Model *parent, t initialValue)
       : Object(name, description, parent), m_value(initialValue) {
-    parent->addChild(this);
+    if (parent != nullptr) {
+      parent->addChild(this);
+    } else {
+      // TODO(renda): Log a better way
+      std::cerr << "Variable " + name + " has no parent assigned" << std::endl;
+    }
   }
 
   void setValue(t value) {

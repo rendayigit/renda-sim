@@ -22,4 +22,6 @@ private:
   ModelVariable<bool> m_booleanValue;
   ModelVariable<std::string> m_stringValue;
   std::vector<ModelVariable<int> *> m_arrayValue; // TODO(renda): improve array support
+
+  ModelVariable<unsigned int> m_uintValue;
 };
