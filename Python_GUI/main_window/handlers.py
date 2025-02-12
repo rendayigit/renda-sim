@@ -5,6 +5,11 @@ from commanding import Commanding
 from engine_controls.window import EngineControls
 from messaging import Messaging
 
+# For plotting
+import sys
+from plot.plot2 import GenericPlotter
+from PyQt5.QtWidgets import QApplication
+
 
 class MainWindowHandlers:
     """Event handlers for Main Window"""
@@ -152,6 +157,10 @@ class MainWindowHandlers:
         menu.Append(item)
         self.main_window.Bind(wx.EVT_MENU, handler=lambda _: self._delete_all_items(self.main_window.variable_list), id=item.GetId())
 
+        item = wx.MenuItem(menu, wx.NewId(), "Plot")
+        menu.Append(item)
+        self.main_window.Bind(wx.EVT_MENU, handler=lambda _: self._plot(self.main_window.variable_list.GetFocusedItem()), id=item.GetId())
+
         if len(selection) != 0:
             item = wx.MenuItem(menu, wx.NewId(), "Remove Selection")
             menu.Append(item)
@@ -161,9 +170,7 @@ class MainWindowHandlers:
 
             item = wx.MenuItem(menu, wx.NewId(), "Plot Selection")
             menu.Append(item)
-            self.main_window.Bind(
-                wx.EVT_MENU, lambda _: [self._plot_items(i) for i in selection], id=item.GetId()
-            )
+            self.main_window.Bind(wx.EVT_MENU, lambda _: [self._plot_items(i) for i in selection], id=item.GetId())
 
         self.main_window.variable_list.PopupMenu(menu, event.GetPosition())
 
@@ -191,22 +198,34 @@ class MainWindowHandlers:
                 list_ctrl.DeleteItem(i)
                 break
 
-    def _plot_items(self, item_name):
-        import sys
-        from plot.plot2 import GenericPlotter
-        from PyQt5.QtWidgets import QApplication
-        
+    def _plot(self, item):
         app = QApplication(sys.argv)
 
         plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Variables")
         plotter.show()
 
-        a = 0
+        # a = 0
 
-        def update_table(time):
-            plotter.add_variable(item_name, a, time)
+        # def update_table(time):
+        # plotter.add_variable(item_name, a, time)
 
-        Messaging().add_topic_handler("SIM_TIME", update_table)
-        Messaging().add_topic_handler(item_name, lambda val, a: val)
+        # Messaging().add_topic_handler("SIM_TIME", update_table)
+        # Messaging().add_topic_handler(item_name, lambda val, a: val)
+
+        item_name = self.main_window.variable_list.GetItemText(item, 0)
+
+        def temp():
+            plotter.add_variable(
+                item_name, float(self.main_window.variable_list.GetItemText(item, 2)), float(self.main_window.sim_time_display.GetValue())
+            )
+        
+        from PyQt5.QtCore import QTimer
+
+        timer = QTimer()
+        timer.timeout.connect(temp)
+        timer.start(100)  # Update every 100ms
 
         sys.exit(app.exec_())
+
+    def _plot_items(self, item_name):
+        pass
