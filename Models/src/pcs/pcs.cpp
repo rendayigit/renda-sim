@@ -40,7 +40,7 @@ void PowerSubsystem::initialize() {
   // TODO(renda): Initialize the power subsystem here
   // Read initial values from JSON
 
-  Logger::log()->info("Power Subsystem Initialized");
+  Logger::info("Power Subsystem Initialized");
 }
 
 void PowerSubsystem::step() {

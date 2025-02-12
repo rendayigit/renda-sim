@@ -1,4 +1,4 @@
-#include "engine/fileOperations/fileOperations.hpp"
+#include "common.hpp"
 #include <gtest/gtest.h>
 #include <string_view>
 
@@ -16,7 +16,7 @@ bool endsWithTestsBin(const std::string &inputStr) {
 }
 
 TEST(FileOperation, GetExecutableDirectory) {
-  std::string executableDirectory = FileOperations::getInstance().getExecutableDirectory();
+  std::string executableDirectory = getExecutableDirectory();
 
   // Check if the path ends with "/tests/bin/"
   EXPECT_TRUE(endsWithTestsBin(executableDirectory));

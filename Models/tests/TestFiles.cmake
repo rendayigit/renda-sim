@@ -3,7 +3,6 @@ set(TESTFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/load.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/loadState.cpp
     # Engine Source Files
-    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/fileOperations/fileOperations.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/eventManager/eventManager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/json/json.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/logger/logger.cpp

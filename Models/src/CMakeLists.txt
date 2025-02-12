@@ -20,7 +20,7 @@ add_executable(renda-sim-models ${SOURCEFILES})
 
 target_link_libraries(
   renda-sim-models
-  PRIVATE Boost::filesystem zmq spdlog::spdlog
-          -L${CMAKE_CURRENT_LIST_DIR}/../../lib/ -lrenda-sim-engine)
+  PRIVATE -L${CMAKE_CURRENT_LIST_DIR}/../../lib/ -lrenda-sim-engine
+          Boost::filesystem zmq spdlog::spdlog)
 
 target_include_directories(renda-sim-models PUBLIC ${INCLUDEDIRS})

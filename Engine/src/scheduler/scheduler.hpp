@@ -3,10 +3,8 @@
 #include <string>
 #include <thread>
 
-#include "fileOperations/fileOperations.hpp"
+#include "common.hpp"
 #include "json/json.hpp"
-
-const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirectory() + "/../config.json";
 
 class Scheduler {
 public:

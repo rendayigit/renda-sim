@@ -1,5 +1,5 @@
 #include "models/common/load/load.hpp"
-#include "engine/fileOperations/fileOperations.hpp"
+#include "common.hpp"
 #include "engine/json/json.hpp"
 #include "models/common/load/loadContainer.hpp"
 #include "models/common/load/loadState.hpp"
@@ -7,8 +7,7 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 
-std::string testLoadConfigFile =
-    FileOperations::getInstance().getExecutableDirectory() + "../tests/testLoadConfig.json";
+std::string testLoadConfigFile = getExecutableDirectory() + "../tests/testLoadConfig.json";
 
 class LoadTestModel : public Load {
 public:

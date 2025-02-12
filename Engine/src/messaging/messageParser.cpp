@@ -80,7 +80,7 @@ MessageParser::MessageParser() {
       reply = stringVariable->getDescription() + "," + stringVariable->getValue() + "," + "String";
       stringVariable->setIsMonitored(true);
     } else {
-      Logger::log()->debug(variablePath + " is not a valid variable path.");
+      Logger::debug(variablePath + " is not a valid variable path.");
     }
 
     Messaging::getInstance().reply(reply);
@@ -92,7 +92,7 @@ MessageParser::MessageParser() {
 
     if (variable != nullptr) {
       variable->setIsMonitored(false);
-      Logger::log()->debug("Removed " + variablePath + " from the monitor list.");
+      Logger::debug("Removed " + variablePath + " from the monitor list.");
     }
   };
 }

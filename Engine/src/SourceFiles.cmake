@@ -1,7 +1,6 @@
 set(SOURCEFILES
     # Engine Source Files
     ${CMAKE_CURRENT_LIST_DIR}/eventManager/eventManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/fileOperations/fileOperations.cpp
     ${CMAKE_CURRENT_LIST_DIR}/json/json.cpp
     ${CMAKE_CURRENT_LIST_DIR}/logger/logger.cpp
     ${CMAKE_CURRENT_LIST_DIR}/network/client/client.cpp

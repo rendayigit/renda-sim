@@ -37,7 +37,7 @@ void Messaging::queueMessage(const std::string &topic, const std::string &messag
   zmq::message_t zMessage(message.data(), message.size());
 
   if (topic != "SIM_TIME") {
-    Logger::log()->debug("Queuing: [" + topic + "] " + message);
+    Logger::debug("Queuing: [" + topic + "] " + message);
   }
 
   m_publisher->send(zTopic, zmq::send_flags::sndmore);
@@ -45,7 +45,7 @@ void Messaging::queueMessage(const std::string &topic, const std::string &messag
 }
 
 void Messaging::reply(const std::string &message) {
-  Logger::log()->debug("Replying: " + message);
+  Logger::debug("Replying: " + message);
 
   m_commandReceiver->send(zmq::buffer(message));
 }
@@ -58,7 +58,7 @@ void Messaging::commandReceiverStep() {
 
     std::string command = static_cast<char *>(request.data());
 
-    Logger::log()->debug("Received command: " + command);
+    Logger::debug("Received command: " + command);
 
     MessageParser::getInstance().executeCommand(command);
 

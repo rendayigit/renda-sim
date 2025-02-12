@@ -1,14 +1,25 @@
-#include <string>
-
-#include "fileOperations/fileOperations.hpp"
 #include "logger.hpp"
-#include "json/json.hpp"
 
-const std::string CONFIG_PATH = FileOperations::getInstance().getExecutableDirectory() + "/../config.json";
+#include "common.hpp"
 
-Logger::Logger() {
-  m_logger = spdlog::daily_logger_mt(
-      "ENGINE", Json(CONFIG_PATH).getNode("LOGS_DIR").getValue<std::string>() + "Engine.log", 0, 0);
-  m_logger->set_pattern("[%H:%M:%S.%f %z] [%n] [%l] [thread %t] %v");
-  m_logger->set_level(spdlog::level::level_enum::trace); // TODO(renda): Activate only if in debug mode
+void Logger::info(const std::string &message) { getLogger()->info(message); }
+
+void Logger::error(const std::string &message) { getLogger()->error(message); }
+
+void Logger::warn(const std::string &message) { getLogger()->warn(message); }
+
+void Logger::critical(const std::string &message) { getLogger()->critical(message); }
+
+void Logger::debug(const std::string &message) { getLogger()->debug(message); }
+
+std::shared_ptr<spdlog::logger> Logger::getLogger() {
+  static std::shared_ptr<spdlog::logger> logger = [] {
+    auto log = spdlog::daily_logger_mt("ENGINE", getExecutableDirectory() + "Engine.log", 0, 0);
+    log->set_pattern("[%H:%M:%S.%f %z] [%n] [%l] [thread %t] %v");
+    log->set_level(spdlog::level::trace);
+    log->flush_on(spdlog::level::trace);
+    return log;
+  }();
+
+  return logger;
 }

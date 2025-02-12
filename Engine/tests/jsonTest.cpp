@@ -1,10 +1,10 @@
-#include "engine/json/json.hpp"
-#include "engine/fileOperations/fileOperations.hpp"
+#include "json/json.hpp"
+#include "common.hpp"
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <string>
 
-std::string testJsonFilePath = FileOperations::getInstance().getExecutableDirectory() + "../tests/test.json";
+std::string testJsonFilePath = getExecutableDirectory() + "../tests/test.json";
 
 TEST(Json, GetValue) {
   // Get node "first_name"

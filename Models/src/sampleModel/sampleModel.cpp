@@ -54,12 +54,12 @@ SampleModel::SampleModel()
   // types to messageparser
   m_uintValue.setValue(15);
 
-  Logger::log()->info("Sample Model Initialized");
+  Logger::info("Sample Model Initialized");
 }
 
 void SampleModel::step(int stepTime) {
   // TODO(renda): Do something about below code
-  // Logger::log()->info(std::to_string(stepTime) +
+  // Logger::info(std::to_string(stepTime) +
   //                     " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
 
   if (stepTime == TIME_STEP_1_SEC) {
