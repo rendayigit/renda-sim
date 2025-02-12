@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include "messaging/messaging.hpp"
 #include "model/model.hpp"

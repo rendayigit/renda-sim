@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 // TODO(renda): find a better name
 class VariableProperties {
 public:
