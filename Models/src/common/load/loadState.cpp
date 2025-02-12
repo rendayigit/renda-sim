@@ -1,25 +1,29 @@
 #include "loadState.hpp"
 
-#include "json/json.hpp"
-
 #include <cmath>
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <stdexcept>
+
+#include "common.hpp"
 
 LoadState::LoadState(std::string configurationFile, std::string stateName)
     : m_configurationFile(std::move(configurationFile)), m_stateName(std::move(stateName)) {
+  nlohmann::json config;
+  std::ifstream configFile(CONFIG_PATH);
+  configFile >> config;
 
-  setVoltageParameters(
-      Json(m_configurationFile).getNode(m_stateName).getNode("nominalVoltageConsumption").getValue<double>(),
-      Json(m_configurationFile).getNode(m_stateName).getNode("maxVoltageConsumption").getValue<double>(),
-      Json(m_configurationFile).getNode(m_stateName).getNode("minVoltageConsumption").getValue<double>());
+  // TODO: Might need error handling
+  setVoltageParameters(config[m_stateName]["nominalVoltageConsumption"].get<double>(),
+                       config[m_stateName]["maxVoltageConsumption"].get<double>(),
+                       config[m_stateName]["minVoltageConsumption"].get<double>());
 
-  setTemperatureParameters(
-      Json(m_configurationFile).getNode(m_stateName).getNode("nominalTemperature").getValue<double>(),
-      Json(m_configurationFile).getNode(m_stateName).getNode("maxTemperature").getValue<double>(),
-      Json(m_configurationFile).getNode(m_stateName).getNode("minTemperature").getValue<double>());
+  setTemperatureParameters(config[m_stateName]["nominalTemperature"].get<double>(),
+                           config[m_stateName]["maxTemperature"].get<double>(),
+                           config[m_stateName]["minTemperature"].get<double>());
 
-  setPowerParameters(Json(m_configurationFile).getNode(m_stateName).getNode("nominalPower").getValue<double>(),
-                     Json(m_configurationFile).getNode(m_stateName).getNode("maxPower").getValue<double>(),
-                     Json(m_configurationFile).getNode(m_stateName).getNode("minPower").getValue<double>());
+  setPowerParameters(config[m_stateName]["nominalPower"].get<double>(), config[m_stateName]["maxPower"].get<double>(),
+                     config[m_stateName]["minPower"].get<double>());
 }
 
 void LoadState::setTemperatureParameters(double nominal, double max, double min) {

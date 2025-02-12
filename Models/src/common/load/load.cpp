@@ -1,19 +1,25 @@
 #include "common/load/load.hpp"
-#include "common/load/loadContainer.hpp"
-#include "json.hpp"
 
 #include <cmath>
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <utility>
+
+#include "common/load/loadContainer.hpp"
 
 constexpr double ROOM_TEMPERATURE = 293.15;
 
 Load::Load(std::string name, std::string configurationFile)
     : vbus({}), gnd({}), activeVoltageConsumption({}), activeTemperature({}), activePowerConsumption({}),
       m_name(std::move(name)), m_configurationFile(std::move(configurationFile)) {
-  Json config = Json(m_configurationFile);
-  m_thermalZone = config.getNode("thermalZone").getValue<std::string>();
-  m_busType = m_busTypes.at(config.getNode("busType").getValue<std::string>());
+  nlohmann::json config;
+  std::ifstream configFile(m_configurationFile);
+  configFile >> config;
+
+  // TODO: Might need error handling
+  m_thermalZone = config["thermalZone"].get<std::string>();
+  m_busType = m_busTypes.at(config["busType"].get<std::string>());
 
   vbus.setUpdateFunction([this](double value) { updateVbusIn(value); });
   gnd.setUpdateFunction([this](double value) { updateVbusGnd(value); });

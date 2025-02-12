@@ -1,10 +1,6 @@
 #pragma once
 
-#include <string>
 #include <thread>
-
-#include "common.hpp"
-#include "json/json.hpp"
 
 class Scheduler {
 public:
@@ -26,14 +22,12 @@ public:
   bool isRunning() const { return m_isRunning; }
 
 private:
-  Scheduler()
-      : m_stepTimeMicros(Json(CONFIG_PATH).getNode("SCHEDULER_STEP_TIME_MICROS").getValue<double>()),
-        m_rate(Json(CONFIG_PATH).getNode("SCHEDULER_DEFAULT_RATE").getValue<double>()) {}
+  Scheduler();
 
   void step(long currentMillis) const;
 
-  double m_stepTimeMicros;
-  double m_rate;
+  double m_stepTimeMicros{};
+  double m_rate{};
 
   std::thread m_schedulerThread;
   bool m_isRunning = false;

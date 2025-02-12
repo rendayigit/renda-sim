@@ -4,10 +4,7 @@ set(TESTFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/models/common/load/loadState.cpp
     # Engine Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/eventManager/eventManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/json/json.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/logger/logger.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/network/client/client.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../src/engine/network/server/server.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/scheduler/scheduler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/timer/timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/engine/messaging/messaging.cpp
@@ -26,7 +23,6 @@ set(TESTFILES
     # ${CMAKE_CURRENT_LIST_DIR}/../tests/engine/eventManagerTest.cpp
     # TODO(renda): Fix tests
     ${CMAKE_CURRENT_LIST_DIR}/../tests/engine/fileOperationsTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/engine/jsonTest.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/../tests/engine/loggerTest.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/../tests/engine/schedulerTest.cpp
     # TODO(renda): Fix tests Model Test Files
