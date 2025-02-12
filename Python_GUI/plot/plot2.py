@@ -28,16 +28,33 @@ class GenericPlotter(QMainWindow):
         self.lines = {}  # Dictionary to store line objects for each plot
         self.colors = {}  # Dictionary to store colors for each plot
 
+        self.common_colors = [
+            (255, 0, 0),  # Red
+            (0, 255, 0),  # Green
+            (0, 0, 255),  # Blue
+            (255, 255, 0),  # Yellow
+            (255, 0, 255),  # Magenta
+            (0, 255, 255),  # Cyan
+            (128, 0, 0),  # Dark Red
+            (0, 128, 0),  # Dark Green
+            (0, 0, 128),  # Dark Blue
+            (128, 128, 0),  # Brown
+            (128, 0, 128),  # Purple
+            (0, 128, 128),  # Teal
+        ]
+
+        self.color_index = 0
+
         self.plot_widget.addLegend()
 
     def add_variable(self, name, value, time):
         """Add a new variable with a given name, value, and time."""
         if name not in self.data:
             self.data[name] = {"x": [time], "y": [value]}
-            self.lines[name] = self.plot_widget.plot(
-                pen=pg.mkPen(color=(255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)), name=name
-            )
-            self.colors[name] = (255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)
+            color = self.common_colors[self.color_index]
+            self.lines[name] = self.plot_widget.plot(pen=pg.mkPen(color=color), name=name)
+            self.colors[name] = color
+            self.color_index = (self.color_index + 1) % len(self.common_colors)
         else:
             self.data[name]["x"].append(time)
             self.data[name]["y"].append(value)
@@ -76,6 +93,10 @@ if __name__ == "__main__":
         plotter.add_variable("Value A", random.random(), _time)
         plotter.add_variable("Value B", random.random() * 2, _time)
         plotter.add_variable("Value C", random.random() * 3 - 1.5, _time)
+        plotter.add_variable("Value D", random.random() * 4, _time)
+        plotter.add_variable("Value E", random.random() * 5, _time)
+        plotter.add_variable("Value F", random.random() * 6, _time)
+
         _time += 1
 
     timer = QTimer()
