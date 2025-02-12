@@ -96,7 +96,6 @@ if __name__ == "__main__":
         plotter.add_variable("Value D", random.random() * 4, _time)
         plotter.add_variable("Value E", random.random() * 5, _time)
         plotter.add_variable("Value F", random.random() * 6, _time)
-
         _time += 1
 
     timer = QTimer()
@@ -104,3 +103,29 @@ if __name__ == "__main__":
     timer.start(100)  # Update every 100ms
 
     sys.exit(app.exec_())
+
+''' CONSIDERED USAGE
+a = 0
+b = 0
+c = 0
+time = 0
+
+def update_table(): # loop
+    plotter.add_variable("Value A", a, time)
+    plotter.add_variable("Value B", b, time)
+    plotter.add_variable("Value C", c, time)
+
+def update_time(_time):
+    time = _time
+
+def update_a(_a):
+    _a = a
+
+Messaging().add_topic_handler("SIM_TIME", update_time)
+
+Messaging().add_topic_handler("Value A", update_a)
+
+Messaging().add_topic_handler("Value A", lambda val, a: val)
+Messaging().add_topic_handler("Value B", lambda val, b: val)
+Messaging().add_topic_handler("Value C", lambda val, c: val)
+'''
