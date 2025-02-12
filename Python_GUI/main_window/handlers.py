@@ -201,16 +201,8 @@ class MainWindowHandlers:
     def _plot(self, item):
         app = QApplication(sys.argv)
 
-        plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Variables")
+        plotter = GenericPlotter(title="Real-time Plotter", xlabel="Time (s)", ylabel="Variables")
         plotter.show()
-
-        # a = 0
-
-        # def update_table(time):
-        # plotter.add_variable(item_name, a, time)
-
-        # Messaging().add_topic_handler("SIM_TIME", update_table)
-        # Messaging().add_topic_handler(item_name, lambda val, a: val)
 
         item_name = self.main_window.variable_list.GetItemText(item, 0)
 
@@ -218,14 +210,15 @@ class MainWindowHandlers:
             plotter.add_variable(
                 item_name, float(self.main_window.variable_list.GetItemText(item, 2)), float(self.main_window.sim_time_display.GetValue())
             )
-        
+
         from PyQt5.QtCore import QTimer
 
         timer = QTimer()
         timer.timeout.connect(temp)
         timer.start(100)  # Update every 100ms
 
-        sys.exit(app.exec_())
+        app.exec_()
 
     def _plot_items(self, item_name):
         pass
+        # TODO: implement
