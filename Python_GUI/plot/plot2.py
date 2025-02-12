@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
 
+
 class GenericPlotter(QMainWindow):
     def __init__(self, title="Generic Plot", xlabel="X", ylabel="Y", max_data_points=100):
         super().__init__()
@@ -21,8 +22,8 @@ class GenericPlotter(QMainWindow):
         self.central_widget.setLayout(self.layout)
 
         self.plot_widget = pg.PlotWidget(title=title)
-        self.plot_widget.setLabel('bottom', xlabel)
-        self.plot_widget.setLabel('left', ylabel)
+        self.plot_widget.setLabel("bottom", xlabel)
+        self.plot_widget.setLabel("left", ylabel)
         self.layout.addWidget(self.plot_widget)
 
         self.lines = {}  # Dictionary to store line objects for each plot
@@ -61,20 +62,25 @@ class GenericPlotter(QMainWindow):
 
         self.time += 0.1
 
-    def start_animation(self):
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_plot)
-        self.timer.start(100)  # Update every 100ms
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Value")
+
+    # TODO: Instead of doing these 4 lines, we need to have a single function that takes a variable name
+    # and a variable value. Every time a new variable is added via this function the table shall add a new plot for this
+    # variable along with its value. And every time a new value for an existent variable is provided via
+    # this function the value of the already added plot shall be updated.
     plotter.add_plot("sin", (255, 0, 0))  # Red
     plotter.add_plot("cos", (0, 0, 255))  # Blue
     plotter.data["sin"] = {"x": [], "y": []}
     plotter.data["cos"] = {"x": [], "y": []}
+
     plotter.show()
-    plotter.start_animation()
+
+    timer = QTimer()
+    timer.timeout.connect(plotter.update_plot)
+    timer.start(100)  # Update every 100ms
 
     sys.exit(app.exec_())
