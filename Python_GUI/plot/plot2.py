@@ -1,9 +1,9 @@
 import sys
-import math
+import random
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
-import random
+
 
 class GenericPlotter(QMainWindow):
     def __init__(self, title="Generic Plot", xlabel="X", ylabel="Y", max_data_points=100):
@@ -13,7 +13,6 @@ class GenericPlotter(QMainWindow):
         self.max_data_points = max_data_points
 
         self.setWindowTitle(title)
-        self.setGeometry(100, 100, 800, 600)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -29,11 +28,15 @@ class GenericPlotter(QMainWindow):
         self.lines = {}  # Dictionary to store line objects for each plot
         self.colors = {}  # Dictionary to store colors for each plot
 
+        self.plot_widget.addLegend()
+
     def add_variable(self, name, value, time):
         """Add a new variable with a given name, value, and time."""
         if name not in self.data:
             self.data[name] = {"x": [time], "y": [value]}
-            self.lines[name] = self.plot_widget.plot(pen=pg.mkPen(color=(255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)), name=name)
+            self.lines[name] = self.plot_widget.plot(
+                pen=pg.mkPen(color=(255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)), name=name
+            )
             self.colors[name] = (255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)
         else:
             self.data[name]["x"].append(time)
@@ -66,13 +69,14 @@ if __name__ == "__main__":
     plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Value")
     plotter.show()
 
-    time = 0
+    _time = 0
+
     def update_plot():
-        global time
-        plotter.add_variable("Value A", random.random(), time)
-        plotter.add_variable("Value B", random.random() * 2, time)
-        plotter.add_variable("Value C", random.random() * 3 - 1.5, time)
-        time += 1
+        global _time
+        plotter.add_variable("Value A", random.random(), _time)
+        plotter.add_variable("Value B", random.random() * 2, _time)
+        plotter.add_variable("Value C", random.random() * 3 - 1.5, _time)
+        _time += 1
 
     timer = QTimer()
     timer.timeout.connect(update_plot)
