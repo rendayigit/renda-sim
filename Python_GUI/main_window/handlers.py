@@ -201,7 +201,7 @@ class MainWindowHandlers:
     def _plot(self, item):
         app = QApplication(sys.argv)
 
-        plotter = GenericPlotter(title="Real-time Plotter", xlabel="Time (s)", ylabel="Variables")
+        plotter = GenericPlotter(title="Real-time Plotter", xlabel="Time (s)", ylabel="Values")
         plotter.show()
 
         item_name = self.main_window.variable_list.GetItemText(item, 0)
@@ -218,6 +218,7 @@ class MainWindowHandlers:
         timer.start(100)  # Update every 100ms
 
         app.exec_()
+        timer.stop()
 
     def _plot_items(self, item_name):
         pass
