@@ -1,12 +1,14 @@
 """Event handlers for Main Window"""
 
+import threading
+import time
+import sys
 import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
 from messaging import Messaging
 
 # For plotting
-import sys
 from plot.plot2 import GenericPlotter
 from PyQt5.QtWidgets import QApplication
 
@@ -198,27 +200,30 @@ class MainWindowHandlers:
                 list_ctrl.DeleteItem(i)
                 break
 
+    # FIXME: Crashes if adding a second plot
     def _plot(self, item):
         app = QApplication(sys.argv)
 
         plotter = GenericPlotter(title="Real-time Plotter", xlabel="Time (s)", ylabel="Values")
         plotter.show()
 
-        item_name = self.main_window.variable_list.GetItemText(item, 0)
+        def thread_loop():
+            while True:
+                try:
+                    wx.CallAfter(
+                        plotter.add_variable,
+                        self.main_window.variable_list.GetItemText(item, 0),
+                        float(self.main_window.variable_list.GetItemText(item, 2)),
+                        float(self.main_window.sim_time_display.GetValue()),
+                    )
+                except:
+                    pass
+                time.sleep(0.1)  # sleep for 100 ms
 
-        def temp():
-            plotter.add_variable(
-                item_name, float(self.main_window.variable_list.GetItemText(item, 2)), float(self.main_window.sim_time_display.GetValue())
-            )
-
-        from PyQt5.QtCore import QTimer
-
-        timer = QTimer()
-        timer.timeout.connect(temp)
-        timer.start(100)  # Update every 100ms
+        thread = threading.Thread(target=thread_loop)
+        thread.start()
 
         app.exec_()
-        timer.stop()
 
     def _plot_items(self, item_name):
         pass
