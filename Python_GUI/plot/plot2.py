@@ -3,7 +3,7 @@ import math
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
-
+import random
 
 class GenericPlotter(QMainWindow):
     def __init__(self, title="Generic Plot", xlabel="X", ylabel="Y", max_data_points=100):
@@ -27,26 +27,25 @@ class GenericPlotter(QMainWindow):
         self.layout.addWidget(self.plot_widget)
 
         self.lines = {}  # Dictionary to store line objects for each plot
-        self.time = 0
+        self.colors = {}  # Dictionary to store colors for each plot
 
-    def add_plot(self, name, color):
-        """Add a new plot with a given name and line color."""
-        self.data[name] = {"x": [], "y": []}
-        self.lines[name] = self.plot_widget.plot(pen=pg.mkPen(color=color), name=name)
-
-    def update_plot(self):
-        for name, line in self.lines.items():
-            new_y = math.sin(self.time) if name == "sin" else math.cos(self.time)
-            self.data[name]["x"].append(self.time)
-            self.data[name]["y"].append(new_y)
+    def add_variable(self, name, value, time):
+        """Add a new variable with a given name, value, and time."""
+        if name not in self.data:
+            self.data[name] = {"x": [time], "y": [value]}
+            self.lines[name] = self.plot_widget.plot(pen=pg.mkPen(color=(255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)), name=name)
+            self.colors[name] = (255, 0, 0) if len(self.lines) == 0 else (0, 255, 0) if len(self.lines) == 1 else (0, 0, 255)
+        else:
+            self.data[name]["x"].append(time)
+            self.data[name]["y"].append(value)
 
             # Limit data points to maintain performance
             if len(self.data[name]["x"]) > self.max_data_points:
                 self.data[name]["x"] = self.data[name]["x"][-self.max_data_points :]
                 self.data[name]["y"] = self.data[name]["y"][-self.max_data_points :]
 
-            # Update line data efficiently
-            line.setData(self.data[name]["x"], self.data[name]["y"])
+        # Update line data efficiently
+        self.lines[name].setData(self.data[name]["x"], self.data[name]["y"])
 
         # Dynamically adjust x and y-axis limits
         all_x = [val for sublist in [d["x"] for d in self.data.values()] for val in sublist]
@@ -60,27 +59,23 @@ class GenericPlotter(QMainWindow):
             self.plot_widget.setXRange(xmin - 0.1 * x_range, xmax + 0.1 * x_range)
             self.plot_widget.setYRange(ymin - 0.1 * y_range, ymax + 0.1 * y_range)
 
-        self.time += 0.1
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Value")
-
-    # TODO: Instead of doing these 4 lines, we need to have a single function that takes a variable name
-    # and a variable value. Every time a new variable is added via this function the table shall add a new plot for this
-    # variable along with its value. And every time a new value for an existent variable is provided via
-    # this function the value of the already added plot shall be updated.
-    plotter.add_plot("sin", (255, 0, 0))  # Red
-    plotter.add_plot("cos", (0, 0, 255))  # Blue
-    plotter.data["sin"] = {"x": [], "y": []}
-    plotter.data["cos"] = {"x": [], "y": []}
-
     plotter.show()
 
+    time = 0
+    def update_plot():
+        global time
+        plotter.add_variable("Value A", random.random(), time)
+        plotter.add_variable("Value B", random.random() * 2, time)
+        plotter.add_variable("Value C", random.random() * 3 - 1.5, time)
+        time += 1
+
     timer = QTimer()
-    timer.timeout.connect(plotter.update_plot)
+    timer.timeout.connect(update_plot)
     timer.start(100)  # Update every 100ms
 
     sys.exit(app.exec_())
