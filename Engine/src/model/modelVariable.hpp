@@ -26,10 +26,6 @@ public:
     if (isMonitored()) {
       Messaging::getInstance().queueMessage(getPath(), std::to_string(m_value));
     }
-
-    if (isPlotted()) {
-      // TODO(renda): Transmit value
-    }
   }
 
   t getValue() { return m_value; }
