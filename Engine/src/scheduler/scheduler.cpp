@@ -2,7 +2,6 @@
 #include <string>
 
 #include "eventManager/eventManager.hpp"
-#include "logger/logger.hpp"
 #include "messaging/messaging.hpp"
 #include "scheduler/scheduler.hpp"
 #include "timer/timer.hpp"
