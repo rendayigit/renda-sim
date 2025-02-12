@@ -9,6 +9,8 @@ sudo apt install python3-pip        # Install python package manager.
 pip install wxPython                # Install wxPython UI framework.
 pip install matplotlib              # Install matplotlib for plotting.
 pip install pyzmq                   # Install zeromq message queue library for gui.
+pip install pyqtgraph               # Install PyQtGraph Scientific Graphics and GUI Library for Python
+pip install PyQt5                   # Install Qt 5 GUI Library for Python
 sudo apt-get install libzmq3-dev    # Install zeromq message queue library for engine.
 sudo apt install build-essential    # Install GNU compilers.
 sudo apt install libboost-all-dev   # Install boost libraries.
