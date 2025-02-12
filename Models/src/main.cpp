@@ -8,8 +8,8 @@ int main(int /*argc*/, char ** /*argv*/) {
   SampleModel sampleModel;
   PowerSubsystem powerSubsystem;
 
-  Engine engine;
-  engine.run();
+  // Start engine
+  Engine::run();
 
   return 0;
 }

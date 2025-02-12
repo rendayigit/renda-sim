@@ -7,8 +7,8 @@
 
 class Engine {
 public:
-  static void run() { // Instantiate messaging
-    Messaging::getInstance().start();
+  static void run() {
+    Messaging::getInstance().start(); // Instantiate messaging
 
     std::cout << "\nPress enter to stop the simulation\n\n";
     char input = 0;
@@ -19,4 +19,7 @@ public:
     Scheduler::getInstance().stop();
     Messaging::getInstance().stop();
   }
+
+private:
+  Engine() = default;
 };
