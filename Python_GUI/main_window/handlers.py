@@ -159,6 +159,12 @@ class MainWindowHandlers:
                 wx.EVT_MENU, lambda _: [self._delete_item_by_name(self.main_window.variable_list, i) for i in selection], id=item.GetId()
             )
 
+            item = wx.MenuItem(menu, wx.NewId(), "Plot Selection")
+            menu.Append(item)
+            self.main_window.Bind(
+                wx.EVT_MENU, lambda _: [self._plot_items(i) for i in selection], id=item.GetId()
+            )
+
         self.main_window.variable_list.PopupMenu(menu, event.GetPosition())
 
     def _get_all_items(self, list_ctrl):
@@ -184,3 +190,23 @@ class MainWindowHandlers:
             if item_text == item_name:
                 list_ctrl.DeleteItem(i)
                 break
+
+    def _plot_items(self, item_name):
+        import sys
+        from plot.plot2 import GenericPlotter
+        from PyQt5.QtWidgets import QApplication
+        
+        app = QApplication(sys.argv)
+
+        plotter = GenericPlotter(title="Real-time Plot", xlabel="Time (s)", ylabel="Variables")
+        plotter.show()
+
+        a = 0
+
+        def update_table(time):
+            plotter.add_variable(item_name, a, time)
+
+        Messaging().add_topic_handler("SIM_TIME", update_table)
+        Messaging().add_topic_handler(item_name, lambda val, a: val)
+
+        sys.exit(app.exec_())
