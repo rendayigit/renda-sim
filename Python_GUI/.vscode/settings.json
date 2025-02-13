@@ -1,0 +1,7 @@
+{
+    "pylint.args": [
+        "--extension-pkg-whitelist=wx,PyQt5",
+        "--max-line-length=150"
+    ],
+    "cmake.sourceDirectory": "/home/renda/Desktop/renda-sim",
+}

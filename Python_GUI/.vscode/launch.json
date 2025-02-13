@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python GUI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder:Python_GUI}/main.py"
+    }
+  ]
+}

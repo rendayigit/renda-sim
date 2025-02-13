@@ -1,5 +1,15 @@
 cmake_minimum_required(VERSION 3.21)
-project(sample-cpp)
+project(renda-sim)
 
-add_subdirectory(src/) # Application
-# add_subdirectory(tests/)  # Unit Tests // TODO(renda): Uncomment later
+# Engine Library
+add_subdirectory(Engine/src/)
+
+# Models
+add_subdirectory(Models/src/)
+
+# Unit Tests
+
+# add_subdirectory(Engine/tests/) # TODO(renda): Uncomment later
+add_subdirectory(Models/tests/)
+
+add_dependencies(renda-sim-models renda-sim-engine)

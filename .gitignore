@@ -1,6 +1,9 @@
 # Executables
 bin/
 
+# Libraries
+lib/
+
 # CMake build directory
 build/
 
@@ -9,3 +12,6 @@ build/
 
 # coverage data
 coverage/
+
+# python residuals
+__pycache__

@@ -14,14 +14,26 @@ jobs:
     steps:
     - name: Install Libraries 
       run:  |
-        sudo apt install build-essential                                    # Install GNU compilers.
-        sudo apt install libboost-all-dev                                   # Install Boost libraries.
-        sudo apt install libgtest-dev                                       # Install Google Test.
+        sudo apt install build-essential    # Install GNU compilers.
+        sudo apt install libboost-all-dev   # Install Boost libraries.
+        sudo apt install libgtest-dev       # Install Google Test.
+        sudo apt-get install libzmq3-dev    # Install zeromq.
+        sudo apt install nlohmann-json3-dev # Install nlohmann json library.
+        sudo apt install libspdlog-dev      # Install spdlog logging library.
         
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Build & Run Unit Tests
-      run: |       
-        chmod -R 777 ${{ github.workspace }}/scripts/
-        ${{ github.workspace }}/scripts/test.sh
+    - name: Build & Run Engine Tests
+      run: |
+        cd ${{ github.workspace }}/Engine
+        make
+        cd ${{ github.workspace }}/Engine/bin
+        # ./engine-tests # TODO: activate later
+
+    - name: Build & Run Model Tests
+      run: |
+        cd ${{ github.workspace }}/Models
+        make
+        cd ${{ github.workspace }}/Models/bin
+        ./model-tests
