@@ -15,7 +15,7 @@ bool endsWithTestsBin(const std::string &inputStr) {
   return pos != std::string_view::npos && pos + strlen(subStr) == svInput.length();
 }
 
-TEST(FileOperation, GetExecutableDirectory) {
+TEST(FileOperations, GetExecutableDirectory) {
   std::string executableDirectory = getExecutableDirectory();
 
   // Check if the path ends with "/tests/bin/"

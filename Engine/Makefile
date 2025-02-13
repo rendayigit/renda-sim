@@ -16,14 +16,30 @@ all: src tests
 # Target to build the source
 src: 
 	@mkdir -p $(BUILD_DIR)/src/
-	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) $(ROOT_DIR)/src -B$(BUILD_DIR)/src/
+	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON $(ROOT_DIR)/src -B$(BUILD_DIR)/src/
 	@$(MAKE) -C $(BUILD_DIR)/src/
+	@cp $(BUILD_DIR)/src/compile_commands.json $(BUILD_DIR)/compile_commands_src.json
+	@$(MAKE) merge_compile_commands
 
 # Target to build the tests
 tests: 
 	@mkdir -p $(BUILD_DIR)/tests/
-	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) $(ROOT_DIR)/tests -B$(BUILD_DIR)/tests/
+	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON $(ROOT_DIR)/tests -B$(BUILD_DIR)/tests/
 	@$(MAKE) -C $(BUILD_DIR)/tests/
+	@cp $(BUILD_DIR)/tests/compile_commands.json $(BUILD_DIR)/compile_commands_tests.json
+	@$(MAKE) merge_compile_commands
+
+# Merge the compile commands
+merge_compile_commands:
+	@if [ -f $(BUILD_DIR)/compile_commands_src.json ] && [ -f $(BUILD_DIR)/compile_commands_tests.json ]; then \
+		jq -s '.[0] + .[1]' $(BUILD_DIR)/compile_commands_src.json $(BUILD_DIR)/compile_commands_tests.json > $(BUILD_DIR)/compile_commands.json; \
+	else \
+		if [ -f $(BUILD_DIR)/compile_commands_src.json ]; then \
+			cp $(BUILD_DIR)/compile_commands_src.json $(BUILD_DIR)/compile_commands.json; \
+		elif [ -f $(BUILD_DIR)/compile_commands_tests.json ]; then \
+			cp $(BUILD_DIR)/compile_commands_tests.json $(BUILD_DIR)/compile_commands.json; \
+		fi; \
+	fi
 
 # Clean target
 clean:
@@ -35,7 +51,7 @@ clean:
 distclean: clean
 	@true
 
-.PHONY: all src source tests clean distclean
+.PHONY: all src source tests merge_compile_commands clean distclean
 
 # Alias for src target
 source: src
