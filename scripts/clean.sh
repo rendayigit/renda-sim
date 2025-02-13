@@ -4,9 +4,9 @@ SCRIPTDIR=`pwd`
 cd -
 
 # Build Engine
-cd $SCRIPTDIR/Engine
+cd $SCRIPTDIR/../Engine
 make clean
 
 # Build Models
-cd $SCRIPTDIR/Models
+cd $SCRIPTDIR/../Models
 make clean
