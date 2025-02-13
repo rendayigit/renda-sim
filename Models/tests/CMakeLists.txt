@@ -27,8 +27,15 @@ add_executable(tests ${TESTFILES})
 
 target_include_directories(tests PUBLIC ${INCLUDEDIRS})
 
-target_link_libraries(tests PRIVATE gtest_main gtest Boost::filesystem zmq
-                                    spdlog::spdlog)
+target_link_libraries(
+  tests
+  PRIVATE gtest_main
+          gtest
+          -L${CMAKE_CURRENT_LIST_DIR}/../../lib/
+          -lrenda-sim-engine
+          Boost::filesystem
+          zmq
+          spdlog::spdlog)
 
 include(GoogleTest)
 gtest_discover_tests(tests)

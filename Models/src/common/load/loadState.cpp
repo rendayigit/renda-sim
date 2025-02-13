@@ -5,12 +5,10 @@
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 
-#include "common.hpp"
-
 LoadState::LoadState(std::string configurationFile, std::string stateName)
     : m_configurationFile(std::move(configurationFile)), m_stateName(std::move(stateName)) {
   nlohmann::json config;
-  std::ifstream configFile(CONFIG_PATH);
+  std::ifstream configFile(m_configurationFile);
   configFile >> config;
 
   // TODO: Might need error handling

@@ -10,6 +10,6 @@ add_subdirectory(Models/src/)
 # Unit Tests
 
 # add_subdirectory(Engine/tests/) # TODO(renda): Uncomment later
-# add_subdirectory(Models/tests/) # TODO(renda): Uncomment later
+add_subdirectory(Models/tests/)
 
 add_dependencies(renda-sim-models renda-sim-engine)

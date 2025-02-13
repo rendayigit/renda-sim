@@ -1,11 +1,11 @@
-#include "models/common/load/load.hpp"
-#include "common.hpp"
-#include "engine/json/json.hpp"
-#include "models/common/load/loadContainer.hpp"
-#include "models/common/load/loadState.hpp"
 #include <cmath>
 #include <gtest/gtest.h>
 #include <stdexcept>
+
+#include "common.hpp"
+#include "common/load/load.hpp"
+#include "common/load/loadContainer.hpp"
+#include "common/load/loadState.hpp"
 
 std::string testLoadConfigFile = getExecutableDirectory() + "../tests/testLoadConfig.json";
 

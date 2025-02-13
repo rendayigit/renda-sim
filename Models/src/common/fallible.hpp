@@ -1,8 +1,6 @@
 #pragma once
 
-#include "models/common/failure.hpp"
-#include <optional>
-#include <vector>
+#include "common/failure.hpp"
 
 class Fallible {
 public:

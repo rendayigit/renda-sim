@@ -1,6 +1,7 @@
-#include "models/common/failure.hpp"
-#include "models/common/fallible.hpp"
 #include <gtest/gtest.h>
+
+#include "common/failure.hpp"
+#include "common/fallible.hpp"
 
 // Derived test model from Fallible, implementing necessary virtual functions and logic
 class FallibleTestModel : public Fallible {

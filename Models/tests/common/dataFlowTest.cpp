@@ -1,6 +1,7 @@
-#include "models/common/dataFlow.hpp"
 #include <gtest/gtest.h>
 #include <stdexcept>
+
+#include "common/dataFlow.hpp"
 
 /* Defines */
 const double aIn = 3.4;
