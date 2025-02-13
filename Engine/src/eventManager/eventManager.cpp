@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+EventManager::~EventManager() { m_eventQueue->clear(); }
+
 void EventManager::addEvent(Event *event) {
   // Ensure the event is not already added.
   if (std::find(m_eventQueue->begin(), m_eventQueue->end(), event) == m_eventQueue->end()) {

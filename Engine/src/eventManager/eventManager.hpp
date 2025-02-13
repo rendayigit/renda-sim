@@ -11,6 +11,8 @@ public:
     return instance;
   }
 
+  ~EventManager();
+
   void addEvent(Event *event);
 
   void removeEvent(Event *event);

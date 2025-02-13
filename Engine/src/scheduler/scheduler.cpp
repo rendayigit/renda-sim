@@ -14,6 +14,40 @@ constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
+Scheduler::Scheduler() {
+  nlohmann::json config;
+
+  std::ifstream configFile(CONFIG_PATH);
+  if (not configFile.is_open()) {
+    Logger::error("Could not open the config file: " + CONFIG_PATH);
+  } else {
+    try {
+      configFile >> config;
+
+      if (config.contains("SCHEDULER_STEP_TIME_MICROS") and config["SCHEDULER_STEP_TIME_MICROS"].is_number_float()) {
+        m_stepTimeMicros = config["SCHEDULER_STEP_TIME_MICROS"].get<double>();
+      } else {
+        Logger::error("Key 'SCHEDULER_STEP_TIME_MICROS' not found or is not a float.");
+      }
+
+      if (config.contains("SCHEDULER_DEFAULT_RATE") and config["SCHEDULER_DEFAULT_RATE"].is_number_float()) {
+        m_rate = config["SCHEDULER_DEFAULT_RATE"].get<double>();
+      } else {
+        Logger::error("Key 'SCHEDULER_DEFAULT_RATE' not found or is not a float.");
+      }
+
+    } catch (const nlohmann::json::parse_error &e) {
+      Logger::critical("JSON parse error: " + std::string(e.what()));
+    }
+  }
+}
+
+Scheduler::~Scheduler() {
+  stop();
+  m_lastStopTicks = {};
+  m_progressTimeLastMillis = {};
+}
+
 void Scheduler::start() {
   if (m_lastStopTicks != 0) {
     Timer::getInstance().updateInitialTicks(m_lastStopTicks);
@@ -53,34 +87,6 @@ void Scheduler::setRate(double rate) { m_rate = rate; }
 void Scheduler::progressTime(long millis) {
   m_progressTimeLastMillis += millis;
   step(m_progressTimeLastMillis);
-}
-
-Scheduler::Scheduler() {
-  nlohmann::json config;
-
-  std::ifstream configFile(CONFIG_PATH);
-  if (not configFile.is_open()) {
-    Logger::error("Could not open the config file: " + CONFIG_PATH);
-  } else {
-    try {
-      configFile >> config;
-
-      if (config.contains("SCHEDULER_STEP_TIME_MICROS") and config["SCHEDULER_STEP_TIME_MICROS"].is_number_float()) {
-        m_stepTimeMicros = config["SCHEDULER_STEP_TIME_MICROS"].get<double>();
-      } else {
-        Logger::error("Key 'SCHEDULER_STEP_TIME_MICROS' not found or is not a float.");
-      }
-
-      if (config.contains("SCHEDULER_DEFAULT_RATE") and config["SCHEDULER_DEFAULT_RATE"].is_number_float()) {
-        m_rate = config["SCHEDULER_DEFAULT_RATE"].get<double>();
-      } else {
-        Logger::error("Key 'SCHEDULER_DEFAULT_RATE' not found or is not a float.");
-      }
-
-    } catch (const nlohmann::json::parse_error &e) {
-      Logger::critical("JSON parse error: " + std::string(e.what()));
-    }
-  }
 }
 
 void Scheduler::step(long currentMillis) const {

@@ -6,6 +6,10 @@
 #include "scheduler/scheduler.hpp"
 
 TEST(Scheduler, StartStop) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   int count = 0;
   SimpleEvent evt;
   evt.setEventFunction([&] { count += 1; });
@@ -31,6 +35,10 @@ TEST(Scheduler, StartStop) {
 }
 
 TEST(Scheduler, ProgressTime) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   int count = 0;
   SimpleEvent evt;
   evt.setEventFunction([&] { count += 1; });

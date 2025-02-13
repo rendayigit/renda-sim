@@ -9,7 +9,7 @@ public:
     return instance;
   }
 
-  ~Scheduler() { stop(); }
+  ~Scheduler();
 
   void start();
   void stop();

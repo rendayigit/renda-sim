@@ -5,6 +5,10 @@
 #include "scheduler/scheduler.hpp"
 
 TEST(EventManager, BasicEventFunctionality) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   SimpleEvent event;
 
   // Verify the event is deactivated at startup
@@ -44,6 +48,10 @@ TEST(EventManager, EventQueue) {
 }
 
 TEST(EventManager, SingleShotEvents) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   SimpleEvent singleShotEvent;
 
   // Set event function to progess a counter
@@ -74,6 +82,10 @@ TEST(EventManager, SingleShotEvents) {
 }
 
 TEST(EventManager, CyclicEvents) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   SimpleEvent cyclicEvent;
 
   // Set event function to progess a counter
@@ -133,6 +145,10 @@ TEST(EventManager, CyclicEvents) {
 }
 
 TEST(EventManager, NoTriggering) {
+  // Reset environment
+  EventManager::getInstance().~EventManager();
+  Scheduler::getInstance().~Scheduler();
+
   int triggerCount = 0;
 
   SimpleEvent evt;
