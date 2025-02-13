@@ -24,13 +24,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Build & Run Unit Tests
-      run: |       
+    - name: Build & Run Engine Tests
+      run: |
         cd ${{ github.workspace }}/Engine
-        make
-        cd ${{ github.workspace }}/Models
         make
         cd ${{ github.workspace }}/Engine/bin
         # ./tests # TODO: activate later
+
+    - name: Build & Run Model Tests
+      run: |
+        cd ${{ github.workspace }}/Models
+        make
         cd ${{ github.workspace }}/Models/bin
         ./tests

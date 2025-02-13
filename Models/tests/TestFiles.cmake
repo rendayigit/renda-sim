@@ -1,4 +1,3 @@
-# TODO(renda): Fix tests
 set(TESTFILES
     # Common Source Files
     ${CMAKE_CURRENT_LIST_DIR}/../src/common/load/load.cpp
