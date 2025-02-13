@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <thread>
 
-#include "engine/eventManager/eventManager.hpp"
-#include "engine/eventManager/simpleEvent.hpp"
-#include "engine/scheduler/scheduler.hpp"
+#include "eventManager/eventManager.hpp"
+#include "eventManager/simpleEvent.hpp"
+#include "scheduler/scheduler.hpp"
 
 TEST(Scheduler, StartStop) {
   int count = 0;

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(tests LANGUAGES CXX)
+project(engine-tests LANGUAGES CXX)
 
 # Enable coverage
 if(${ENABLE_COVERAGE})
@@ -23,12 +23,12 @@ find_package(spdlog REQUIRED)
 
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
-add_executable(tests ${TESTFILES})
+add_executable(engine-tests ${TESTFILES})
 
-target_include_directories(tests PUBLIC ${INCLUDEDIRS})
+target_include_directories(engine-tests PUBLIC ${INCLUDEDIRS})
 
-target_link_libraries(tests PRIVATE gtest_main gtest Boost::filesystem zmq
-                                    spdlog::spdlog)
+target_link_libraries(engine-tests PRIVATE gtest_main gtest Boost::filesystem
+                                           zmq spdlog::spdlog)
 
 include(GoogleTest)
-gtest_discover_tests(tests)
+gtest_discover_tests(engine-tests)

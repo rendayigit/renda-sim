@@ -29,11 +29,11 @@ jobs:
         cd ${{ github.workspace }}/Engine
         make
         cd ${{ github.workspace }}/Engine/bin
-        # ./tests # TODO: activate later
+        # ./engine-tests # TODO: activate later
 
     - name: Build & Run Model Tests
       run: |
         cd ${{ github.workspace }}/Models
         make
         cd ${{ github.workspace }}/Models/bin
-        ./tests
+        ./model-tests

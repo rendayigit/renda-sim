@@ -1,8 +1,8 @@
-# Define the build directory
-BUILD_DIR := build
-
 # Define the source directory as the directory of this Makefile
 ROOT_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+# Define the build directory
+BUILD_DIR := $(ROOT_DIR)/build
 
 # Define the CMake command
 CMAKE := cmake
@@ -28,6 +28,8 @@ tests:
 # Clean target
 clean:
 	@rm -rf $(BUILD_DIR)
+	@rm -rf $(ROOT_DIR)/bin
+	@rm -rf $(ROOT_DIR)/../lib
 
 # Distclean target (for removing everything including configure results)
 distclean: clean

@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "engine/eventManager/eventManager.hpp"
-#include "engine/eventManager/simpleEvent.hpp"
-#include "engine/scheduler/scheduler.hpp"
+#include "eventManager/eventManager.hpp"
+#include "eventManager/simpleEvent.hpp"
+#include "scheduler/scheduler.hpp"
 
 TEST(EventManager, BasicEventFunctionality) {
   SimpleEvent event;
