@@ -2,6 +2,8 @@
 
 ## How to build the project
 
+### Install dependencies
+
 ```bash
 cd ~
 sudo apt install python3            # Install python.
@@ -18,7 +20,14 @@ sudo apt install nlohmann-json3-dev # Install nlohmann json library.
 sudo apt install libspdlog-dev      # Install spdlog logging library.
 ```
 
-### Developers might need to install these as well
+### Build the project
+
+- `./scripts/build.sh`: To build the engine, the models and the tests.
+- `./scripts/clean.sh`: To clean all projects.
+
+## For Developers
+
+### Developer dependencies
 
 ```bash
 cd ~
@@ -31,15 +40,4 @@ sudo apt install pre-commit         # Install pre-commit to run clang-format on 
 pre-commit install                  # Activate pre-commit hooks
 ```
 
-### Use the scripts under `scripts/`
-
-- `build.sh`: Build the sample application.
-- `clean.sh`: Clean the sample application.
-- `coverage.sh`: Generate unit test code coverage.
-- `run.sh`: Run the sample application.
-- `test.sh`: Run the unit tests without code coverage.
-
-## For Developers
-
-- See the readmes in `deps/` for more details about some of the project dependencies.
-- Run `pre-commit install` to activate pre-commit hooks.
+See the readmes in `deps/` for more details about some of the project dependencies.
