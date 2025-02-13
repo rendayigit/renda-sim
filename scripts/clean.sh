@@ -3,12 +3,10 @@ cd `dirname $0`
 SCRIPTDIR=`pwd`
 cd -
 
-# Make Clean
-cmake \
---build $SCRIPTDIR/../build/ \
---target clean
+# Build Engine
+cd $SCRIPTDIR/Engine
+make clean
 
-# Force Delete Dirs
-rm -rf $SCRIPTDIR/../bin/
-rm -rf $SCRIPTDIR/../lib/
-rm -rf $SCRIPTDIR/../build/
+# Build Models
+cd $SCRIPTDIR/Models
+make clean

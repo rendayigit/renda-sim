@@ -41,20 +41,33 @@ merge_compile_commands:
 		fi; \
 	fi
 
+# Target to build and run tests with coverage
+coverage: 
+	@mkdir -p $(BUILD_DIR)/tests_coverage/
+	@$(CMAKE) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_COVERAGE=ON $(ROOT_DIR)/tests -B$(BUILD_DIR)/tests_coverage/
+	@$(MAKE) -C $(BUILD_DIR)/tests_coverage/
+	@$(ROOT_DIR)/bin/engine-tests
+	@mkdir -p $(ROOT_DIR)/coverage/
+	@python3 -m gcovr --config $(ROOT_DIR)/gcovr.cfg
+
 # Clean target
 clean:
 	@rm -rf $(BUILD_DIR)
 	@rm -rf $(ROOT_DIR)/bin
+	@rm -rf $(ROOT_DIR)/coverage
 	@rm -rf $(ROOT_DIR)/../lib
 
 # Distclean target (for removing everything including configure results)
 distclean: clean
 	@true
 
-.PHONY: all src source tests merge_compile_commands clean distclean
+.PHONY: all src source tests coverage merge_compile_commands clean distclean
 
 # Alias for src target
 source: src
 
 # Alias for test target
 test: tests
+
+# Alias for cov target
+cov: coverage
