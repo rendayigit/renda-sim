@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "messaging/messaging.hpp"
+#include "messaging/publisher.hpp"
 #include "model/model.hpp"
 #include "model/object.hpp"
 #include "model/variableProperties.hpp"
@@ -24,7 +24,11 @@ public:
     m_value = value;
 
     if (isMonitored()) {
-      Messaging::getInstance().queueMessage(getPath(), std::to_string(m_value));
+      nlohmann::json message;
+
+      message["variablePath"] = getPath();
+      message["variableValue"] = m_value;
+      Publisher::getInstance().queueMessage("VARIABLE_UPDATE", message.dump());
     }
   }
 

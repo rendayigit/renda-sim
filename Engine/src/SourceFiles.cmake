@@ -4,8 +4,9 @@ set(SOURCEFILES
     ${CMAKE_CURRENT_LIST_DIR}/logger/logger.cpp
     ${CMAKE_CURRENT_LIST_DIR}/scheduler/scheduler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/timer/timer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/messaging/messaging.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/messaging/messageParser.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/messaging/commanding.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/messaging/commandParser.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/messaging/publisher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/model/model.cpp
     ${CMAKE_CURRENT_LIST_DIR}/model/modelContainer.cpp)
 
