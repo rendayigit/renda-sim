@@ -6,16 +6,20 @@
 #include "logger/logger.hpp"
 #include "messaging/commandParser.hpp"
 
-constexpr int COMMANDING_MAX_COMMAND_SIZE = 1024;
-constexpr int COMMANDING_COMMAND_RECEIVER_SLEEP_DURATION = 100;
+constexpr int MAX_CONTEXT_THREAD_COUNT = 1;
+constexpr int MAX_COMMAND_SIZE = 1024;
+constexpr int RECEIVER_SLEEP_DURATION = 100;
 constexpr int BINDING_DELAY = 200;
+constexpr int SOCKET_TIMEOUT = 100;
 
 Commanding::Commanding()
-    : m_context(new zmq::context_t(1)), m_socket(new zmq::socket_t(*m_context, zmq::socket_type::rep)) {
+    : m_port("12340"), // TODO: Get from config file
+      m_context(new zmq::context_t(MAX_CONTEXT_THREAD_COUNT)),
+      m_socket(new zmq::socket_t(*m_context, zmq::socket_type::rep)) {
   try {
     m_socket->bind("tcp://0.0.0.0:" + m_port);
     std::this_thread::sleep_for(std::chrono::milliseconds(BINDING_DELAY)); // Minor sleep to allow the socket to bind
-    m_socket->set(zmq::sockopt::rcvtimeo, 100); // Set timeout to 100ms // TODO: Get from config file
+    m_socket->set(zmq::sockopt::rcvtimeo, SOCKET_TIMEOUT); // Set timeout to 100ms // TODO: Get from config file
   } catch (zmq::error_t &e) {
     Logger::critical("Zmq commanding error: " + std::string(e.what()));
   }
@@ -49,7 +53,7 @@ void Commanding::reply(const std::string &message) {
 
 void Commanding::step() {
   while (m_isRunning) {
-    std::array<char, COMMANDING_MAX_COMMAND_SIZE> buf{'\0'};
+    std::array<char, MAX_COMMAND_SIZE> buf{'\0'};
     zmq::mutable_buffer request(buf.data(), buf.size());
     zmq::recv_buffer_result_t result = m_socket->recv(request, zmq::recv_flags::none);
 
@@ -63,6 +67,6 @@ void Commanding::step() {
 
     CommandParser::getInstance().executeCommand(nlohmann::json::parse(command));
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(COMMANDING_COMMAND_RECEIVER_SLEEP_DURATION));
+    std::this_thread::sleep_for(std::chrono::milliseconds(RECEIVER_SLEEP_DURATION));
   }
 }
