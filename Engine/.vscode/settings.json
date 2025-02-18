@@ -1,5 +1,6 @@
 {
     "C_Cpp.intelliSenseEngine": "disabled",
     "testMate.cpp.test.executables": "{bin}/**/*{tests}*",
-    "cmake.automaticReconfigure": false
+    "cmake.automaticReconfigure": false,
+    "cmake.ignoreCMakeListsMissing": true
 }

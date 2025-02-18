@@ -19,7 +19,6 @@ Commanding::Commanding()
   try {
     m_socket->bind("tcp://0.0.0.0:" + m_port);
     std::this_thread::sleep_for(std::chrono::milliseconds(BINDING_DELAY)); // Minor sleep to allow the socket to bind
-    m_socket->set(zmq::sockopt::rcvtimeo, SOCKET_TIMEOUT); // Set timeout to 100ms // TODO: Get from config file
   } catch (zmq::error_t &e) {
     Logger::critical("Zmq commanding error: " + std::string(e.what()));
   }
@@ -58,10 +57,6 @@ void Commanding::step() {
     zmq::recv_buffer_result_t result = m_socket->recv(request, zmq::recv_flags::none);
 
     std::string command = static_cast<char *>(request.data());
-
-    if (command.empty()) {
-      continue; // Skip empty
-    }
 
     Logger::debug("Received command: " + command);
 

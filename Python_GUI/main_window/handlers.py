@@ -19,9 +19,7 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        scheduler_running = Commanding().request("SCHEDULER")
-
-        if scheduler_running == "RUNNING":
+        if Commanding().request("SCHEDULER")["schedulerIsRunning"] is True:
             self._start()
 
     def on_engine(self, _event):
@@ -32,14 +30,12 @@ class MainWindowHandlers:
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        scheduler_running = Commanding().request("SCHEDULER")
-
-        if scheduler_running == "STOPPED":
+        if Commanding().request("SCHEDULER")["schedulerIsRunning"] is False:
             self._start()
-            Commanding().transmit("START")
+            Commanding().request("START")
         else:
             self._stop()
-            Commanding().transmit("STOP")
+            Commanding().request("STOP")
 
     def _start(self):
         """Start receiving sim time updates from the engine"""
@@ -186,12 +182,12 @@ class MainWindowHandlers:
 
     def _delete_all_items(self, list_ctrl):
         for item in self._get_all_items(list_ctrl):
-            Commanding().transmit("VARIABLE_REMOVE:" + item.GetText())
+            Commanding().request("VARIABLE_REMOVE:" + item.GetText())
 
         list_ctrl.DeleteAllItems()
 
     def _delete_item_by_name(self, list_ctrl, item_name):
-        Commanding().transmit("VARIABLE_REMOVE:" + item_name)
+        Commanding().request("VARIABLE_REMOVE:" + item_name)
 
         item_count = list_ctrl.GetItemCount()
         for i in range(item_count):
