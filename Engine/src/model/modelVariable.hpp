@@ -27,7 +27,7 @@ public:
       nlohmann::json message;
       message["variablePath"] = getPath();
       message["variableValue"] = m_value;
-      Publisher::getInstance().queueMessage(getPath(), message.dump());
+      Publisher::getInstance().queueMessage("VARIABLE", message.dump());
     }
   }
 

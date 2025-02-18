@@ -20,13 +20,11 @@ class Application(wx.App):
         # Initialize binders
         binder = MainWindowEventBinder(main_window)
 
-        model_tree_json = Commanding().request("MODEL_TREE")
+        model_tree_json = Commanding().request({"command": "MODEL_TREE"})
 
         populate_tree(main_window.models_tree, model_tree_json["modelTree"], main_window.tree_root)
 
-        Messaging().add_topic_handler("TIME", main_window.sim_time_display.ChangeValue)
-
-        Messaging().add_topic_handler("EVENT", main_window.event_logs.AppendText)
+        Messaging(main_window).start()
 
         return True
 

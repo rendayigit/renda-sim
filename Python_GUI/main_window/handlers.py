@@ -19,7 +19,7 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        if Commanding().request("SCHEDULER")["schedulerIsRunning"] is True:
+        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is True:
             self._start()
 
     def on_engine(self, _event):
@@ -30,12 +30,12 @@ class MainWindowHandlers:
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        if Commanding().request("SCHEDULER")["schedulerIsRunning"] is False:
+        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is False:
             self._start()
-            Commanding().request("START")
+            Commanding().request({"command": "START"})
         else:
             self._stop()
-            Commanding().request("STOP")
+            Commanding().request({"command": "STOP"})
 
     def _start(self):
         """Start receiving sim time updates from the engine"""
@@ -129,16 +129,13 @@ class MainWindowHandlers:
                 if path == item.GetText():
                     return
 
-            var = Commanding().request("VARIABLE_ADD:" + path)
-            var_desc, var_value, var_type = var.split(",")
-
-            print(f"{var} -> {var_desc}, {var_value}, {type}")  # TODO(Renda): remove after testing
+            var = Commanding().request({"command": "VARIABLE_ADD", "variablePath": path})
+            var_desc, var_value, var_type = var["variable"].split(",")
 
             item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
             self.main_window.variable_list.SetItem(item_index, 1, var_desc)
             self.main_window.variable_list.SetItem(item_index, 2, var_value)
             self.main_window.variable_list.SetItem(item_index, 3, var_type)
-            Messaging().add_topic_handler(path, self.main_window.variable_list.SetItem, item_index, 2)
 
     def on_list(self, event):
         """List control callback"""
@@ -182,12 +179,12 @@ class MainWindowHandlers:
 
     def _delete_all_items(self, list_ctrl):
         for item in self._get_all_items(list_ctrl):
-            Commanding().request("VARIABLE_REMOVE:" + item.GetText())
+            Commanding().request({"command": "VARIABLE_REMOVE", "variablePath" : item.GetText() })
 
         list_ctrl.DeleteAllItems()
 
     def _delete_item_by_name(self, list_ctrl, item_name):
-        Commanding().request("VARIABLE_REMOVE:" + item_name)
+        Commanding().request({"command": "VARIABLE_REMOVE", "variablePath" : item_name })
 
         item_count = list_ctrl.GetItemCount()
         for i in range(item_count):

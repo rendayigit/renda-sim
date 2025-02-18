@@ -33,7 +33,7 @@ void Logger::transmitLog(const std::string &logLevel, const std::string &log) {
   message["level"] = logLevel;
   message["log"] = log;
 
-  Publisher::getInstance().queueMessage("EVENT", log);
+  Publisher::getInstance().queueMessage("EVENT", message);
 }
 
 std::shared_ptr<spdlog::logger> Logger::getLogger() {

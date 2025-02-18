@@ -29,6 +29,5 @@ class Commanding:
     # TODO(renda): Need timeout option or blocks forever
     def request(self, command: str) -> str:
         """Send a command and wait for a response from the engine"""
-        json_command = {"command": command}
-        self.socket.send_string(json.dumps(json_command))  # Send the command
+        self.socket.send_string(json.dumps(command))  # Send the command
         return self.socket.recv_json()  # Receive and decode the response
