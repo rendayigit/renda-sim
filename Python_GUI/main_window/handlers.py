@@ -6,7 +6,6 @@ import sys
 import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
-from messaging import Messaging
 
 # For plotting
 from plot.plot2 import GenericPlotter

@@ -5,6 +5,7 @@ import json
 import wx
 import zmq
 
+
 class Messaging:
     """Messaging utilities for GUI"""
 
@@ -35,6 +36,7 @@ class Messaging:
             self.main_window = main_window
             self.subscriber = None
             self.is_running = False
+            self.thread = threading.Thread(target=self._messaging_thread)
 
     # TODO(renda): Add option to remove topic handlers
 
@@ -59,14 +61,14 @@ class Messaging:
             command_json = json.loads(bytes(frames[1]).decode())
 
             # TODO(renda): Find a better way to do this
-            if(topic == "TIME"):
+            if topic == "TIME":
                 wx.CallAfter(self.main_window.sim_time_display.ChangeValue, command_json["simTime"])
-            elif(topic == "EVENT"):
+            elif topic == "EVENT":
                 log = "[" + command_json["level"] + "] " + command_json["log"] + "\n"
                 wx.CallAfter(self.main_window.event_logs.AppendText, log)
-            elif(topic == "VARIABLE"):
+            elif topic == "VARIABLE":
                 for i in range(self.main_window.variable_list.GetItemCount()):
-                    if(self.main_window.variable_list.GetItem(i).GetText() == command_json["variablePath"]):
+                    if self.main_window.variable_list.GetItem(i).GetText() == command_json["variablePath"]:
                         wx.CallAfter(self.main_window.variable_list.SetItem, i, 2, str(command_json["variableValue"]))
 
             # if self.topic_handler_argument_map.__contains__(topic):
