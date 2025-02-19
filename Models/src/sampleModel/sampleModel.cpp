@@ -61,6 +61,10 @@ SampleModel::SampleModel()
   // types to messageparser
   m_uintValue.setValue(15);
 
+  m_childModels.push_back(new SampleChildModel("Sample Child 1", "A sample child model", this));
+  m_childModels.push_back(new SampleChildModel("Sample Child 2", "A sample child model", this));
+  m_childModels.push_back(new SampleChildModel("Sample Child 3", "A sample child model", this));
+
   Logger::info("Sample Model Initialized");
 }
 
