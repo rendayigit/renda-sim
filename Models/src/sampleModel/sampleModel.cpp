@@ -23,7 +23,8 @@ SampleModel::SampleModel()
   myVect.push_back(5);
 
   // ModelVariable<std::vector<int>> modelVarVector("m_modelVarVector", "m_modelVarVector", this, myVect);
-  m_modelVarVector = new ModelVariable<std::vector<int>>("m_modelVarVector", "m_modelVarVector", this, myVect);
+  m_modelVarVector =
+      new ModelVariable<std::vector<int>>("Model Variable Vector", "Sample Model Variable Vector", this, myVect);
 
   m_eventSlow->setEventFunction([&] { step(1000); });
   m_eventSlow->setCycleMillis(TIME_STEP_1_SEC);
@@ -64,6 +65,14 @@ SampleModel::SampleModel()
   m_childModels.push_back(new SampleChildModel("Sample Child 1", "A sample child model", this));
   m_childModels.push_back(new SampleChildModel("Sample Child 2", "A sample child model", this));
   m_childModels.push_back(new SampleChildModel("Sample Child 3", "A sample child model", this));
+
+  SampleSturcture structure{};
+  structure.integer = 1;
+  structure.boolean = true;
+
+  // TODO add structure support
+  // m_structureModelVariable =
+  // new ModelVariable<SampleSturcture>("Structure Variable", "Sample Structure Variable", this, structure);
 
   Logger::info("Sample Model Initialized");
 }
