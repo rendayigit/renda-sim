@@ -26,6 +26,8 @@ Publisher::~Publisher() {
 }
 
 void Publisher::queueMessage(const std::string &topic, const std::string &message) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   zmq::message_t zTopic(topic.data(), topic.size());
   zmq::message_t zMessage(message.data(), message.size());
 

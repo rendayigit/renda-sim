@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -21,6 +22,7 @@ private:
   Publisher();
   ~Publisher();
 
+  std::mutex m_mutex;
   std::string m_port;
   zmq::context_t *m_context{};
   zmq::socket_t *m_socket{};

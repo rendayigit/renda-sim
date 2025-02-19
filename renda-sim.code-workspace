@@ -23,7 +23,11 @@
           "kind": "build",
           "isDefault": true
         },
-        "command": ["chmod -R 777 ./scripts/;", "./scripts/build.sh"],
+        "command": [
+          "chmod -R 777 ./scripts/;",
+          "./scripts/clean.sh;",
+          "./scripts/build.sh"
+        ],
         "options": {
           "cwd": "${workspaceFolder:Models}/../"
         },

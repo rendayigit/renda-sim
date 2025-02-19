@@ -33,6 +33,16 @@ public:
 
   t getValue() { return m_value; }
 
+  nlohmann::json getJson() override {
+    nlohmann::json jsonVar;
+    jsonVar["name"] = getName();
+    jsonVar["path"] = getPath();
+    jsonVar["description"] = getDescription();
+    jsonVar["value"] = m_value;
+    jsonVar["type"] = "UNKNOWN"; // TODO implement
+    return jsonVar;
+  }
+
 private:
   friend class MainWindow;
 

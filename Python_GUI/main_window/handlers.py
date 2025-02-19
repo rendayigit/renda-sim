@@ -129,7 +129,9 @@ class MainWindowHandlers:
                     return
 
             var = Commanding().request({"command": "VARIABLE_ADD", "variablePath": path})
-            var_desc, var_value, var_type = var["variable"].split(",")
+            var_desc = var["variable"]["description"]
+            var_value = str(var["variable"]["value"])
+            var_type = var["variable"]["type"]
 
             item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
             self.main_window.variable_list.SetItem(item_index, 1, var_desc)
@@ -201,15 +203,21 @@ class MainWindowHandlers:
 
         def thread_loop():
             while True:
-                try:
-                    wx.CallAfter(
-                        plotter.add_variable,
-                        self.main_window.variable_list.GetItemText(item, 0),
-                        float(self.main_window.variable_list.GetItemText(item, 2)),
-                        float(self.main_window.sim_time_display.GetValue()),
-                    )
-                except:
-                    pass
+                name = self.main_window.variable_list.GetItemText(item, 0)
+                value = self.main_window.variable_list.GetItemText(item, 2)
+                sim_time = self.main_window.sim_time_display.GetValue()
+
+                # FIXME Cannot figure out why sometimes they are ""
+                if sim_time == "" or value == "":
+                    continue
+
+                wx.CallAfter(
+                    plotter.add_variable,
+                    name,
+                    float(value),
+                    float(sim_time),
+                )
+
                 time.sleep(0.1)  # sleep for 100 ms
 
         thread = threading.Thread(target=thread_loop)

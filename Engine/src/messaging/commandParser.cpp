@@ -46,53 +46,16 @@ CommandParser::CommandParser() {
     std::string variablePath = command["variablePath"]; // TODO implement error handling
 
     auto *object = ModelContainer::getInstance().getModel(variablePath);
-
-    auto *doubleVariable = dynamic_cast<ModelVariable<double> *>(object);
-    auto *integerVariable = dynamic_cast<ModelVariable<int> *>(object);
-    auto *boolVariable = dynamic_cast<ModelVariable<bool> *>(object);
-    auto *stringVariable = dynamic_cast<ModelVariable<std::string> *>(object);
-
-    // TODO(renda): Add all primitive types
-    /*
-    void
-    bool
-    char
-    short
-    int
-    long long
-    long
-    unsigned char
-    unsigned short
-    unsigned int
-    unsigned long long
-    unsigned long
-    wchar_t
-    float
-    double
-    */
-
-    std::string reply;
-
-    if (doubleVariable != nullptr) {
-      reply = doubleVariable->getDescription() + "," + std::to_string(doubleVariable->getValue()) + "," + "Double";
-      doubleVariable->setIsMonitored(true);
-    } else if (integerVariable != nullptr) {
-      reply = integerVariable->getDescription() + "," + std::to_string(integerVariable->getValue()) + "," + "Integer";
-      integerVariable->setIsMonitored(true);
-    } else if (boolVariable != nullptr) {
-      reply = boolVariable->getDescription() + "," + (boolVariable->getValue() ? "True" : "False") + "," + "Boolean";
-      boolVariable->setIsMonitored(true);
-    } else if (stringVariable != nullptr) {
-      reply = stringVariable->getDescription() + "," + stringVariable->getValue() + "," + "String";
-      stringVariable->setIsMonitored(true);
-    } else {
-      Logger::debug(variablePath + " is not a valid variable path.");
-    }
+    auto *variable = dynamic_cast<VariableProperties *>(object);
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
-    replyStatus["variable"] = reply;
+    replyStatus["variable"] = object->getJson();
     replyStatus["status"] = true; // TODO implement return value
+
+    variable->setIsMonitored(true);
+    Logger::debug("Added " + variablePath + " to the monitor list.");
+
     Commanding::getInstance().reply(replyStatus.dump());
   };
 

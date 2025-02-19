@@ -38,8 +38,6 @@ class Messaging:
             self.is_running = False
             self.thread = threading.Thread(target=self._messaging_thread)
 
-    # TODO(renda): Add option to remove topic handlers
-
     def start(self):
         """Starts the messaging thread"""
         if not self.is_running:
@@ -70,8 +68,3 @@ class Messaging:
                 for i in range(self.main_window.variable_list.GetItemCount()):
                     if self.main_window.variable_list.GetItem(i).GetText() == command_json["variablePath"]:
                         wx.CallAfter(self.main_window.variable_list.SetItem, i, 2, str(command_json["variableValue"]))
-
-            # if self.topic_handler_argument_map.__contains__(topic):
-            #     wx.CallAfter(self.topic_handler_map[topic], *self.topic_handler_argument_map[topic], messagedata)
-            # else:
-            #     wx.CallAfter(self.topic_handler_map[topic], messagedata)

@@ -27,3 +27,11 @@ nlohmann::json Model::getModelTreeJson() {
 
   return modelTree;
 }
+
+nlohmann::json Model::getJson() {
+  nlohmann::json jsonVar;
+  jsonVar["name"] = getName();
+  jsonVar["path"] = getPath();
+  jsonVar["description"] = getDescription();
+  return jsonVar;
+}

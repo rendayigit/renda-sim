@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <string>
 #include <utility>
 
@@ -15,6 +16,8 @@ public:
   std::string getPath() const { return (m_parent == nullptr) ? m_name : m_parent->getPath() + "." + m_name; }
 
   Object *getParent() const { return m_parent; }
+
+  virtual nlohmann::json getJson() = 0;
 
 private:
   std::string m_name;
