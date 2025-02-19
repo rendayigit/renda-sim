@@ -1,6 +1,7 @@
 #include "sampleModel/sampleModel.hpp"
 #include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
+#include <vector>
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -15,6 +16,15 @@ SampleModel::SampleModel()
       m_booleanValue("Boolean Variable", "Sample Boolean Variable", this, true),
       m_stringValue("String Variable", "Sample String Variable", this, "ABCD"),
       m_uintValue("Uint", "Sample Uint", this, 15) {
+
+  std::vector<int> myVect;
+  myVect.push_back(1);
+  myVect.push_back(3);
+  myVect.push_back(5);
+
+  // ModelVariable<std::vector<int>> modelVarVector("m_modelVarVector", "m_modelVarVector", this, myVect);
+  m_modelVarVector = new ModelVariable<std::vector<int>>("m_modelVarVector", "m_modelVarVector", this, myVect);
+
   m_eventSlow->setEventFunction([&] { step(1000); });
   m_eventSlow->setCycleMillis(TIME_STEP_1_SEC);
   m_eventSlow->activate();
@@ -65,5 +75,9 @@ void SampleModel::step(int stepTime) {
     m_arrayValue.at(1)->setValue(m_integerValue.getValue() * 2);
     m_arrayValue.at(2)->setValue(m_integerValue.getValue() * 3);
     m_arrayValue.at(3)->setValue(m_integerValue.getValue() * 4);
+
+    std::vector<int> a = m_modelVarVector->getValue();
+    a.at(0) += 1;
+    m_modelVarVector->setValue(a);
   }
 }

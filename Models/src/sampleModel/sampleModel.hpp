@@ -24,5 +24,7 @@ private:
 
   std::vector<ModelVariable<int> *> m_arrayValue; // TODO(renda): improve array support
 
+  ModelVariable<std::vector<int>> *m_modelVarVector;
+
   ModelVariable<unsigned int> m_uintValue;
 };
