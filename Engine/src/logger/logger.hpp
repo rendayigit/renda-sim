@@ -14,5 +14,7 @@ public:
 
 private:
   Logger() = default;
-  static std::shared_ptr<spdlog::logger> getLogger();
+  static void transmitLog(const std::string &logLevel, const std::string &log);
+  static std::shared_ptr<spdlog::logger> getFileLogger();
+  static std::shared_ptr<spdlog::logger> getConsoleLogger();
 };

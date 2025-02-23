@@ -190,7 +190,10 @@ def populate_tree(tree_ctrl, json_data, parent_item=None):
         if isinstance(value, list):
             item = tree_ctrl.AppendItem(parent_item, key)
             for item_text in value:
-                tree_ctrl.AppendItem(item, item_text)
+                if isinstance(item_text, dict):
+                    populate_tree(tree_ctrl, item_text, item)
+                else:
+                    tree_ctrl.AppendItem(item, item_text)
         elif isinstance(value, dict):
             item = tree_ctrl.AppendItem(parent_item, key)
             populate_tree(tree_ctrl, value, item)

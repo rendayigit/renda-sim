@@ -2,13 +2,13 @@
 
 #include <iostream>
 
-#include "messaging/messaging.hpp"
+#include "messaging/commanding.hpp"
 #include "scheduler/scheduler.hpp"
 
 class Engine {
 public:
   static void run() {
-    Messaging::getInstance().start(); // Instantiate messaging
+    Commanding::getInstance().start(); // Instantiate messaging
 
     std::cout << "\nPress enter to stop the simulation\n\n";
     char input = 0;
@@ -17,7 +17,7 @@ public:
     }
 
     Scheduler::getInstance().stop();
-    Messaging::getInstance().stop();
+    Commanding::getInstance().stop();
   }
 
 private:

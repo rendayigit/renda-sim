@@ -1,6 +1,7 @@
 """Messaging utilities for GUI"""
 
 import threading
+import json
 import wx
 import zmq
 
@@ -10,9 +11,10 @@ class Messaging:
 
     _instance = None  # Class-level instance variable for singleton implementation
 
-    def __new__(cls):
+    def __new__(cls, main_window):
         """Singleton instance"""
         if cls._instance is None:
+            cls.main_window = main_window
             # Create the singleton instance
             cls._instance = super(Messaging, cls).__new__(cls)
 
@@ -20,42 +22,28 @@ class Messaging:
             cls._instance.context = zmq.Context(1)
             cls._instance.subscriber = cls._instance.context.socket(zmq.SUB)
             cls._instance.subscriber.connect("tcp://localhost:12345")
+            cls._instance.subscriber.set(zmq.SUBSCRIBE, "TIME".encode())
+            cls._instance.subscriber.set(zmq.SUBSCRIBE, "EVENT".encode())
+            cls._instance.subscriber.set(zmq.SUBSCRIBE, "VARIABLE".encode())
 
-            # TODO(renda): Maybe combine maps for better readability
-            cls._instance.topic_handler_map = {}
-            cls._instance.topic_handler_argument_map = {}
-
-            cls._instance.thread = threading.Thread(target=cls._instance._messaging_thread)
-            cls._instance.is_running = True
-            cls._instance.thread.start()
+            cls._instance.is_running = False
 
         return cls._instance
 
-    def __init__(self):
+    def __init__(self, main_window):
         # Explicitly define attributes for better static analysis
         if not hasattr(self, "subscriber"):  # Prevent reinitialization in the singleton
+            self.main_window = main_window
             self.subscriber = None
-            self.topic_handler_map = {}
-            self.topic_handler_argument_map = {}
-            self.is_running = True
+            self.is_running = False
             self.thread = threading.Thread(target=self._messaging_thread)
-
-    def add_topic_handler(self, topic, callable_func, *args):
-        """Adds a handler for a given topic"""
-        self.topic_handler_map[topic] = callable_func
-        self.topic_handler_argument_map[topic] = args
-
-        self.subscriber.set(zmq.SUBSCRIBE, topic.encode())
-
-    # TODO(renda): Add option to remove topic handlers
 
     def start(self):
         """Starts the messaging thread"""
         if not self.is_running:
             self.is_running = True
             self.thread = threading.Thread(target=self._messaging_thread)
-
-        self.thread.start()
+            self.thread.start()
 
     def stop(self):
         """Stops the messaging thread"""
@@ -68,10 +56,15 @@ class Messaging:
         while self.is_running:
             frames = self.subscriber.recv_multipart(copy=False)
             topic = bytes(frames[0]).decode()
-            messagedata = bytes(frames[1]).decode()
+            command_json = json.loads(bytes(frames[1]).decode())
 
             # TODO(renda): Find a better way to do this
-            if self.topic_handler_argument_map.__contains__(topic):
-                wx.CallAfter(self.topic_handler_map[topic], *self.topic_handler_argument_map[topic], messagedata)
-            else:
-                wx.CallAfter(self.topic_handler_map[topic], messagedata)
+            if topic == "TIME":
+                wx.CallAfter(self.main_window.sim_time_display.ChangeValue, command_json["simTime"])
+            elif topic == "EVENT":
+                log = "[" + command_json["level"] + "] " + command_json["log"] + "\n"
+                wx.CallAfter(self.main_window.event_logs.AppendText, log)
+            elif topic == "VARIABLE":
+                for i in range(self.main_window.variable_list.GetItemCount()):
+                    if self.main_window.variable_list.GetItem(i).GetText() == command_json["variablePath"]:
+                        wx.CallAfter(self.main_window.variable_list.SetItem, i, 2, str(command_json["variableValue"]))

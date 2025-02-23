@@ -6,7 +6,7 @@
 #include "common.hpp"
 #include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
-#include "messaging/messaging.hpp"
+#include "messaging/publisher.hpp"
 #include "scheduler/scheduler.hpp"
 #include "timer/timer.hpp"
 
@@ -54,7 +54,7 @@ void Scheduler::start() {
   }
 
   m_isRunning = true;
-  Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Start *****\n");
+  Logger::info("Simulation started");
 
   setRate(m_rate);
 
@@ -68,7 +68,8 @@ void Scheduler::start() {
 
 void Scheduler::stop() {
   m_isRunning = false;
-  Messaging::getInstance().queueMessage("EVENT_LOG", "***** Simulation Stop *****\n");
+
+  Logger::info("Simulation stopped");
 
   if (m_schedulerThread.joinable()) {
     m_schedulerThread.join();
@@ -89,12 +90,8 @@ void Scheduler::progressTime(long millis) {
   step(m_progressTimeLastMillis);
 }
 
-void Scheduler::step(long currentMillis) const {
-  double timeInSeconds = static_cast<double>(currentMillis) / MILLIS_TO_SECS;
-  std::string timeStr = std::to_string(timeInSeconds);
-  timeStr = timeStr.substr(0, timeStr.find('.') + 3); // Keep 2 decimal places
-  // TODO(renda): Transmit time
-  Messaging::getInstance().queueMessage("SIM_TIME", timeStr);
+void Scheduler::step(long currentMillis) {
+  transmitTime(currentMillis);
 
   EventManager *eventManagerInstance = &EventManager::getInstance();
   std::vector<Event *> *eventQueueInstance = EventManager::getInstance().getEventQueue();
@@ -133,4 +130,19 @@ void Scheduler::step(long currentMillis) const {
     event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
     eventManagerInstance->addEvent(event);
   }
+}
+
+void Scheduler::transmitTime(long simTimeMillis) {
+  double simTimeInSeconds = static_cast<double>(simTimeMillis) / MILLIS_TO_SECS;
+
+  std::string simTimeStr = std::to_string(simTimeInSeconds);
+  simTimeStr = simTimeStr.substr(0, simTimeStr.find('.') + 3); // Keep 2 decimal places
+
+  nlohmann::json message;
+  message["simTime"] = simTimeStr;
+  message["missionTime"] = ""; // TODO: implement
+  message["epochTime"] = "";   // TODO: implement
+  message["zuluTime"] = "";    // TODO: implement
+
+  Publisher::getInstance().queueMessage("TIME", message);
 }

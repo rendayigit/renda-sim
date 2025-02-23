@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <string>
 #include <utility>
 
@@ -16,9 +17,15 @@ public:
 
   Object *getParent() const { return m_parent; }
 
+  virtual nlohmann::json getJson() = 0;
+
+  // TODO only variables can be monitored, not models
+  bool isMonitored() const { return m_isMonitored; }
+  void setMonitored(bool isMonitored) { m_isMonitored = isMonitored; }
+
 private:
   std::string m_name;
   std::string m_description;
-
   Object *m_parent;
+  bool m_isMonitored{};
 };

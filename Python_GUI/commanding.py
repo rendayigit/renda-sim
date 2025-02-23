@@ -1,5 +1,6 @@
 """Transmit commands to the engine"""
 
+import json
 import zmq
 
 
@@ -15,7 +16,7 @@ class Commanding:
 
             # Initialize ZeroMQ context and socket
             cls._instance.context = zmq.Context(1)
-            cls._instance.socket = cls._instance.context.socket(zmq.PAIR)
+            cls._instance.socket = cls._instance.context.socket(zmq.REQ)
             cls._instance.socket.connect("tcp://localhost:12340")
 
         return cls._instance
@@ -25,21 +26,8 @@ class Commanding:
         if not hasattr(self, "socket"):  # Prevent reinitialization in the singleton
             self.socket = None
 
-    def transmit(self, command: str):
-        """Transmit command to the engine"""
-        if not isinstance(command, str):
-            raise ValueError("Command must be a string")
-
-        self.socket.send(command.encode())  # Send the command as bytes
-
     # TODO(renda): Need timeout option or blocks forever
     def request(self, command: str) -> str:
         """Send a command and wait for a response from the engine"""
-        self.transmit(command)  # Send the command
-        return self.socket.recv().decode()  # Receive and decode the response
-
-    # TODO(renda): Need timeout option or blocks forever
-    def request_json(self, command: str) -> str:
-        """Send a command and wait for a response from the engine"""
-        self.transmit(command)  # Send the command
-        return self.socket.recv_json()  # Receive the response
+        self.socket.send_string(json.dumps(command))  # Send the command
+        return self.socket.recv_json()  # Receive and decode the response

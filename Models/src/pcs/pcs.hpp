@@ -11,9 +11,7 @@
 
 #pragma once
 
-#include <algorithm>
 #include <cmath>
-#include <iostream>
 
 #include "model.hpp"
 #include "modelVariable.hpp"

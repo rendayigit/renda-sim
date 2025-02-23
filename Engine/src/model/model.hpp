@@ -15,6 +15,8 @@ public:
   nlohmann::json getModelTreeJson();
 
 private:
+  nlohmann::json getJson() override;
+
   template <typename t> friend class ModelVariable;
 
   void addChild(Object *child);

@@ -3,7 +3,7 @@
 #include <functional>
 #include <utility>
 
-#include "eventManager.hpp"
+#include "event.hpp"
 
 class SimpleEvent : public Event {
 public:

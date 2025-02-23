@@ -24,7 +24,8 @@ public:
 private:
   Scheduler();
 
-  void step(long currentMillis) const;
+  void step(long currentMillis);
+  void transmitTime(long simTimeMillis);
 
   double m_stepTimeMicros{};
   double m_rate{};
