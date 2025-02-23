@@ -19,9 +19,13 @@ public:
 
   virtual nlohmann::json getJson() = 0;
 
+  // TODO only variables can be monitored, not models
+  bool isMonitored() const { return m_isMonitored; }
+  void setMonitored(bool isMonitored) { m_isMonitored = isMonitored; }
+
 private:
   std::string m_name;
   std::string m_description;
-
   Object *m_parent;
+  bool m_isMonitored{};
 };

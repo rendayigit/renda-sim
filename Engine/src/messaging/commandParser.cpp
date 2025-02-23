@@ -4,7 +4,6 @@
 #include "messaging/commanding.hpp"
 #include "model/modelContainer.hpp"
 #include "model/modelVariable.hpp"
-#include "model/variableProperties.hpp"
 #include "scheduler/scheduler.hpp"
 
 CommandParser::CommandParser() {
@@ -45,15 +44,14 @@ CommandParser::CommandParser() {
   m_functionMap["VARIABLE_ADD"] = [](const nlohmann::json &command) {
     std::string variablePath = command["variablePath"]; // TODO implement error handling
 
-    auto *object = ModelContainer::getInstance().getModel(variablePath);
-    auto *variable = dynamic_cast<VariableProperties *>(object);
+    auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
-    replyStatus["variable"] = object->getJson();
+    replyStatus["variable"] = variable->getJson();
     replyStatus["status"] = true; // TODO implement return value
 
-    variable->setIsMonitored(true);
+    variable->setMonitored(true);
     Logger::debug("Added " + variablePath + " to the monitor list.");
 
     Commanding::getInstance().reply(replyStatus.dump());
@@ -62,11 +60,10 @@ CommandParser::CommandParser() {
   m_functionMap["VARIABLE_REMOVE"] = [](const nlohmann::json &command) {
     std::string variablePath = command["variablePath"]; // TODO implement error handling
 
-    auto *object = ModelContainer::getInstance().getModel(variablePath);
-    auto *variable = dynamic_cast<VariableProperties *>(object);
+    auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
     if (variable != nullptr) {
-      variable->setIsMonitored(false);
+      variable->setMonitored(false);
       Logger::debug("Removed " + variablePath + " from the monitor list.");
     }
 

@@ -7,7 +7,6 @@
 #include "messaging/publisher.hpp"
 #include "model/model.hpp"
 #include "model/object.hpp"
-#include "model/variableProperties.hpp"
 
 // TODO improve
 static std::string demangle(const char *name) {
@@ -39,7 +38,7 @@ static std::string demangle(const char *name) {
   return demangledName;
 }
 
-template <typename t> class ModelVariable : public Object, public VariableProperties {
+template <typename t> class ModelVariable : public Object {
 public:
   explicit ModelVariable(std::string name, std::string description, Model *parent, t initialValue)
       : Object(name, description, parent), m_value(initialValue) {
