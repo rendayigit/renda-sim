@@ -51,5 +51,4 @@ private:
   ModelVariable<double> m_powerConsumption; // Power consumption of the system (Watts)
 
   SimpleEvent m_powerEvent;
-  BoostScheduler scheduler;
 };

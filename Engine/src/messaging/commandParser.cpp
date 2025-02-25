@@ -6,9 +6,13 @@
 #include "model/modelVariable.hpp"
 #include "scheduler/scheduler.hpp"
 
+#include "scheduler/boost_scheduler.hpp"
+
 CommandParser::CommandParser() {
   m_functionMap["START"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().start();
+    // Scheduler::getInstance().start();
+
+    BoostScheduler::getInstance().start();
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
@@ -17,7 +21,9 @@ CommandParser::CommandParser() {
   };
 
   m_functionMap["STOP"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().stop();
+    // Scheduler::getInstance().stop();
+
+    BoostScheduler::getInstance().stop();
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
@@ -28,7 +34,8 @@ CommandParser::CommandParser() {
   m_functionMap["SCHEDULER"] = [](const nlohmann::json &command) {
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
-    replyStatus["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+    // replyStatus["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+    replyStatus["schedulerIsRunning"] = BoostScheduler::getInstance().getIsRunning();
     replyStatus["status"] = true;
     Commanding::getInstance().reply(replyStatus.dump());
   };

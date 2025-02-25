@@ -1,3 +1,4 @@
+#include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
 #include "timer/timer.hpp"
 #include <iostream>
@@ -80,7 +81,45 @@ static void time_step() {
 
 class BoostScheduler {
 public:
-  BoostScheduler() : work(io_service), working_thread([this]() { this->io_service.run(); }) {
+  static BoostScheduler &getInstance() {
+    static BoostScheduler instance;
+    return instance;
+  }
+
+  void add_event(int offset_interval, bool periodic, int interval, BoostEvent::entrypoint &&fn) {
+    this->events.push_back(std::make_shared<BoostEvent>(this->io_service, offset_interval, periodic, interval, fn));
+  }
+
+  void start() {
+    if (m_lastStopTicks != 0) {
+      Timer::getInstance().updateInitialTicks(m_lastStopTicks);
+    }
+
+    isRunning = true;
+
+    Logger::info("Simulation started");
+
+    for (auto &event : events) {
+      event->start();
+    }
+  }
+
+  void stop() {
+    isRunning = false;
+
+    Logger::info("Simulation stopped");
+
+    for (auto &event : events) {
+      event->cancel();
+    }
+
+    m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  }
+
+  bool getIsRunning() const { return isRunning; }
+
+private:
+  BoostScheduler() : work(io_service), working_thread([this]() { this->io_service.run(); }), isRunning(true) {
     add_event(0, true, 100, [&]() { time_step(); });
   }
 
@@ -89,13 +128,10 @@ public:
     this->working_thread.join();
   }
 
-  void add_event(int offset_interval, bool periodic, int interval, BoostEvent::entrypoint &&fn) {
-    this->events.push_back(std::make_shared<BoostEvent>(this->io_service, offset_interval, periodic, interval, fn));
-  }
-
-private:
   boost::asio::io_service io_service;
   boost::asio::io_service::work work;
   std::thread working_thread;
   std::vector<std::shared_ptr<BoostEvent>> events;
+  bool isRunning;
+  long long m_lastStopTicks{};
 };

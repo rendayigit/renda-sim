@@ -35,7 +35,7 @@ PowerSubsystem::PowerSubsystem()
   // m_powerEvent.activate();
   // EventManager::getInstance().addEvent(&m_powerEvent);
 
-  scheduler.add_event(0, true, 10, [&]() { step(); });
+  BoostScheduler::getInstance().add_event(0, true, 10, [&]() { step(); });
 }
 
 void PowerSubsystem::initialize() {
