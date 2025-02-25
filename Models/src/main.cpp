@@ -5,7 +5,7 @@
 
 int main(int /*argc*/, char ** /*argv*/) {
   // Instantiate models
-  SampleModel sampleModel;
+  // SampleModel sampleModel;
   PowerSubsystem powerSubsystem;
 
   // Start engine

@@ -30,10 +30,12 @@ PowerSubsystem::PowerSubsystem()
 
   initialize();
 
-  m_powerEvent.setEventFunction([&] { step(); });
-  m_powerEvent.setCycleMillis(100);
-  m_powerEvent.activate();
-  EventManager::getInstance().addEvent(&m_powerEvent);
+  // m_powerEvent.setEventFunction([&] { step(); });
+  // m_powerEvent.setCycleMillis(100);
+  // m_powerEvent.activate();
+  // EventManager::getInstance().addEvent(&m_powerEvent);
+
+  scheduler.add_event(0, true, 10, [&]() { step(); });
 }
 
 void PowerSubsystem::initialize() {

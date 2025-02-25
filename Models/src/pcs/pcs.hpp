@@ -17,6 +17,8 @@
 #include "modelVariable.hpp"
 #include "simpleEvent.hpp"
 
+#include "scheduler/boost_scheduler.hpp"
+
 // Global variables for customization
 constexpr double MAX_PANEL_POWER = 100.0;             // Maximum power solar panels can generate (Watts)
 constexpr double BATTERY_CAPACITY = 1000.0;           // Maximum battery capacity (Watt-hours)
@@ -49,4 +51,5 @@ private:
   ModelVariable<double> m_powerConsumption; // Power consumption of the system (Watts)
 
   SimpleEvent m_powerEvent;
+  BoostScheduler scheduler;
 };
