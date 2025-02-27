@@ -157,14 +157,16 @@ class MainWindow(wx.Frame):
         self.events_panel = wx.Panel(events_splitter, wx.ID_ANY)
 
         # Create the logs display
-        self.event_logs = wx.TextCtrl(
+        self.event_logs = wx.ListCtrl(
             self.events_panel,
             wx.ID_ANY,
-            " Event Logs:\n",
             wx.DefaultPosition,
             wx.DefaultSize,
-            wx.TE_READONLY | wx.TE_MULTILINE,
+            wx.LC_REPORT,
         )
+
+        self.event_logs.InsertColumn(0, "Level", wx.LIST_FORMAT_CENTER, 70)
+        self.event_logs.InsertColumn(1, "Log", wx.LIST_FORMAT_LEFT, 1100)
 
         self.events_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.events_sizer.Add(self.event_logs, 1, wx.ALL | wx.EXPAND, 5)
