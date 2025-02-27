@@ -51,6 +51,13 @@ class Messaging:
             self.is_running = False
             self.thread.join()
 
+    # TODO move this func somewhere else
+    def _add_log(self, command_json):
+        log_index = self.main_window.event_logs.InsertItem(self.main_window.event_logs.GetItemCount(), "")
+        self.main_window.event_logs.SetItem(log_index, 0, command_json["level"])
+        self.main_window.event_logs.SetItem(log_index, 1, command_json["log"])
+        self.main_window.event_logs.EnsureVisible(log_index)
+
     def _messaging_thread(self):
         """Messeging thread"""
         while self.is_running:
@@ -62,8 +69,7 @@ class Messaging:
             if topic == "TIME":
                 wx.CallAfter(self.main_window.sim_time_display.ChangeValue, command_json["simTime"])
             elif topic == "EVENT":
-                log = "[" + command_json["level"] + "] " + command_json["log"] + "\n"
-                wx.CallAfter(self.main_window.event_logs.AppendText, log)
+                wx.CallAfter(self._add_log, command_json)
             elif topic == "VARIABLE":
                 for i in range(self.main_window.variable_list.GetItemCount()):
                     if self.main_window.variable_list.GetItem(i).GetText() == command_json["variablePath"]:
