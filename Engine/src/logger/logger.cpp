@@ -44,7 +44,8 @@ void Logger::transmitLog(const std::string &logLevel, const std::string &log) {
 
 std::shared_ptr<spdlog::logger> Logger::getFileLogger() {
   static std::shared_ptr<spdlog::logger> logger = [] {
-    auto log = spdlog::daily_logger_mt("ENGINE", getExecutableDirectory() + "Engine.log", 0, 0);
+    static std::string filePathName = getExecutableDirectory() + "/Engine.log";
+    auto log = spdlog::daily_logger_mt("ENGINE", filePathName, 0, 0);
     log->set_pattern("[%H:%M:%S.%f %z] [%n] [%l] [thread %t] %v");
     log->set_level(spdlog::level::trace);
     log->flush_on(spdlog::level::trace);
