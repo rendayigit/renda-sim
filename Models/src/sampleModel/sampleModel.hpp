@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nlohmann/adl_serializer.hpp>
 #include <string>
 #include <vector>
 
@@ -27,9 +28,36 @@ private:
 };
 
 struct SampleSturcture {
-  int integer;
-  bool boolean;
+  int integer = 1;
+  bool boolean = true;
+  std::string string = "Default structure string";
+
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(SampleSturcture, integer, boolean, string)
 };
+
+// Specialization for serializing SampleSturcture*
+namespace nlohmann {
+template <> struct adl_serializer<SampleSturcture *> {
+  static void to_json(json &j, const SampleSturcture *const &ptr) {
+    if (ptr == nullptr) {
+      j = nullptr; // Handle null pointer case
+    } else {
+      j = *ptr; // Delegate to the existing SampleSturcture serialization
+    }
+  }
+
+  static void from_json(const json &j, SampleSturcture *&ptr) {
+    if (j.is_null()) {
+      ptr = nullptr;
+    } else {
+      if (ptr == nullptr) {
+        ptr = new SampleSturcture();
+      }
+      *ptr = j.get<SampleSturcture>();
+    }
+  }
+};
+} // namespace nlohmann
 
 class SampleModel : public Model {
 public:
@@ -53,7 +81,7 @@ private:
 
   std::vector<SampleChildModel *> m_childModels;
   // ModelVariable<int[5]> m_cArrayModelVariable;
-  // ModelVariable<SampleSturcture> *m_structureModelVariable;
+  ModelVariable<SampleSturcture *> m_structureModelVariable;
 
   ModelVariable<unsigned int> m_uintValue;
 };

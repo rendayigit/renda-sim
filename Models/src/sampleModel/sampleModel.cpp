@@ -15,8 +15,9 @@ SampleModel::SampleModel()
       m_integerValue("Integer Variable", "Sample Integer Variable", this, -1),
       m_booleanValue("Boolean Variable", "Sample Boolean Variable", this, true),
       m_stringValue("String Variable", "Sample String Variable", this, "ABCD"),
-      m_uintValue("Uint", "Sample Uint", this, 15) {
-
+      m_uintValue("Uint", "Sample Uint", this, 15),
+      m_structureModelVariable("Structure Variable", "Sample Structure Variable", this,
+                               new SampleSturcture{.integer = 2}) {
   std::vector<int> myVect;
   myVect.push_back(1);
   myVect.push_back(3);
@@ -66,14 +67,6 @@ SampleModel::SampleModel()
   m_childModels.push_back(new SampleChildModel("Sample Child 2", "A sample child model", this));
   m_childModels.push_back(new SampleChildModel("Sample Child 3", "A sample child model", this));
 
-  SampleSturcture structure{};
-  structure.integer = 1;
-  structure.boolean = true;
-
-  // TODO add structure support
-  // m_structureModelVariable =
-  // new ModelVariable<SampleSturcture>("Structure Variable", "Sample Structure Variable", this, structure);
-
   Logger::info("Sample Model Initialized");
 }
 
@@ -92,5 +85,9 @@ void SampleModel::step(int stepTime) {
     std::vector<int> a = m_modelVarVector->getValue();
     a.at(0) += 1;
     m_modelVarVector->setValue(a);
+
+    auto *structure = m_structureModelVariable.getValue();
+    structure->integer += 1;
+    m_structureModelVariable.setValue(structure);
   }
 }
