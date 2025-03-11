@@ -7,7 +7,6 @@
 #include "messaging/commandParser.hpp"
 
 constexpr int MAX_CONTEXT_THREAD_COUNT = 1;
-constexpr int RECEIVER_SLEEP_DURATION = 100;
 constexpr int BINDING_DELAY = 200;
 
 Commanding::Commanding()
@@ -50,6 +49,8 @@ void Commanding::reply(const std::string &message) {
 
 void Commanding::step() {
   while (m_isRunning) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     zmq::message_t request;
     zmq::recv_result_t receiveStatus = m_socket->recv(request, zmq::recv_flags::none);
 
@@ -60,7 +61,5 @@ void Commanding::step() {
 
       CommandParser::getInstance().executeCommand(nlohmann::json::parse(command));
     }
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(RECEIVER_SLEEP_DURATION));
   }
 }

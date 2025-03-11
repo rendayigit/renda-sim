@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <thread>
 #include <zmq.hpp>
 
@@ -29,4 +30,6 @@ private:
 
   std::thread m_thread;
   bool m_isRunning{};
+
+  std::mutex m_mutex;
 };
