@@ -1,3 +1,5 @@
+#pragma once
+
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
 #include "timer/timer.hpp"
