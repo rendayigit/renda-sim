@@ -109,34 +109,52 @@ class MainWindowHandlers:
             # Check if the selected item has children
             child, _ = self.main_window.models_tree.GetFirstChild(item)
 
-            if child.IsOk():  # If the item has a valid child, skip the rest of the logic
+            # If the selected item has children, iterate through them
+            if child.IsOk():
+                self._process_tree_children(item)
                 return
 
-            parts = []
-            while item.IsOk():
-                parent = self.main_window.models_tree.GetItemParent(item)  # Get the parent item
-                if not parent.IsOk():  # Skip if root item
-                    break
-                parts.insert(0, self.main_window.models_tree.GetItemText(item))  # Add the item's text at the beginning
-                item = parent  # Move to the parent item
-            path = ".".join(parts)  # Join all parts with a dot
+            # If the selected item does not have children, process it directly
+            self._process_tree_item(item)
 
-            print(f"Selected path: {path}")  # TODO(Renda): remove after testing
+    def _process_tree_children(self, parent_item):
+        """Recursively process all children of a tree item."""
+        child, cookie = self.main_window.models_tree.GetFirstChild(parent_item)
+        while child.IsOk():
+            # If the child has children, process them recursively
+            if self.main_window.models_tree.ItemHasChildren(child):
+                self._process_tree_children(child)
+            else:
+                self._process_tree_item(child)
+            child, cookie = self.main_window.models_tree.GetNextChild(parent_item, cookie)
 
-            # If child is already being monitored, skip the rest of the logic
-            for item in self._get_all_items(self.main_window.variable_list):
-                if path == item.GetText():
-                    return
+    def _process_tree_item(self, item):
+        """Process a single tree item."""
+        parts = []
+        while item.IsOk():
+            parent = self.main_window.models_tree.GetItemParent(item)  # Get the parent item
+            if not parent.IsOk():  # Skip if root item
+                break
+            parts.insert(0, self.main_window.models_tree.GetItemText(item))  # Add the item's text at the beginning
+            item = parent  # Move to the parent item
+        path = ".".join(parts)  # Join all parts with a dot
 
-            var = Commanding().request({"command": "VARIABLE_ADD", "variablePath": path})
-            var_desc = var["variable"]["description"]
-            var_value = str(var["variable"]["value"])
-            var_type = var["variable"]["type"]
+        print(f"Selected path: {path}")  # TODO(Renda): remove after testing
 
-            item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
-            self.main_window.variable_list.SetItem(item_index, 1, var_desc)
-            self.main_window.variable_list.SetItem(item_index, 2, var_value)
-            self.main_window.variable_list.SetItem(item_index, 3, var_type)
+        # If child is already being monitored, skip the rest of the logic
+        for item in self._get_all_items(self.main_window.variable_list):
+            if path == item.GetText():
+                return
+
+        var = Commanding().request({"command": "VARIABLE_ADD", "variablePath": path})
+        var_desc = var["variable"]["description"]
+        var_value = str(var["variable"]["value"])
+        var_type = var["variable"]["type"]
+
+        item_index = self.main_window.variable_list.InsertItem(self.main_window.variable_list.GetItemCount(), path)
+        self.main_window.variable_list.SetItem(item_index, 1, var_desc)
+        self.main_window.variable_list.SetItem(item_index, 2, var_value)
+        self.main_window.variable_list.SetItem(item_index, 3, var_type)
 
     def on_list(self, event):
         """List control callback"""
