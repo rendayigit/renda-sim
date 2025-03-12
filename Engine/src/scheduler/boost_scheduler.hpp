@@ -3,38 +3,40 @@
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
 #include "timer/timer.hpp"
-#include <iostream>
-
-#include <thread>
-#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/core/noncopyable.hpp>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
+#include <utility>
+#include <vector>
 
 constexpr double SIM_RATE = 1.0;
 
 class BoostEvent : public boost::noncopyable {
 public:
-  using entrypoint = std::function<void(void)>;
-
-  BoostEvent(boost::asio::io_service &io_service, int offset_interval, bool periodic, int interval, entrypoint task)
-      : task(task), offset_interval(offset_interval), periodic(periodic), interval(interval), timer(io_service) {
+  BoostEvent(boost::asio::io_service &io_service, int offset_interval, bool periodic, int interval,
+             std::function<void(void)> task)
+      : m_task(std::move(task)), m_offsetInterval(offset_interval), m_periodic(periodic), m_interval(interval),
+        m_timer(io_service) {
     // Schedule start to be ran by the io_service
-    io_service.post(boost::bind(&BoostEvent::start, this));
+    io_service.post([this] { start(); });
   }
 
   ~BoostEvent() { std::cout << "Event destroyed" << std::endl; }
 
   void execute(boost::system::error_code const &ec) {
     if (!ec) {
-      if (this->periodic) {
+      if (this->m_periodic) {
         // timer.expires_at(timer.expires_at() + boost::posix_time::milliseconds(this->interval));
-        timer.expires_at(timer.expires_at() +
-                         boost::posix_time::milliseconds(static_cast<int>(this->interval / SIM_RATE)));
-        this->start_wait();
+        m_timer.expires_at(m_timer.expires_at() +
+                           boost::posix_time::milliseconds(static_cast<int>(this->m_interval / SIM_RATE)));
+        this->startWait();
       }
-      this->task();
+      this->m_task();
     } else {
       if (boost::asio::error::operation_aborted == ec) {
         // FIXME
@@ -47,25 +49,25 @@ public:
   }
 
   void start() {
-    this->timer.expires_from_now(boost::posix_time::milliseconds(this->offset_interval));
-    this->start_wait();
+    this->m_timer.expires_from_now(boost::posix_time::milliseconds(this->m_offsetInterval));
+    this->startWait();
   }
 
-  void cancel() { this->timer.cancel(); }
+  void cancel() { this->m_timer.cancel(); }
 
 private:
-  void start_wait() {
-    this->timer.async_wait(boost::bind(&BoostEvent::execute, this, boost::asio::placeholders::error));
+  void startWait() {
+    this->m_timer.async_wait([this](const boost::system::error_code &ec) { this->execute(ec); });
   }
 
-  entrypoint task;
-  int offset_interval;
-  bool periodic;
-  int interval;
-  boost::asio::deadline_timer timer;
+  std::function<void(void)> m_task;
+  int m_offsetInterval;
+  bool m_periodic;
+  int m_interval;
+  boost::asio::deadline_timer m_timer;
 };
 
-static void time_step() {
+static void timeStep() {
   auto simTimeMillis = Timer::getInstance().simMillis();
   double simTimeInSeconds = static_cast<double>(simTimeMillis) / 1000;
 
@@ -88,8 +90,8 @@ public:
     return instance;
   }
 
-  void add_event(int offset_interval, bool periodic, int interval, BoostEvent::entrypoint &&fn) {
-    this->events.push_back(std::make_shared<BoostEvent>(this->io_service, offset_interval, periodic, interval, fn));
+  void add_event(int offsetInterval, bool periodic, int interval, std::function<void(void)> &&fn) {
+    this->m_events.push_back(std::make_shared<BoostEvent>(this->m_ioService, offsetInterval, periodic, interval, fn));
   }
 
   void start() {
@@ -97,43 +99,43 @@ public:
       Timer::getInstance().updateInitialTicks(m_lastStopTicks);
     }
 
-    isRunning = true;
+    m_isRunning = true;
 
     Logger::info("Simulation started");
 
-    for (auto &event : events) {
+    for (auto &event : m_events) {
       event->start();
     }
   }
 
   void stop() {
-    isRunning = false;
+    m_isRunning = false;
 
     Logger::info("Simulation stopped");
 
-    for (auto &event : events) {
+    for (auto &event : m_events) {
       event->cancel();
     }
 
     m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
   }
 
-  bool getIsRunning() const { return isRunning; }
+  bool getIsRunning() const { return m_isRunning; }
 
 private:
-  BoostScheduler() : work(io_service), working_thread([this]() { this->io_service.run(); }), isRunning(true) {
-    add_event(0, true, 100, [&]() { time_step(); });
+  BoostScheduler() : m_work(m_ioService), m_workingThread([this]() { this->m_ioService.run(); }) {
+    add_event(0, true, 100, [&]() { timeStep(); });
   }
 
   ~BoostScheduler() {
-    this->io_service.stop();
-    this->working_thread.join();
+    this->m_ioService.stop();
+    this->m_workingThread.join();
   }
 
-  boost::asio::io_service io_service;
-  boost::asio::io_service::work work;
-  std::thread working_thread;
-  std::vector<std::shared_ptr<BoostEvent>> events;
-  bool isRunning;
+  boost::asio::io_service m_ioService;
+  boost::asio::io_service::work m_work;
+  std::thread m_workingThread;
+  std::vector<std::shared_ptr<BoostEvent>> m_events;
+  bool m_isRunning{};
   long long m_lastStopTicks{};
 };
