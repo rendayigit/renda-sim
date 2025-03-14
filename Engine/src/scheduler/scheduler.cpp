@@ -1,12 +1,13 @@
 #include <chrono>
 #include <fstream>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
 
 #include "common.hpp"
-#include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
+#include "scheduler/Entrypoint.hpp"
 #include "scheduler/scheduler.hpp"
 #include "timer/timer.hpp"
 
@@ -14,7 +15,7 @@ constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
-Scheduler::Scheduler() {
+Scheduler::Scheduler() : m_work(m_ioService) {
   nlohmann::json config;
 
   std::ifstream configFile(CONFIG_PATH);
@@ -40,12 +41,22 @@ Scheduler::Scheduler() {
       Logger::critical("JSON parse error: " + std::string(e.what()));
     }
   }
+
+  AddSimulationTimeEvent(new EntryPoint([&] { transmitTime(); }), 0, 100, -1);
 }
 
 Scheduler::~Scheduler() {
   stop();
   m_lastStopTicks = {};
   m_progressTimeLastMillis = {};
+
+  m_ioService.stop();
+
+  if (m_workingThread.joinable()) {
+    m_workingThread.join();
+  }
+
+  m_entryPoints->clear();
 }
 
 void Scheduler::start() {
@@ -58,12 +69,7 @@ void Scheduler::start() {
 
   setRate(m_rate);
 
-  m_schedulerThread = std::thread([&] {
-    while (m_isRunning) {
-      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
-      step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
-    }
-  });
+  m_workingThread = std::thread([this]() { m_ioService.run(); });
 }
 
 void Scheduler::stop() {
@@ -76,6 +82,11 @@ void Scheduler::stop() {
   }
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+  // m_work.get_io_context().stop();
+  if (m_workingThread.joinable()) {
+    m_workingThread.join();
+  }
 }
 
 void Scheduler::reset() {
@@ -87,53 +98,61 @@ void Scheduler::setRate(double rate) { m_rate = rate; }
 
 void Scheduler::progressTime(long millis) {
   m_progressTimeLastMillis += millis;
-  step(m_progressTimeLastMillis);
+  // step(m_progressTimeLastMillis);
 }
 
-void Scheduler::step(long currentMillis) {
-  transmitTime(currentMillis);
+void Scheduler::handleEvent(EntryPoint *entryPoint, long simulationTime, long cycleTime, int repeat) {
+  entryPoint->Execute();
 
-  EventManager *eventManagerInstance = &EventManager::getInstance();
-  std::vector<Event *> *eventQueueInstance = EventManager::getInstance().getEventQueue();
+  auto timer = std::make_unique<boost::asio::deadline_timer>(m_ioService);
+  long nextCycleTime = static_cast<long>(cycleTime / m_rate);
+  timer->expires_from_now(boost::posix_time::milliseconds(nextCycleTime));
 
-  while (true) {
-    // Skip if no events in queue
-    if (eventQueueInstance->empty()) {
+  // Bind the event by reference to the lambda to ensure the current instance is captured.
+  timer->async_wait([&](const boost::system::error_code &errorCode) {
+    if (boost::asio::error::operation_aborted == errorCode) {
+      // FIXME
+      Logger::error("Operation aborted");
+      return;
+    } else {
+      // FIXME
+      Logger::error("Other error");
       return;
     }
 
-    // Get the nearest event
-    Event *event = eventQueueInstance->at(0);
+    handleEvent(entryPoint, simulationTime, cycleTime, repeat);
+  });
+}
 
-    // Skip if event is not active
-    if (not event->isActive()) {
-      return;
-    }
-
-    // Skip if event is not due
-    if (event->getNextMillis() > currentMillis) {
-      return;
-    }
-
-    // Process the event
-    event->process();
-
-    // Pop event
-    eventManagerInstance->removeEvent(event);
-
-    // If the event is single shot do not reschedule event
-    if (event->getCycleMillis() < 0) {
-      return;
-    }
-
-    // Reschedule event if event is cyclic and repeat loop
-    event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
-    eventManagerInstance->addEvent(event);
+void Scheduler::AddSimulationTimeEvent(EntryPoint *entryPoint, long simulationTime, long cycleTime, int repeat) {
+  // Ensure the entryPoint is not already added.
+  if (std::find(m_entryPoints->begin(), m_entryPoints->end(), entryPoint) == m_entryPoints->end()) {
+    // Insert entryPoint to entrypoint list
+    m_entryPoints->push_back(entryPoint);
+  } else {
+    Logger::warn("Entrypoint already added.");
+    return;
   }
+
+  auto timer = std::make_unique<boost::asio::deadline_timer>(m_ioService);
+  timer->expires_from_now(boost::posix_time::milliseconds(static_cast<int>(simulationTime / m_rate)));
+  timer->async_wait([&](const boost::system::error_code &errorCode) {
+    if (boost::asio::error::operation_aborted == errorCode) {
+      // FIXME
+      Logger::error("Operation aborted");
+      return;
+    } else {
+      // FIXME
+      Logger::error("Other error");
+      return;
+    }
+
+    handleEvent(entryPoint, simulationTime, cycleTime, repeat);
+  });
 }
 
-void Scheduler::transmitTime(long simTimeMillis) {
-  double simTimeInSeconds = static_cast<double>(simTimeMillis) / MILLIS_TO_SECS;
+void Scheduler::transmitTime() {
+  double simTimeInSeconds = static_cast<double>(Timer::getInstance().simMillis()) / MILLIS_TO_SECS;
 
   std::string simTimeStr = std::to_string(simTimeInSeconds);
   simTimeStr = simTimeStr.substr(0, simTimeStr.find('.') + 3); // Keep 2 decimal places

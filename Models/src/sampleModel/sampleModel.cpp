@@ -1,7 +1,6 @@
 #include "sampleModel/sampleModel.hpp"
-#include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
-#include <vector>
+#include "scheduler/scheduler.hpp"
 
 constexpr double TIME_STEP_1_SEC = 1000;
 constexpr double TIME_STEP_500_MSEC = 500;
@@ -9,8 +8,7 @@ constexpr double TIME_STEP_100_MSEC = 100;
 constexpr double TIME_STEP_1_MSEC = 1;
 
 SampleModel::SampleModel()
-    : Model("Sample Model", "Sample Model", nullptr), m_eventSlow(new SimpleEvent), m_eventFast(new SimpleEvent),
-      m_eventFaster(new SimpleEvent), m_eventFastest(new SimpleEvent),
+    : Model("Sample Model", "Sample Model", nullptr),
       m_doubleValue("Double Variable", "Sample Double Variable", this, 123.4),
       m_integerValue("Integer Variable", "Sample Integer Variable", this, -1),
       m_booleanValue("Boolean Variable", "Sample Boolean Variable", this, true),
@@ -25,27 +23,6 @@ SampleModel::SampleModel()
   // ModelVariable<std::vector<int>> modelVarVector("m_modelVarVector", "m_modelVarVector", this, myVect);
   m_modelVarVector =
       new ModelVariable<std::vector<int>>("Model Variable Vector", "Sample Model Variable Vector", this, myVect);
-
-  m_eventSlow->setEventFunction([&] { step(1000); });
-  m_eventSlow->setCycleMillis(TIME_STEP_1_SEC);
-  m_eventSlow->activate();
-
-  m_eventFast->setEventFunction([&] { step(500); });
-  m_eventFast->setCycleMillis(TIME_STEP_500_MSEC);
-  m_eventFast->activate();
-
-  m_eventFaster->setEventFunction([&] { step(100); });
-  m_eventFaster->setCycleMillis(TIME_STEP_100_MSEC);
-  m_eventFaster->activate();
-
-  m_eventFastest->setEventFunction([&] { step(1); });
-  m_eventFastest->setCycleMillis(TIME_STEP_1_MSEC);
-  m_eventFastest->activate();
-
-  EventManager::getInstance().addEvent(m_eventSlow);
-  EventManager::getInstance().addEvent(m_eventFast);
-  EventManager::getInstance().addEvent(m_eventFaster);
-  EventManager::getInstance().addEvent(m_eventFastest);
 
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[0]", "Sample Array Variable 0", this, -1));
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[1]", "Sample Array Variable 1", this, -1));
@@ -75,6 +52,16 @@ SampleModel::SampleModel()
   // new ModelVariable<SampleSturcture>("Structure Variable", "Sample Structure Variable", this, structure);
 
   Logger::info("Sample Model Initialized");
+
+  m_eventSlow = new EntryPoint([&] { step(1000); });
+  m_eventFast = new EntryPoint([&] { step(500); });
+  m_eventFaster = new EntryPoint([&] { step(100); });
+  m_eventFastest = new EntryPoint([&] { step(1); });
+
+  Scheduler::getInstance().AddSimulationTimeEvent(m_eventSlow, 0, TIME_STEP_1_SEC, -1);
+  Scheduler::getInstance().AddSimulationTimeEvent(m_eventFast, 0, TIME_STEP_500_MSEC, -1);
+  Scheduler::getInstance().AddSimulationTimeEvent(m_eventFaster, 0, TIME_STEP_100_MSEC, -1);
+  Scheduler::getInstance().AddSimulationTimeEvent(m_eventFastest, 0, TIME_STEP_1_MSEC, -1);
 }
 
 void SampleModel::step(int stepTime) {

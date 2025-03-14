@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "modelVariable.hpp"
-#include "simpleEvent.hpp"
+#include "scheduler/Entrypoint.hpp"
 
 class SampleGrandChildModel : public Model {
 public:
@@ -37,10 +37,10 @@ public:
   void step(int stepTime);
 
 private:
-  SimpleEvent *m_eventSlow;
-  SimpleEvent *m_eventFast;
-  SimpleEvent *m_eventFaster;
-  SimpleEvent *m_eventFastest;
+  EntryPoint *m_eventSlow;
+  EntryPoint *m_eventFast;
+  EntryPoint *m_eventFaster;
+  EntryPoint *m_eventFastest;
 
   ModelVariable<double> m_doubleValue;
   ModelVariable<int> m_integerValue;

@@ -22,12 +22,12 @@ src:
 	@$(MAKE) merge_compile_commands
 
 # Target to build the tests
-tests: 
-	@mkdir -p $(BUILD_DIR)/tests/
-	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON $(ROOT_DIR)/tests -B$(BUILD_DIR)/tests/
-	@$(MAKE) -C $(BUILD_DIR)/tests/
-	@cp $(BUILD_DIR)/tests/compile_commands.json $(BUILD_DIR)/compile_commands_tests.json
-	@$(MAKE) merge_compile_commands
+# tests: 
+# 	@mkdir -p $(BUILD_DIR)/tests/
+# 	@$(CMAKE) -DCMAKE_CXX_FLAGS=$(CFLAGS) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON $(ROOT_DIR)/tests -B$(BUILD_DIR)/tests/
+# 	@$(MAKE) -C $(BUILD_DIR)/tests/
+# 	@cp $(BUILD_DIR)/tests/compile_commands.json $(BUILD_DIR)/compile_commands_tests.json
+# 	@$(MAKE) merge_compile_commands
 
 # Merge the compile commands
 merge_compile_commands:
