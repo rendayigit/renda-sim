@@ -106,39 +106,33 @@ void Scheduler::progressTime(long millis) {
 void Scheduler::step(long currentMillis) {
   transmitTime(currentMillis);
 
-  while (true) {
-    // Skip if no events in queue
-    if (m_eventQueueInstance->empty()) {
-      return;
-    }
+  // Skip if no events in queue
+  if (m_eventQueueInstance->empty()) {
+    return;
+  }
 
-    // Get the nearest event
-    Event *event = m_eventQueueInstance->front();
-
+  for (auto &event : *m_eventQueueInstance) {
     // Skip if event is not active
     if (not event->isActive()) {
-      return;
+      continue;
     }
 
     // Skip if event is not due
     if (event->getNextMillis() > currentMillis) {
-      return;
+      continue;
     }
 
     // Process the event
     event->process();
 
-    // Pop event
-    m_eventManagerInstance->removeEvent(event);
-
-    // If the event is single shot do not reschedule event
+    // If the event is single shot remove the event from queue
     if (event->getCycleMillis() < 0) {
-      return;
+      m_eventManagerInstance->removeEvent(event);
+      continue;
     }
 
-    // Reschedule event if event is cyclic and repeat loop
+    // Update event if event is cyclic and repeat loop
     event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
-    m_eventManagerInstance->addEvent(event);
   }
 }
 
