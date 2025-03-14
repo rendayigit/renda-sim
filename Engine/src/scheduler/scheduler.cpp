@@ -14,7 +14,7 @@ constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
-Scheduler::Scheduler() {
+Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { this->m_ioService.run(); }), m_timer(m_ioService) {
   nlohmann::json config;
 
   std::ifstream configFile(CONFIG_PATH);
@@ -46,6 +46,25 @@ Scheduler::~Scheduler() {
   stop();
   m_lastStopTicks = {};
   m_progressTimeLastMillis = {};
+
+  this->m_ioService.stop();
+  this->m_workingThread.join();
+}
+
+void Scheduler::execute(boost::system::error_code const &errorCode) {
+  if (not errorCode) {
+    m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(100));
+    this->m_timer.async_wait([this](const boost::system::error_code &ec) { this->execute(ec); });
+    step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
+  } else {
+    if (boost::asio::error::operation_aborted == errorCode) {
+      // TODO handle
+      Logger::warn("Scheduler aborted");
+    } else {
+      // TODO handle
+      Logger::warn("Scheduler error");
+    }
+  }
 }
 
 void Scheduler::start() {
@@ -58,12 +77,8 @@ void Scheduler::start() {
 
   setRate(m_rate);
 
-  m_schedulerThread = std::thread([&] {
-    while (m_isRunning) {
-      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
-      step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
-    }
-  });
+  this->m_timer.expires_from_now(boost::posix_time::milliseconds(0));
+  this->m_timer.async_wait([this](const boost::system::error_code &ec) { this->execute(ec); });
 }
 
 void Scheduler::stop() {
@@ -71,9 +86,7 @@ void Scheduler::stop() {
 
   Logger::info("Simulation stopped");
 
-  if (m_schedulerThread.joinable()) {
-    m_schedulerThread.join();
-  }
+  this->m_timer.cancel();
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 }
