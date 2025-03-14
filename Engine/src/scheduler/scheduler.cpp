@@ -1,13 +1,13 @@
+#include "scheduler/scheduler.hpp"
+
 #include <chrono>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <string>
 
 #include "common.hpp"
-#include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
-#include "scheduler/scheduler.hpp"
 #include "timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
@@ -106,17 +106,14 @@ void Scheduler::progressTime(long millis) {
 void Scheduler::step(long currentMillis) {
   transmitTime(currentMillis);
 
-  EventManager *eventManagerInstance = &EventManager::getInstance();
-  std::vector<Event *> *eventQueueInstance = EventManager::getInstance().getEventQueue();
-
   while (true) {
     // Skip if no events in queue
-    if (eventQueueInstance->empty()) {
+    if (m_eventQueueInstance->empty()) {
       return;
     }
 
     // Get the nearest event
-    Event *event = eventQueueInstance->at(0);
+    Event *event = m_eventQueueInstance->front();
 
     // Skip if event is not active
     if (not event->isActive()) {
@@ -132,7 +129,7 @@ void Scheduler::step(long currentMillis) {
     event->process();
 
     // Pop event
-    eventManagerInstance->removeEvent(event);
+    m_eventManagerInstance->removeEvent(event);
 
     // If the event is single shot do not reschedule event
     if (event->getCycleMillis() < 0) {
@@ -141,7 +138,7 @@ void Scheduler::step(long currentMillis) {
 
     // Reschedule event if event is cyclic and repeat loop
     event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
-    eventManagerInstance->addEvent(event);
+    m_eventManagerInstance->addEvent(event);
   }
 }
 

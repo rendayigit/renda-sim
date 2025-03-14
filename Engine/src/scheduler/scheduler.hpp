@@ -10,6 +10,8 @@
 #include <utility>
 #include <vector>
 
+#include "eventManager/eventManager.hpp"
+
 class Scheduler : public boost::noncopyable {
 public:
   static Scheduler &getInstance() {
@@ -35,6 +37,9 @@ private:
   void execute(boost::system::error_code const &errorCode);
   void step(long currentMillis);
   void transmitTime(long simTimeMillis);
+
+  EventManager *m_eventManagerInstance = &EventManager::getInstance();
+  std::vector<Event *> *m_eventQueueInstance = EventManager::getInstance().getEventQueue();
 
   double m_stepTimeMicros{};
   double m_rate{};
