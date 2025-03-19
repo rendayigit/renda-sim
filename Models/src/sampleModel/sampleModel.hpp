@@ -80,7 +80,7 @@ private:
   ModelVariable<std::vector<int>> *m_modelVarVector;
 
   std::vector<SampleChildModel *> m_childModels;
-  // ModelVariable<int[5]> m_cArrayModelVariable;
+
   ModelVariable<SampleSturcture *> m_structureModelVariable;
 
   ModelVariable<unsigned int> m_uintValue;
