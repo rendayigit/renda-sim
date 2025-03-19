@@ -23,7 +23,6 @@ SampleModel::SampleModel()
   myVect.push_back(3);
   myVect.push_back(5);
 
-  // ModelVariable<std::vector<int>> modelVarVector("m_modelVarVector", "m_modelVarVector", this, myVect);
   m_modelVarVector =
       new ModelVariable<std::vector<int>>("Model Variable Vector", "Sample Model Variable Vector", this, myVect);
 
@@ -53,14 +52,6 @@ SampleModel::SampleModel()
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[2]", "Sample Array Variable 2", this, -1));
   m_arrayValue.push_back(new ModelVariable<int>("Array Variable[3]", "Sample Array Variable 3", this, -1));
 
-  // FIXME(renda): Why does this not work?
-  // m_arrayValue.emplace_back("Array Variable[0]", "Sample Array Variable 0", this, -1);
-  // m_arrayValue.emplace_back("Array Variable[1]", "Sample Array Variable 1", this, -1);
-  // m_arrayValue.emplace_back("Array Variable[2]", "Sample Array Variable 2", this, -1);
-  // m_arrayValue.emplace_back("Array Variable[3]", "Sample Array Variable 3", this, -1);
-
-  // FIXME(renda): Variable display cannot view this because uint is not defined in messageparser, add all primitive
-  // types to messageparser
   m_uintValue.setValue(15);
 
   m_childModels.push_back(new SampleChildModel("Sample Child 1", "A sample child model", this));
@@ -71,10 +62,6 @@ SampleModel::SampleModel()
 }
 
 void SampleModel::step(int stepTime) {
-  // TODO(renda): Do something about below code
-  // Logger::info(std::to_string(stepTime) +
-  //                     " ms Step, Real Millis: " + std::to_string(Timer::getInstance().simMillis()));
-
   if (stepTime == TIME_STEP_1_SEC) {
     m_integerValue.setValue(m_integerValue.getValue() + 1);
     m_arrayValue.at(0)->setValue(m_integerValue.getValue());
