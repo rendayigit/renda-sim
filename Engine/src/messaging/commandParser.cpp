@@ -45,6 +45,24 @@ CommandParser::CommandParser() {
     Commanding::getInstance().reply(replyStatus.dump());
   };
 
+  m_functionMap["RUN_UNTIL"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().runUntil(command["time"]);
+
+    nlohmann::json replyStatus;
+    replyStatus["command"] = command["command"];
+    replyStatus["status"] = Scheduler::getInstance().isRunning();
+    Commanding::getInstance().reply(replyStatus.dump());
+  };
+
+  m_functionMap["STOP_AT"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().stopAt(command["time"]);
+
+    nlohmann::json replyStatus;
+    replyStatus["command"] = command["command"];
+    replyStatus["status"] = Scheduler::getInstance().isRunning();
+    Commanding::getInstance().reply(replyStatus.dump());
+  };
+
   m_functionMap["SCHEDULER"] = [](const nlohmann::json &command) {
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];

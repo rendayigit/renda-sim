@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <string>
 
 #include "common.hpp"
@@ -97,13 +96,33 @@ void Scheduler::runFor(long millis) {
   stopIn(millis);
 }
 
-void Scheduler::runUntil(long millis) {
+void Scheduler::runUntil(const nlohmann::json &time) {
   start();
-  stopAt(millis);
+  stopAt(time);
 }
 
-void Scheduler::stopAt(long millis) {
-  // TODO implement
+void Scheduler::stopAt(const nlohmann::json &time) {
+  auto hour = time["hours"].get<int>();
+  auto minute = time["minutes"].get<int>();
+  auto second = time["seconds"].get<int>();
+  auto millisecond = time["milliseconds"].get<int>();
+
+  auto currentDate = boost::posix_time::second_clock::local_time().date();
+
+  boost::posix_time::ptime expirationTime(
+      currentDate, boost::posix_time::hours(hour) + boost::posix_time::minutes(minute) +
+                       boost::posix_time::seconds(second) + boost::posix_time::milliseconds(millisecond));
+
+  m_durationTimer.expires_at(expirationTime);
+
+  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
+    if (not errorCode) {
+      stop();
+    } else {
+      Logger::warn("Unable to stop simulation at " + std::to_string(hour) + ":" + std::to_string(minute) + ":" +
+                   std::to_string(second) + ":" + std::to_string(millisecond));
+    }
+  });
 }
 
 void Scheduler::stopIn(long millis) {

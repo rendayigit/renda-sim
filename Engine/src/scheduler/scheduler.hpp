@@ -3,11 +3,8 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/core/noncopyable.hpp>
-#include <iostream>
-#include <memory>
-#include <string>
+#include <nlohmann/json.hpp>
 #include <thread>
-#include <utility>
 #include <vector>
 
 #include "eventManager/eventManager.hpp"
@@ -27,8 +24,8 @@ public:
   void setRate(double rate);
 
   void runFor(long millis);
-  void runUntil(long millis);
-  void stopAt(long millis);
+  void runUntil(const nlohmann::json &time);
+  void stopAt(const nlohmann::json &time);
   void stopIn(long millis);
 
   bool isRunning() const { return m_isRunning; }

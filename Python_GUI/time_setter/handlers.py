@@ -19,8 +19,12 @@ class TimeSetterWindowHandlers:
         seconds = self.time_setter.seconds_spin.GetValue()
         milliseconds = self.time_setter.milliseconds_spin.GetValue()
 
-        total_milliseconds = (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds
-        Commanding().request({"command": self.command_string, "millis": total_milliseconds})
+        if self.command_string == "RUN_FOR" or self.command_string == "STOP_IN":
+            total_milliseconds = (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds
+            Commanding().request({"command": self.command_string, "millis": total_milliseconds})
+        else:
+            time = {"hours": hours, "minutes": minutes, "seconds": seconds, "milliseconds": milliseconds}
+            Commanding().request({"command": self.command_string, "time": time})
 
     def on_cancel(self, event):
         """Cancel Handler"""
