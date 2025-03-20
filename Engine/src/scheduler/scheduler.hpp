@@ -53,7 +53,8 @@ private:
 
   boost::asio::io_service m_ioService;
   std::function<void(void)> m_task;
-  boost::asio::deadline_timer m_timer;
+  boost::asio::deadline_timer m_schedulerTimer;
+  boost::asio::deadline_timer m_durationTimer;
   boost::asio::io_service::work m_work;
   std::thread m_workingThread;
 };

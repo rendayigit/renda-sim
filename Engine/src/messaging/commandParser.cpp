@@ -3,8 +3,10 @@
 #include "logger/logger.hpp"
 #include "messaging/commanding.hpp"
 #include "model/modelContainer.hpp"
-#include "model/modelVariable.hpp"
 #include "scheduler/scheduler.hpp"
+
+// TODO implement error handling for all received json data
+// TODO refactor replyStatus["status"]s, some of them are redundant
 
 CommandParser::CommandParser() {
   m_functionMap["START"] = [](const nlohmann::json &command) {
@@ -25,6 +27,15 @@ CommandParser::CommandParser() {
     Commanding::getInstance().reply(replyStatus.dump());
   };
 
+  m_functionMap["RUN_FOR"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().runFor(command["millis"]);
+
+    nlohmann::json replyStatus;
+    replyStatus["command"] = command["command"];
+    replyStatus["status"] = Scheduler::getInstance().isRunning();
+    Commanding::getInstance().reply(replyStatus.dump());
+  };
+
   m_functionMap["SCHEDULER"] = [](const nlohmann::json &command) {
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
@@ -42,14 +53,14 @@ CommandParser::CommandParser() {
   };
 
   m_functionMap["VARIABLE_ADD"] = [](const nlohmann::json &command) {
-    std::string variablePath = command["variablePath"]; // TODO implement error handling
+    std::string variablePath = command["variablePath"];
 
     auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
     replyStatus["variable"] = variable->getJson();
-    replyStatus["status"] = true; // TODO implement return value
+    replyStatus["status"] = true;
 
     variable->setMonitored(true);
     Logger::debug("Added " + variablePath + " to the monitor list.");
@@ -58,7 +69,7 @@ CommandParser::CommandParser() {
   };
 
   m_functionMap["VARIABLE_REMOVE"] = [](const nlohmann::json &command) {
-    std::string variablePath = command["variablePath"]; // TODO implement error handling
+    std::string variablePath = command["variablePath"];
 
     auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
@@ -69,7 +80,7 @@ CommandParser::CommandParser() {
 
     nlohmann::json replyStatus;
     replyStatus["command"] = command["command"];
-    replyStatus["status"] = true; // TODO implement return value
+    replyStatus["status"] = true;
     Commanding::getInstance().reply(replyStatus.dump());
   };
 }

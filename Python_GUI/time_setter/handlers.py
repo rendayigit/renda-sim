@@ -1,5 +1,7 @@
 """Event handlers for Time Setter Window"""
 
+from commanding import Commanding
+
 
 class TimeSetterWindowHandlers:
     """Event handlers for Time Setter Window"""
@@ -17,7 +19,7 @@ class TimeSetterWindowHandlers:
         milliseconds = self.time_setter.milliseconds_spin.GetValue()
 
         total_milliseconds = (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds
-        print(f"Total duration in milliseconds: {total_milliseconds}")
+        Commanding().request({"command": "RUN_FOR", "millis": total_milliseconds})
 
     def on_cancel(self, event):
         """Cancel Handler"""

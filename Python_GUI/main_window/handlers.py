@@ -37,6 +37,8 @@ class MainWindowHandlers:
             self._stop()
             Commanding().request({"command": "STOP"})
 
+# TODO handle all start stop events in commanding thread so you dont have to handle start and stop in every handler.py
+
     def _start(self):
         """Start receiving sim time updates from the engine"""
         self.main_window.start_btn.SetLabel("Stop")

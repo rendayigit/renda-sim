@@ -14,7 +14,9 @@ constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
-Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { m_ioService.run(); }), m_timer(m_ioService) {
+Scheduler::Scheduler()
+    : m_work(m_ioService), m_workingThread([&] { m_ioService.run(); }), m_schedulerTimer(m_ioService),
+      m_durationTimer(m_ioService) {
   nlohmann::json config;
 
   std::ifstream configFile(CONFIG_PATH);
@@ -52,8 +54,8 @@ Scheduler::~Scheduler() {
 
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
-    m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(m_stepTimeMillis));
-    m_timer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
+    m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(m_stepTimeMillis));
+    m_schedulerTimer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
     long currentMillis = static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate);
     transmitTime(currentMillis);
     step(currentMillis);
@@ -74,8 +76,8 @@ void Scheduler::start() {
 
   setRate(m_rate);
 
-  m_timer.expires_from_now(boost::posix_time::milliseconds(0));
-  m_timer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
+  m_schedulerTimer.expires_from_now(boost::posix_time::milliseconds(0));
+  m_schedulerTimer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
 }
 
 void Scheduler::stop() {
@@ -83,7 +85,7 @@ void Scheduler::stop() {
 
   m_isRunning = false;
 
-  m_timer.cancel();
+  m_schedulerTimer.cancel();
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 }
@@ -105,9 +107,8 @@ void Scheduler::stopAt(long millis) {
 }
 
 void Scheduler::stopIn(long millis) {
-  boost::asio::deadline_timer timer(m_ioService);
-  timer.expires_from_now(boost::posix_time::milliseconds(millis));
-  timer.async_wait([&](const boost::system::error_code &errorCode) {
+  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(millis));
+  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
     if (not errorCode) {
       stop();
     } else {
