@@ -112,7 +112,7 @@ void Scheduler::stopIn(long millis) {
     if (not errorCode) {
       stop();
     } else {
-      Logger::warn("Unable to run scheduler for " + std::to_string(millis) + " milliseconds");
+      Logger::warn("Unable to stop simulation in " + std::to_string(millis) + " milliseconds");
     }
   });
 }

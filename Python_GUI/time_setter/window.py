@@ -7,7 +7,7 @@ from time_setter.bind import TimeSetterWindowEventBinder
 class TimeSetter(wx.Frame):
     """Time Setter Class"""
 
-    def __init__(self, parent, title):
+    def __init__(self, parent, title, command_string):
         super().__init__(parent, title=title)
 
         controls_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -64,4 +64,4 @@ class TimeSetter(wx.Frame):
 
         self.SetSizerAndFit(main_sizer)
 
-        TimeSetterWindowEventBinder(self)
+        TimeSetterWindowEventBinder(self, command_string)

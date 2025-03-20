@@ -24,7 +24,7 @@ class MainWindowHandlers:
 
     def on_engine(self, _event):
         """Engine button callback"""
-        engine_window = EngineControls(None, title="Engine Controls")
+        engine_window = EngineControls(self.main_window, title="Engine Controls")
         engine_window.Show()
 
     def on_start_stop(self, _event):
@@ -51,13 +51,13 @@ class MainWindowHandlers:
 
     def on_stop_at(self, _event):
         """Stop at button callback"""
-        stop_at_window = TimeSetter(None, title="Stop Simulation At")
+        stop_at_window = TimeSetter(self.main_window, "Stop Simulation At", "STOP_AT")
         stop_at_window.Show()
         # TODO: Implement
 
     def on_stop_in(self, _event):
         """Stop in button callback"""
-        stop_in_window = TimeSetter(None, title="Stop Simulation In")
+        stop_in_window = TimeSetter(self.main_window, "Stop Simulation In", "STOP_IN")
         stop_in_window.Show()
         # TODO: Implement
 
@@ -71,13 +71,13 @@ class MainWindowHandlers:
 
     def on_run_for(self, _event):
         """Run for button callback"""
-        run_for_window = TimeSetter(None, title="Run Simulation For")
+        run_for_window = TimeSetter(self.main_window, "Run Simulation For", "RUN_FOR")
         run_for_window.Show()
         # TODO: Implement
 
     def on_run_until(self, _event):
         """Run until button callback"""
-        run_until_window = TimeSetter(None, title="Run Simulation Until")
+        run_until_window = TimeSetter(self.main_window, "Run Simulation Until", "RUN_UNTIL")
         run_until_window.Show()
         # TODO: Implement
 

@@ -6,8 +6,9 @@ from commanding import Commanding
 class TimeSetterWindowHandlers:
     """Event handlers for Time Setter Window"""
 
-    def __init__(self, time_setter):
+    def __init__(self, time_setter, command_string):
         self.time_setter = time_setter
+        self.command_string = command_string
 
     def on_update_duration(self, event):
         """Time Selection Handler"""
@@ -19,7 +20,7 @@ class TimeSetterWindowHandlers:
         milliseconds = self.time_setter.milliseconds_spin.GetValue()
 
         total_milliseconds = (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds
-        Commanding().request({"command": "RUN_FOR", "millis": total_milliseconds})
+        Commanding().request({"command": self.command_string, "millis": total_milliseconds})
 
     def on_cancel(self, event):
         """Cancel Handler"""
