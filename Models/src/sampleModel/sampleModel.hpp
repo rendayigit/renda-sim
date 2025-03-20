@@ -75,12 +75,12 @@ private:
   ModelVariable<bool> m_booleanValue;
   ModelVariable<std::string> m_stringValue;
 
-  std::vector<ModelVariable<int> *> m_arrayValue; // TODO(renda): improve array support
+  std::vector<ModelVariable<int> *> m_arrayValue;
 
   ModelVariable<std::vector<int>> *m_modelVarVector;
 
   std::vector<SampleChildModel *> m_childModels;
-  // ModelVariable<int[5]> m_cArrayModelVariable;
+
   ModelVariable<SampleSturcture *> m_structureModelVariable;
 
   ModelVariable<unsigned int> m_uintValue;
