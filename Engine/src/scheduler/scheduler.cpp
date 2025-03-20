@@ -14,7 +14,7 @@ constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
-Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { this->m_ioService.run(); }), m_timer(m_ioService) {
+Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { m_ioService.run(); }), m_timer(m_ioService) {
   nlohmann::json config;
 
   std::ifstream configFile(CONFIG_PATH);
@@ -24,10 +24,10 @@ Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { this->m_ioSe
     try {
       configFile >> config;
 
-      if (config.contains("SCHEDULER_STEP_TIME_MICROS") and config["SCHEDULER_STEP_TIME_MICROS"].is_number_float()) {
-        m_stepTimeMicros = config["SCHEDULER_STEP_TIME_MICROS"].get<double>();
+      if (config.contains("SCHEDULER_STEP_TIME_MILLIS") and config["SCHEDULER_STEP_TIME_MILLIS"].is_number_integer()) {
+        m_stepTimeMillis = config["SCHEDULER_STEP_TIME_MILLIS"].get<long>();
       } else {
-        Logger::error("Key 'SCHEDULER_STEP_TIME_MICROS' not found or is not a float.");
+        Logger::error("Key 'SCHEDULER_STEP_TIME_MILLIS' not found or is not a float.");
       }
 
       if (config.contains("SCHEDULER_DEFAULT_RATE") and config["SCHEDULER_DEFAULT_RATE"].is_number_float()) {
@@ -43,25 +43,22 @@ Scheduler::Scheduler() : m_work(m_ioService), m_workingThread([&] { this->m_ioSe
 }
 
 Scheduler::~Scheduler() {
-  stop();
-  m_lastStopTicks = {};
-  m_progressTimeLastMillis = {};
+  m_ioService.stop();
 
-  this->m_ioService.stop();
-  this->m_workingThread.join();
+  if (m_workingThread.joinable()) {
+    m_workingThread.join();
+  }
 }
 
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
-    m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(100));
-    this->m_timer.async_wait([this](const boost::system::error_code &ec) { this->execute(ec); });
-    step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
+    m_timer.expires_at(m_timer.expires_at() + boost::posix_time::milliseconds(m_stepTimeMillis));
+    m_timer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
+    long currentMillis = static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate);
+    transmitTime(currentMillis);
+    step(currentMillis);
   } else {
-    if (boost::asio::error::operation_aborted == errorCode) {
-      // TODO handle
-      Logger::warn("Scheduler aborted");
-    } else {
-      // TODO handle
+    if (errorCode != boost::asio::error::operation_aborted) {
       Logger::warn("Scheduler error");
     }
   }
@@ -77,35 +74,49 @@ void Scheduler::start() {
 
   setRate(m_rate);
 
-  this->m_timer.expires_from_now(boost::posix_time::milliseconds(0));
-  this->m_timer.async_wait([this](const boost::system::error_code &ec) { this->execute(ec); });
+  m_timer.expires_from_now(boost::posix_time::milliseconds(0));
+  m_timer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
 }
 
 void Scheduler::stop() {
-  m_isRunning = false;
-
   Logger::info("Simulation stopped");
 
-  this->m_timer.cancel();
+  m_isRunning = false;
+
+  m_timer.cancel();
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 }
 
-void Scheduler::reset() {
-  Timer::getInstance().reset();
-  // TODO(renda): Reset all events and models
-}
-
 void Scheduler::setRate(double rate) { m_rate = rate; }
 
-void Scheduler::progressTime(long millis) {
-  m_progressTimeLastMillis += millis;
-  step(m_progressTimeLastMillis);
+void Scheduler::runFor(long millis) {
+  start();
+  stopIn(millis);
+}
+
+void Scheduler::runUntil(long millis) {
+  start();
+  stopAt(millis);
+}
+
+void Scheduler::stopAt(long millis) {
+  // TODO implement
+}
+
+void Scheduler::stopIn(long millis) {
+  boost::asio::deadline_timer timer(m_ioService);
+  timer.expires_from_now(boost::posix_time::milliseconds(millis));
+  timer.async_wait([&](const boost::system::error_code &errorCode) {
+    if (not errorCode) {
+      stop();
+    } else {
+      Logger::warn("Unable to run scheduler for " + std::to_string(millis) + " milliseconds");
+    }
+  });
 }
 
 void Scheduler::step(long currentMillis) {
-  transmitTime(currentMillis);
-
   // Skip if no events in queue
   if (m_eventQueueInstance->empty()) {
     return;

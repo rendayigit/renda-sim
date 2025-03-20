@@ -23,11 +23,13 @@ public:
 
   void start();
   void stop();
-  void reset();
 
   void setRate(double rate);
 
-  void progressTime(long millis);
+  void runFor(long millis);
+  void runUntil(long millis);
+  void stopAt(long millis);
+  void stopIn(long millis);
 
   bool isRunning() const { return m_isRunning; }
 
@@ -41,13 +43,13 @@ private:
   EventManager *m_eventManagerInstance = &EventManager::getInstance();
   std::vector<Event *> *m_eventQueueInstance = EventManager::getInstance().getEventQueue();
 
-  double m_stepTimeMicros{};
+  long m_stepTimeMillis{};
+
   double m_rate{};
 
   bool m_isRunning = false;
 
   long long m_lastStopTicks{};
-  long m_progressTimeLastMillis{};
 
   boost::asio::io_service m_ioService;
   std::function<void(void)> m_task;

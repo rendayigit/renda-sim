@@ -21,7 +21,7 @@ find_package(
   REQUIRED)
 find_package(spdlog REQUIRED)
 
-add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
+add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS -DUNIT_TEST)
 
 add_executable(model-tests ${TESTFILES})
 

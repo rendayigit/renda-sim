@@ -4,7 +4,6 @@ import json
 import wx
 from main_window.window import MainWindow
 from main_window.window import populate_tree
-from main_window.bind import MainWindowEventBinder
 from commanding import Commanding
 from messaging import Messaging
 
@@ -16,9 +15,6 @@ class Application(wx.App):
         """Function called when UI is ready"""
         main_window = MainWindow(None, title="Renda Sim GUI")
         main_window.Show()
-
-        # Initialize binders
-        binder = MainWindowEventBinder(main_window)
 
         model_tree_json = Commanding().request({"command": "MODEL_TREE"})
 

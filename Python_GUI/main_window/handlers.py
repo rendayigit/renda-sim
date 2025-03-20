@@ -6,6 +6,7 @@ import sys
 import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
+from time_setter.window import TimeSetter
 
 # For plotting
 from plot.plot2 import GenericPlotter
@@ -48,11 +49,15 @@ class MainWindowHandlers:
 
     def on_stop_at(self, _event):
         """Stop at button callback"""
-        pass  # TODO: Implement
+        stop_at_window = TimeSetter(None, title="Stop Simulation At")
+        stop_at_window.Show()
+        # TODO: Implement
 
     def on_stop_in(self, _event):
         """Stop in button callback"""
-        pass  # TODO: Implement
+        stop_in_window = TimeSetter(None, title="Stop Simulation In")
+        stop_in_window.Show()
+        # TODO: Implement
 
     def on_reset(self, _event):
         """Reset button callback"""
@@ -64,11 +69,15 @@ class MainWindowHandlers:
 
     def on_run_for(self, _event):
         """Run for button callback"""
-        pass  # TODO: Implement
+        run_for_window = TimeSetter(None, title="Run Simulation For")
+        run_for_window.Show()
+        # TODO: Implement
 
     def on_run_until(self, _event):
         """Run until button callback"""
-        pass  # TODO: Implement
+        run_until_window = TimeSetter(None, title="Run Simulation Until")
+        run_until_window.Show()
+        # TODO: Implement
 
     def on_store(self, _event):
         """Store button callback"""
