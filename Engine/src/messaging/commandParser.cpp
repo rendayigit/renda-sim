@@ -21,26 +21,8 @@ CommandParser::CommandParser() {
     Commanding::getInstance().reply("{}");
   };
 
-  m_functionMap["RUN_FOR"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().runFor(command["millis"]);
-
-    Commanding::getInstance().reply("{}");
-  };
-
-  m_functionMap["STOP_IN"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().stopIn(command["millis"]);
-
-    Commanding::getInstance().reply("{}");
-  };
-
-  m_functionMap["RUN_UNTIL"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().runUntil(command["time"]);
-
-    Commanding::getInstance().reply("{}");
-  };
-
-  m_functionMap["STOP_AT"] = [](const nlohmann::json &command) {
-    Scheduler::getInstance().stopAt(command["time"]);
+  m_functionMap["PROGRESS_SIM"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().progressSim(command["millis"]);
 
     Commanding::getInstance().reply("{}");
   };

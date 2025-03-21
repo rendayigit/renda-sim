@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-EventManager::~EventManager() { m_eventQueue->clear(); }
+EventManager::~EventManager() { clearEvents(); }
 
 void EventManager::addEvent(Event *event) {
   // Ensure the event is not already added.
@@ -21,3 +21,5 @@ void EventManager::removeEvent(Event *event) {
     m_eventQueue->erase(it);
   }
 }
+
+void EventManager::clearEvents() { m_eventQueue->clear(); }

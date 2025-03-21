@@ -16,12 +16,9 @@ class MainWindowEventBinder:
         # Bind menu events
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_engine, self.main_window.engine_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_start_stop, self.main_window.start_stop_menu_item)
-        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_stop_at, self.main_window.stop_at_menu_item)
-        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_stop_in, self.main_window.stop_in_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_reset, self.main_window.reset_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_step, self.main_window.step_menu_item)
-        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_run_for, self.main_window.run_for_menu_item)
-        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_run_until, self.main_window.run_until_menu_item)
+        self.main_window.Bind(wx.EVT_MENU, self.handlers.on_progress_sim, self.main_window.progress_sim_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_store, self.main_window.store_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_restore, self.main_window.restore_menu_item)
         self.main_window.Bind(wx.EVT_MENU, self.handlers.on_speed, self.main_window.speed_menu_item)

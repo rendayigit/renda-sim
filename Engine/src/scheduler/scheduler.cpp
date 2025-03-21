@@ -1,5 +1,6 @@
 #include "scheduler/scheduler.hpp"
 
+#include <cstddef>
 #include <string>
 
 #include "logger/logger.hpp"
@@ -15,7 +16,11 @@ Scheduler::Scheduler()
       m_durationTimer(m_ioService) {}
 
 Scheduler::~Scheduler() {
-  m_ioService.stop();
+  reset();
+
+  if (not m_ioService.stopped()) {
+    m_ioService.stop();
+  }
 
   if (m_workingThread.joinable()) {
     m_workingThread.join();
@@ -46,10 +51,8 @@ void Scheduler::start() {
   m_isRunning = true;
   Logger::info("Simulation started");
 
-  setRate(m_rate);
-
   m_schedulerTimer.expires_from_now(boost::posix_time::milliseconds(0));
-  m_schedulerTimer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
+  execute(boost::system::error_code());
 
   nlohmann::json status;
   status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
@@ -70,63 +73,26 @@ void Scheduler::stop() {
 
 void Scheduler::setRate(double rate) { m_rate = rate; }
 
-void Scheduler::runFor(long millis) {
-  start();
-  stopIn(millis);
+void Scheduler::progressSim(long millis) {
+  for (int i = 0; i < millis / STEP_TIME_MILLIS; i++) {
+    step();
+  }
 }
 
-void Scheduler::runUntil(const nlohmann::json &time) {
-  start();
-  stopAt(time);
-}
-
-void Scheduler::stopAt(const nlohmann::json &time) {
-  auto hour = time["hours"].get<int>();
-  auto minute = time["minutes"].get<int>();
-  auto second = time["seconds"].get<int>();
-  auto millisecond = time["milliseconds"].get<int>();
-
-  auto now = boost::posix_time::microsec_clock::local_time();
-
-  boost::posix_time::ptime expirationTime(
-      now.date(), boost::posix_time::hours(hour) + boost::posix_time::minutes(minute) +
-                      boost::posix_time::seconds(second) + boost::posix_time::milliseconds(millisecond));
-
-  // If the expiration time has already passed today, schedule it for tomorrow
-  if (expirationTime < now) {
-    expirationTime += boost::posix_time::hours(24);
+void Scheduler::reset() {
+  if (m_isRunning) {
+    stop();
   }
 
-  // Calculate the duration to wait
-  boost::posix_time::time_duration duration = expirationTime - now;
-
-  m_durationTimer.expires_from_now(duration);
-
-  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
-    if (not errorCode) {
-      stop();
-    } else {
-      Logger::warn("Unable to stop simulation at " + std::to_string(hour) + ":" + std::to_string(minute) + ":" +
-                   std::to_string(second) + ":" + std::to_string(millisecond));
-    }
-  });
-}
-
-void Scheduler::stopIn(long millis) {
-  long timerMillis = (millis - STEP_TIME_MILLIS) / m_rate;
-  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(timerMillis));
-  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
-    if (not errorCode) {
-      stop();
-    } else {
-      Logger::warn("Unable to stop simulation in " + std::to_string(millis) + " milliseconds");
-    }
-  });
+  m_currentMillis = {};
 }
 
 void Scheduler::step() {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   m_currentMillis += STEP_TIME_MILLIS;
-  transmitTime(m_currentMillis); // FIXME This step is resource intensive
+
+  transmitTime(m_currentMillis);
 
   // Skip if no events in queue
   if (m_eventQueueInstance->empty()) {

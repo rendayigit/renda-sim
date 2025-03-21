@@ -17,6 +17,8 @@ public:
 
   void removeEvent(Event *event);
 
+  void clearEvents();
+
   std::vector<Event *> *getEventQueue() const { return m_eventQueue; }
 
 private:
