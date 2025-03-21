@@ -18,6 +18,6 @@ bool endsWithBin(const std::string &inputStr) {
 TEST(FileOperations, GetExecutableDirectory) {
   std::string executableDirectory = getExecutableDirectory();
 
-  // Check if the path ends with "/tests/bin/"
+  // Check if the path ends with "/bin/"
   EXPECT_TRUE(endsWithBin(executableDirectory));
 }

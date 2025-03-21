@@ -7,7 +7,7 @@
 #include "common/load/loadContainer.hpp"
 #include "common/load/loadState.hpp"
 
-std::string testLoadConfigFile = getExecutableDirectory() + "../tests/testLoadConfig.json";
+std::string testLoadConfigFile = getExecutableDirectory() + "../test/testLoadConfig.json";
 
 class LoadTestModel : public Load {
 public:

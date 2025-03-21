@@ -37,16 +37,6 @@ class MainWindowHandlers:
         else:
             Commanding().request({"command": "STOP"})
 
-    def on_stop_at(self, _event):
-        """Stop at button callback"""
-        stop_at_window = TimeSetter(self.main_window, "Stop Simulation At", "STOP_AT")
-        stop_at_window.Show()
-
-    def on_stop_in(self, _event):
-        """Stop in button callback"""
-        stop_in_window = TimeSetter(self.main_window, "Stop Simulation In", "STOP_IN")
-        stop_in_window.Show()
-
     def on_reset(self, _event):
         """Reset button callback"""
         pass  # TODO: Implement
@@ -55,15 +45,10 @@ class MainWindowHandlers:
         """Step button callback"""
         Commanding().request({"command": "STEP"})
 
-    def on_run_for(self, _event):
+    def on_progress_sim(self, _event):
         """Run for button callback"""
-        run_for_window = TimeSetter(self.main_window, "Run Simulation For", "RUN_FOR")
-        run_for_window.Show()
-
-    def on_run_until(self, _event):
-        """Run until button callback"""
-        run_until_window = TimeSetter(self.main_window, "Run Simulation Until", "RUN_UNTIL")
-        run_until_window.Show()
+        progress_sim_window = TimeSetter(self.main_window, "Progress Simulation", "PROGRESS_SIM")
+        progress_sim_window.Show()
 
     def on_store(self, _event):
         """Store button callback"""

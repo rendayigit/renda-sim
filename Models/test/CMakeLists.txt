@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(engine-tests LANGUAGES CXX)
+project(model-tests LANGUAGES CXX)
 
 # Enable coverage
 if(${ENABLE_COVERAGE})
@@ -10,7 +10,7 @@ if(${ENABLE_COVERAGE})
 endif()
 
 # Set target directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../bin/)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 
 # Include SourceFiles.cmake to access the SOURCEFILES and INCLUDEDIRS variables
 include(${CMAKE_CURRENT_LIST_DIR}/TestFiles.cmake)
@@ -23,12 +23,19 @@ find_package(spdlog REQUIRED)
 
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS -DUNIT_TEST)
 
-add_executable(engine-tests ${TESTFILES})
+add_executable(model-tests ${TESTFILES})
 
-target_include_directories(engine-tests PUBLIC ${INCLUDEDIRS})
+target_include_directories(model-tests PUBLIC ${INCLUDEDIRS})
 
-target_link_libraries(engine-tests PRIVATE gtest_main gtest Boost::filesystem
-                                           zmq spdlog::spdlog)
+target_link_libraries(
+  model-tests
+  PRIVATE gtest_main
+          gtest
+          -L${CMAKE_SOURCE_DIR}/../Engine/lib/
+          -lrenda-sim-engine
+          Boost::filesystem
+          zmq
+          spdlog::spdlog)
 
 include(GoogleTest)
-gtest_discover_tests(engine-tests)
+gtest_discover_tests(model-tests)

@@ -1,0 +1,18 @@
+build:
+  ./scripts/build.sh
+
+clean:
+  ./scripts/clean.sh
+
+run:
+  ./scripts/run.sh
+
+test:
+  ./scripts/test.sh
+
+coverage:
+  ./scripts/coverage.sh
+
+all: build
+cov: coverage
+tests: test

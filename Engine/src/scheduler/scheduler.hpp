@@ -3,6 +3,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/core/noncopyable.hpp>
+#include <mutex>
 #include <nlohmann/json.hpp>
 #include <thread>
 #include <vector>
@@ -22,10 +23,8 @@ public:
   void stop();
   void step();
   void setRate(double rate);
-  void runFor(long millis);
-  void runUntil(const nlohmann::json &time);
-  void stopAt(const nlohmann::json &time);
-  void stopIn(long millis);
+  void progressSim(long millis);
+  void reset();
 
   bool isRunning() const { return m_isRunning; }
 
@@ -49,4 +48,6 @@ private:
   boost::asio::deadline_timer m_durationTimer;
   boost::asio::io_service::work m_work;
   std::thread m_workingThread;
+
+  std::mutex m_mutex;
 };

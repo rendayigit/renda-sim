@@ -6,10 +6,10 @@ set(TESTFILES
     ${CMAKE_CURRENT_LIST_DIR}/../src/pcs/pcs.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../src/sampleModel/sampleModel.cpp
     # Model Test Files
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/common/loadTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/common/dataFlowTest.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../tests/common/failureTest.cpp
-    # TODO(renda): Add PCS test ${CMAKE_CURRENT_LIST_DIR}/../tests/pcsTest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../test/common/loadTest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../test/common/dataFlowTest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../test/common/failureTest.cpp
+    # TODO(renda): Add PCS test ${CMAKE_CURRENT_LIST_DIR}/../test/pcsTest.cpp
 )
 
 set(INCLUDEDIRS

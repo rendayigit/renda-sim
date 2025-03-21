@@ -5,8 +5,8 @@ cd -
 
 # Build Engine
 cd $SCRIPTDIR/../Engine
-make clean
+./scripts/clean.sh
 
 # Build Models
 cd $SCRIPTDIR/../Models
-make clean
+./scripts/clean.sh
