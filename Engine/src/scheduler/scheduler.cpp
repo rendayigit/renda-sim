@@ -107,13 +107,21 @@ void Scheduler::stopAt(const nlohmann::json &time) {
   auto second = time["seconds"].get<int>();
   auto millisecond = time["milliseconds"].get<int>();
 
-  auto currentDate = boost::posix_time::second_clock::local_time().date();
+  auto now = boost::posix_time::microsec_clock::local_time();
 
   boost::posix_time::ptime expirationTime(
-      currentDate, boost::posix_time::hours(hour) + boost::posix_time::minutes(minute) +
-                       boost::posix_time::seconds(second) + boost::posix_time::milliseconds(millisecond));
+      now.date(), boost::posix_time::hours(hour) + boost::posix_time::minutes(minute) +
+                      boost::posix_time::seconds(second) + boost::posix_time::milliseconds(millisecond));
 
-  m_durationTimer.expires_at(expirationTime);
+  // If the expiration time has already passed today, schedule it for tomorrow
+  if (expirationTime < now) {
+    expirationTime += boost::posix_time::hours(24);
+  }
+
+  // Calculate the duration to wait
+  boost::posix_time::time_duration duration = expirationTime - now;
+
+  m_durationTimer.expires_from_now(duration);
 
   m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
     if (not errorCode) {

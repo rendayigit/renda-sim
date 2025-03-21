@@ -114,7 +114,7 @@ CommandParser::CommandParser() {
 
 void CommandParser::executeCommand(const nlohmann::json &command) {
   for (auto &function : m_functionMap) {
-    if (command["command"].dump().find(function.first) != std::string::npos) {
+    if (command["command"].get<std::string>() == function.first) {
       function.second(command);
       return; // return after first match
     }
