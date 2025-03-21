@@ -22,7 +22,7 @@ TEST(Scheduler, StartStop) {
 
   Scheduler::getInstance().start();
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   Scheduler::getInstance().stop();
 
@@ -30,7 +30,7 @@ TEST(Scheduler, StartStop) {
 
   EXPECT_GT(currentCount, 0);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   EXPECT_EQ(currentCount, count);
 }
