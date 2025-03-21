@@ -28,13 +28,13 @@ jobs:
     - name: Build & Run Engine Tests
       run: |
         cd ${{ github.workspace }}/Engine
-        make
+        ./scripts/build.sh
         cd ${{ github.workspace }}/Engine/bin
         ./engine-tests
 
     - name: Build & Run Model Tests
       run: |
         cd ${{ github.workspace }}/Models
-        make
+        ./scripts/build.sh
         cd ${{ github.workspace }}/Models/bin
         ./model-tests
