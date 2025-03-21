@@ -76,6 +76,10 @@ void Scheduler::start() {
 
   m_schedulerTimer.expires_from_now(boost::posix_time::milliseconds(0));
   m_schedulerTimer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
+
+  nlohmann::json status;
+  status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+  Publisher::getInstance().queueMessage("STATUS", status);
 }
 
 void Scheduler::stop() {
@@ -86,6 +90,10 @@ void Scheduler::stop() {
   m_schedulerTimer.cancel();
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+  nlohmann::json status;
+  status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+  Publisher::getInstance().queueMessage("STATUS", status);
 }
 
 void Scheduler::setRate(double rate) { m_rate = rate; }

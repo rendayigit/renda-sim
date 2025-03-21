@@ -19,8 +19,7 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is True:
-            self._start()
+        Commanding().request({"command": "STATUS"})
 
     def on_engine(self, _event):
         """Engine button callback"""
@@ -30,24 +29,12 @@ class MainWindowHandlers:
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is False:
-            self._start()
+        Commanding().request({"command": "STATUS"})
+
+        if self.main_window.start_btn.GetLabel() == "Start":
             Commanding().request({"command": "START"})
         else:
-            self._stop()
             Commanding().request({"command": "STOP"})
-
-# TODO handle all start stop events in commanding thread so you dont have to handle start and stop in every handler.py
-
-    def _start(self):
-        """Start receiving sim time updates from the engine"""
-        self.main_window.start_btn.SetLabel("Stop")
-        self.main_window.SetStatusText("Simulation running...")
-
-    def _stop(self):
-        """Stop receiving sim time updates from the engine"""
-        self.main_window.start_btn.SetLabel("Start")
-        self.main_window.SetStatusText("Simulation stopped.")
 
     def on_stop_at(self, _event):
         """Stop at button callback"""
