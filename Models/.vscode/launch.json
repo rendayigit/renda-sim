@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Sim",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/bin/renda-sim-models",
+        "args": [],
+        "cwd": "${workspaceFolder}/bin/"
+      }
+    ]
+  }
+  

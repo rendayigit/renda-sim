@@ -5,8 +5,8 @@ cd -
 
 # Build Engine
 cd $SCRIPTDIR/../Engine
-make -j$((`nproc`+2))
+./scripts/build.sh
 
 # Build Models
 cd $SCRIPTDIR/../Models
-make -j$((`nproc`+2))
+./scripts/build.sh
