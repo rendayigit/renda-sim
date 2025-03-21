@@ -7,8 +7,12 @@ clean:
 run:
   ./scripts/run.sh
 
+test:
+  ./scripts/test.sh
+
 coverage:
   ./scripts/coverage.sh
 
 all: build
 cov: coverage
+tests: test

@@ -4,8 +4,12 @@ build:
 clean:
   ./scripts/clean.sh
 
+test:
+  ./scripts/test.sh
+
 coverage:
   ./scripts/coverage.sh
 
 all: build
 cov: coverage
+tests: test
