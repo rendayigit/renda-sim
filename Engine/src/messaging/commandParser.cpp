@@ -51,6 +51,12 @@ CommandParser::CommandParser() {
     Commanding::getInstance().reply("{}");
   };
 
+  m_functionMap["SIM_RATE"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().setRate(command["rate"]);
+
+    Commanding::getInstance().reply("{}");
+  };
+
   m_functionMap["STATUS"] = [](const nlohmann::json &command) {
     Commanding::getInstance().reply("{}");
 

@@ -10,19 +10,6 @@ class TimeSetter(wx.Frame):
     def __init__(self, parent, title, command_string):
         super().__init__(parent, title=title)
 
-        controls_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        controls_sizer.AddStretchSpacer()
-
-        self.okay_btn = wx.Button(self, wx.ID_ANY, "Okay")
-        self.okay_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
-        self.okay_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
-        controls_sizer.Add(self.okay_btn, 0, wx.ALL, 5)
-
-        self.cancel_btn = wx.Button(self, wx.ID_ANY, "Cancel")
-        self.cancel_btn.SetBackgroundColour(wx.Colour("#ff4545"))
-        self.cancel_btn.SetForegroundColour(wx.Colour("white"))
-        controls_sizer.Add(self.cancel_btn, 0, wx.ALL, 5)
-
         self.hours_label = wx.StaticText(self, label="Hours:")
         self.hours_spin = wx.SpinCtrl(self, value="0", min=0, max=23)
 
@@ -57,7 +44,19 @@ class TimeSetter(wx.Frame):
         milliseconds_sizer.Add(self.milliseconds_spin, 0, wx.ALL, 5)
         time_selection_sizer.Add(milliseconds_sizer)
 
-        # Main Layout: Add Panels
+        controls_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        controls_sizer.AddStretchSpacer()
+
+        self.okay_btn = wx.Button(self, wx.ID_ANY, "Okay")
+        self.okay_btn.SetBackgroundColour(wx.Colour("#ffcc00"))
+        self.okay_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
+        controls_sizer.Add(self.okay_btn, 0, wx.ALL, 5)
+
+        self.cancel_btn = wx.Button(self, wx.ID_ANY, "Cancel")
+        self.cancel_btn.SetBackgroundColour(wx.Colour("#ff4545"))
+        self.cancel_btn.SetForegroundColour(wx.Colour("white"))
+        controls_sizer.Add(self.cancel_btn, 0, wx.ALL, 5)
+
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(time_selection_sizer, 0, wx.ALL | wx.EXPAND, 10)
         main_sizer.Add(controls_sizer, 0, wx.ALL | wx.EXPAND, 10)

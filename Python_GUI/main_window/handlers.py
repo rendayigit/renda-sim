@@ -7,6 +7,7 @@ import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
 from time_setter.window import TimeSetter
+from scale_setter.window import ScaleSetter
 
 # For plotting
 from plot.plot2 import GenericPlotter
@@ -40,13 +41,11 @@ class MainWindowHandlers:
         """Stop at button callback"""
         stop_at_window = TimeSetter(self.main_window, "Stop Simulation At", "STOP_AT")
         stop_at_window.Show()
-        # TODO: Implement
 
     def on_stop_in(self, _event):
         """Stop in button callback"""
         stop_in_window = TimeSetter(self.main_window, "Stop Simulation In", "STOP_IN")
         stop_in_window.Show()
-        # TODO: Implement
 
     def on_reset(self, _event):
         """Reset button callback"""
@@ -60,13 +59,11 @@ class MainWindowHandlers:
         """Run for button callback"""
         run_for_window = TimeSetter(self.main_window, "Run Simulation For", "RUN_FOR")
         run_for_window.Show()
-        # TODO: Implement
 
     def on_run_until(self, _event):
         """Run until button callback"""
         run_until_window = TimeSetter(self.main_window, "Run Simulation Until", "RUN_UNTIL")
         run_until_window.Show()
-        # TODO: Implement
 
     def on_store(self, _event):
         """Store button callback"""
@@ -82,7 +79,8 @@ class MainWindowHandlers:
 
     def on_speed(self, _event):
         """Speed button callback"""
-        pass  # TODO: Implement
+        scale_setter_window = ScaleSetter(self.main_window, "Set Simulation Rate", "SIM_RATE")
+        scale_setter_window.Show()
 
     def on_settings(self, _event):
         """Settings button callback"""

@@ -53,7 +53,14 @@ Scheduler::~Scheduler() {
 
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
+    if (m_rate > m_stepTimeMillis) {
+      m_rate = 1.0;
+      Logger::warn("Rate cannot be more than SCHEDULER_STEP_TIME_MILLIS, update this value in config.json if "
+                   "necessary. Rate is now set to 1.0");
+    }
+
     long nextScheduleMillis = m_stepTimeMillis / m_rate;
+
     m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(nextScheduleMillis));
     m_schedulerTimer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
     step();
