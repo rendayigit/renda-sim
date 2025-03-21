@@ -1,11 +1,9 @@
 #include "scheduler/scheduler.hpp"
 
-#include <chrono>
 #include <string>
 
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
-#include "timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
@@ -27,8 +25,9 @@ Scheduler::~Scheduler() {
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
     if (m_rate > STEP_TIME_MILLIS) {
-      m_rate = 10.0;
-      Logger::warn("Rate cannot be more than " + std::to_string(STEP_TIME_MILLIS) + ". Rate is now set to 1.0");
+      m_rate = STEP_TIME_MILLIS;
+      Logger::warn("Rate cannot be more than " + std::to_string(STEP_TIME_MILLIS) + ". Rate is now set to " +
+                   std::to_string(STEP_TIME_MILLIS));
     }
 
     long nextScheduleMillis = STEP_TIME_MILLIS / m_rate;
@@ -44,10 +43,6 @@ void Scheduler::execute(boost::system::error_code const &errorCode) {
 }
 
 void Scheduler::start() {
-  if (m_lastStopTicks != 0) {
-    Timer::getInstance().updateInitialTicks(m_lastStopTicks);
-  }
-
   m_isRunning = true;
   Logger::info("Simulation started");
 
@@ -67,8 +62,6 @@ void Scheduler::stop() {
   m_isRunning = false;
 
   m_schedulerTimer.cancel();
-
-  m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
   nlohmann::json status;
   status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
@@ -132,7 +125,7 @@ void Scheduler::stopIn(long millis) {
 
 void Scheduler::step() {
   m_currentMillis += STEP_TIME_MILLIS;
-  transmitTime(m_currentMillis); // This step is resource intensive
+  transmitTime(m_currentMillis); // FIXME This step is resource intensive
 
   // Skip if no events in queue
   if (m_eventQueueInstance->empty()) {

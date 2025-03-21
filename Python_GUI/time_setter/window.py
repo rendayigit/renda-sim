@@ -52,9 +52,7 @@ class TimeSetter(wx.Frame):
         self.okay_btn.SetForegroundColour(wx.Colour("black" if wx.SystemSettings.GetAppearance().IsDark() else "wxSYS_COLOUR_WINDOWTEXT"))
         controls_sizer.Add(self.okay_btn, 0, wx.ALL, 5)
 
-        self.cancel_btn = wx.Button(self, wx.ID_ANY, "Cancel")
-        self.cancel_btn.SetBackgroundColour(wx.Colour("#ff4545"))
-        self.cancel_btn.SetForegroundColour(wx.Colour("white"))
+        self.cancel_btn = wx.Button(self, wx.ID_ANY, "Close")
         controls_sizer.Add(self.cancel_btn, 0, wx.ALL, 5)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)

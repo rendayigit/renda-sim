@@ -44,10 +44,7 @@ private:
 
   bool m_isRunning = false;
 
-  long long m_lastStopTicks{};
-
   boost::asio::io_service m_ioService;
-  std::function<void(void)> m_task;
   boost::asio::deadline_timer m_schedulerTimer;
   boost::asio::deadline_timer m_durationTimer;
   boost::asio::io_service::work m_work;
