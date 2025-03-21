@@ -113,7 +113,8 @@ void Scheduler::stopAt(const nlohmann::json &time) {
 }
 
 void Scheduler::stopIn(long millis) {
-  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(millis - STEP_TIME_MILLIS));
+  long timerMillis = (millis - STEP_TIME_MILLIS) / m_rate;
+  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(timerMillis));
   m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
     if (not errorCode) {
       stop();
