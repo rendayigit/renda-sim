@@ -1,0 +1,11 @@
+build:
+  ./scripts/build.sh
+
+clean:
+  ./scripts/clean.sh
+
+coverage:
+  ./scripts/coverage.sh
+
+all: build
+cov: coverage
