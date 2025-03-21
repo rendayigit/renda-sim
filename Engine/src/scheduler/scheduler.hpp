@@ -38,10 +38,9 @@ private:
   EventManager *m_eventManagerInstance = &EventManager::getInstance();
   std::vector<Event *> *m_eventQueueInstance = EventManager::getInstance().getEventQueue();
 
-  long m_stepTimeMillis{};
   long m_currentMillis{};
 
-  double m_rate{};
+  double m_rate = 1.0;
 
   bool m_isRunning = false;
 

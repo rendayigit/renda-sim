@@ -1,10 +1,8 @@
 #include "scheduler/scheduler.hpp"
 
 #include <chrono>
-#include <fstream>
 #include <string>
 
-#include "common.hpp"
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
 #include "timer/timer.hpp"
@@ -12,36 +10,11 @@
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
+constexpr long STEP_TIME_MILLIS = 10;
 
 Scheduler::Scheduler()
     : m_work(m_ioService), m_workingThread([&] { m_ioService.run(); }), m_schedulerTimer(m_ioService),
-      m_durationTimer(m_ioService) {
-  nlohmann::json config;
-
-  std::ifstream configFile(CONFIG_PATH);
-  if (not configFile.is_open()) {
-    Logger::error("Could not open the config file: " + CONFIG_PATH);
-  } else {
-    try {
-      configFile >> config;
-
-      if (config.contains("SCHEDULER_STEP_TIME_MILLIS") and config["SCHEDULER_STEP_TIME_MILLIS"].is_number_integer()) {
-        m_stepTimeMillis = config["SCHEDULER_STEP_TIME_MILLIS"].get<long>();
-      } else {
-        Logger::error("Key 'SCHEDULER_STEP_TIME_MILLIS' not found or is not a float.");
-      }
-
-      if (config.contains("SCHEDULER_DEFAULT_RATE") and config["SCHEDULER_DEFAULT_RATE"].is_number_float()) {
-        m_rate = config["SCHEDULER_DEFAULT_RATE"].get<double>();
-      } else {
-        Logger::error("Key 'SCHEDULER_DEFAULT_RATE' not found or is not a float.");
-      }
-
-    } catch (const nlohmann::json::parse_error &e) {
-      Logger::critical("JSON parse error: " + std::string(e.what()));
-    }
-  }
-}
+      m_durationTimer(m_ioService) {}
 
 Scheduler::~Scheduler() {
   m_ioService.stop();
@@ -53,13 +26,12 @@ Scheduler::~Scheduler() {
 
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
-    if (m_rate > m_stepTimeMillis) {
-      m_rate = 1.0;
-      Logger::warn("Rate cannot be more than SCHEDULER_STEP_TIME_MILLIS, update this value in config.json if "
-                   "necessary. Rate is now set to 1.0");
+    if (m_rate > STEP_TIME_MILLIS) {
+      m_rate = 10.0;
+      Logger::warn("Rate cannot be more than " + std::to_string(STEP_TIME_MILLIS) + ". Rate is now set to 1.0");
     }
 
-    long nextScheduleMillis = m_stepTimeMillis / m_rate;
+    long nextScheduleMillis = STEP_TIME_MILLIS / m_rate;
 
     m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(nextScheduleMillis));
     m_schedulerTimer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
@@ -148,7 +120,7 @@ void Scheduler::stopAt(const nlohmann::json &time) {
 }
 
 void Scheduler::stopIn(long millis) {
-  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(millis - m_stepTimeMillis));
+  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(millis - STEP_TIME_MILLIS));
   m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
     if (not errorCode) {
       stop();
@@ -159,7 +131,7 @@ void Scheduler::stopIn(long millis) {
 }
 
 void Scheduler::step() {
-  m_currentMillis += m_stepTimeMillis;
+  m_currentMillis += STEP_TIME_MILLIS;
   transmitTime(m_currentMillis); // This step is resource intensive
 
   // Skip if no events in queue
