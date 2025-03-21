@@ -1,20 +1,21 @@
+#include "scheduler/scheduler.hpp"
+
 #include <chrono>
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <string>
 
 #include "common.hpp"
-#include "eventManager/eventManager.hpp"
 #include "logger/logger.hpp"
 #include "messaging/publisher.hpp"
-#include "scheduler/scheduler.hpp"
 #include "timer/timer.hpp"
 
 constexpr int MICROS_TO_MILLIS = 1000;
 constexpr int MILLIS_TO_SECS = 1000;
 constexpr int LOGGER_RATE_MULTIPLIER = 100;
 
-Scheduler::Scheduler() {
+Scheduler::Scheduler()
+    : m_work(m_ioService), m_workingThread([&] { m_ioService.run(); }), m_schedulerTimer(m_ioService),
+      m_durationTimer(m_ioService) {
   nlohmann::json config;
 
   std::ifstream configFile(CONFIG_PATH);
@@ -24,10 +25,10 @@ Scheduler::Scheduler() {
     try {
       configFile >> config;
 
-      if (config.contains("SCHEDULER_STEP_TIME_MICROS") and config["SCHEDULER_STEP_TIME_MICROS"].is_number_float()) {
-        m_stepTimeMicros = config["SCHEDULER_STEP_TIME_MICROS"].get<double>();
+      if (config.contains("SCHEDULER_STEP_TIME_MILLIS") and config["SCHEDULER_STEP_TIME_MILLIS"].is_number_integer()) {
+        m_stepTimeMillis = config["SCHEDULER_STEP_TIME_MILLIS"].get<long>();
       } else {
-        Logger::error("Key 'SCHEDULER_STEP_TIME_MICROS' not found or is not a float.");
+        Logger::error("Key 'SCHEDULER_STEP_TIME_MILLIS' not found or is not a float.");
       }
 
       if (config.contains("SCHEDULER_DEFAULT_RATE") and config["SCHEDULER_DEFAULT_RATE"].is_number_float()) {
@@ -43,9 +44,24 @@ Scheduler::Scheduler() {
 }
 
 Scheduler::~Scheduler() {
-  stop();
-  m_lastStopTicks = {};
-  m_progressTimeLastMillis = {};
+  m_ioService.stop();
+
+  if (m_workingThread.joinable()) {
+    m_workingThread.join();
+  }
+}
+
+void Scheduler::execute(boost::system::error_code const &errorCode) {
+  if (not errorCode) {
+    long nextScheduleMillis = m_stepTimeMillis / m_rate;
+    m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(nextScheduleMillis));
+    m_schedulerTimer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
+    step();
+  } else {
+    if (errorCode != boost::asio::error::operation_aborted) {
+      Logger::warn("Scheduler error");
+    }
+  }
 }
 
 void Scheduler::start() {
@@ -58,77 +74,114 @@ void Scheduler::start() {
 
   setRate(m_rate);
 
-  m_schedulerThread = std::thread([&] {
-    while (m_isRunning) {
-      std::this_thread::sleep_for(std::chrono::microseconds(static_cast<long>(m_stepTimeMicros * MICROS_TO_MILLIS)));
-      step(static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate));
-    }
-  });
+  m_schedulerTimer.expires_from_now(boost::posix_time::milliseconds(0));
+  m_schedulerTimer.async_wait([this](const boost::system::error_code &errorCode) { execute(errorCode); });
+
+  nlohmann::json status;
+  status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+  Publisher::getInstance().queueMessage("STATUS", status);
 }
 
 void Scheduler::stop() {
-  m_isRunning = false;
-
   Logger::info("Simulation stopped");
 
-  if (m_schedulerThread.joinable()) {
-    m_schedulerThread.join();
-  }
+  m_isRunning = false;
+
+  m_schedulerTimer.cancel();
 
   m_lastStopTicks = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-}
 
-void Scheduler::reset() {
-  Timer::getInstance().reset();
-  // TODO(renda): Reset all events and models
+  nlohmann::json status;
+  status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+  Publisher::getInstance().queueMessage("STATUS", status);
 }
 
 void Scheduler::setRate(double rate) { m_rate = rate; }
 
-void Scheduler::progressTime(long millis) {
-  m_progressTimeLastMillis += millis;
-  step(m_progressTimeLastMillis);
+void Scheduler::runFor(long millis) {
+  start();
+  stopIn(millis);
 }
 
-void Scheduler::step(long currentMillis) {
-  transmitTime(currentMillis);
+void Scheduler::runUntil(const nlohmann::json &time) {
+  start();
+  stopAt(time);
+}
 
-  EventManager *eventManagerInstance = &EventManager::getInstance();
-  std::vector<Event *> *eventQueueInstance = EventManager::getInstance().getEventQueue();
+void Scheduler::stopAt(const nlohmann::json &time) {
+  auto hour = time["hours"].get<int>();
+  auto minute = time["minutes"].get<int>();
+  auto second = time["seconds"].get<int>();
+  auto millisecond = time["milliseconds"].get<int>();
 
-  while (true) {
-    // Skip if no events in queue
-    if (eventQueueInstance->empty()) {
-      return;
+  auto now = boost::posix_time::microsec_clock::local_time();
+
+  boost::posix_time::ptime expirationTime(
+      now.date(), boost::posix_time::hours(hour) + boost::posix_time::minutes(minute) +
+                      boost::posix_time::seconds(second) + boost::posix_time::milliseconds(millisecond));
+
+  // If the expiration time has already passed today, schedule it for tomorrow
+  if (expirationTime < now) {
+    expirationTime += boost::posix_time::hours(24);
+  }
+
+  // Calculate the duration to wait
+  boost::posix_time::time_duration duration = expirationTime - now;
+
+  m_durationTimer.expires_from_now(duration);
+
+  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
+    if (not errorCode) {
+      stop();
+    } else {
+      Logger::warn("Unable to stop simulation at " + std::to_string(hour) + ":" + std::to_string(minute) + ":" +
+                   std::to_string(second) + ":" + std::to_string(millisecond));
     }
+  });
+}
 
-    // Get the nearest event
-    Event *event = eventQueueInstance->at(0);
+void Scheduler::stopIn(long millis) {
+  m_durationTimer.expires_from_now(boost::posix_time::milliseconds(millis - m_stepTimeMillis));
+  m_durationTimer.async_wait([&](const boost::system::error_code &errorCode) {
+    if (not errorCode) {
+      stop();
+    } else {
+      Logger::warn("Unable to stop simulation in " + std::to_string(millis) + " milliseconds");
+    }
+  });
+}
 
+void Scheduler::step() {
+  m_currentMillis += m_stepTimeMillis;
+  transmitTime(m_currentMillis); // This step is resource intensive
+
+  // Skip if no events in queue
+  if (m_eventQueueInstance->empty()) {
+    return;
+  }
+
+  for (auto &event : *m_eventQueueInstance) {
     // Skip if event is not active
     if (not event->isActive()) {
-      return;
+      continue;
     }
 
     // Skip if event is not due
-    if (event->getNextMillis() > currentMillis) {
-      return;
+    if (event->getNextMillis() > m_currentMillis) {
+      continue;
     }
 
     // Process the event
     event->process();
 
-    // Pop event
-    eventManagerInstance->removeEvent(event);
-
-    // If the event is single shot do not reschedule event
+    // If the event is single shot remove the event from queue
     if (event->getCycleMillis() < 0) {
-      return;
+      m_eventManagerInstance->removeEvent(event);
+      continue;
     }
 
-    // Reschedule event if event is cyclic and repeat loop
+    // Update event if event is cyclic and repeat loop
     event->setNextMillis(event->getNextMillis() + event->getCycleMillis());
-    eventManagerInstance->addEvent(event);
   }
 }
 

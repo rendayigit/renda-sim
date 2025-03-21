@@ -20,4 +20,8 @@ static std::string getExecutableDirectory() {
   return (exePath.parent_path().string() + '/');
 }
 
+#ifndef UNIT_TEST
 const std::string CONFIG_PATH = getExecutableDirectory() + "../config.json";
+#else
+const std::string CONFIG_PATH = getExecutableDirectory() + "../../config.json";
+#endif

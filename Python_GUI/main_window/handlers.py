@@ -6,6 +6,7 @@ import sys
 import wx
 from commanding import Commanding
 from engine_controls.window import EngineControls
+from time_setter.window import TimeSetter
 
 # For plotting
 from plot.plot2 import GenericPlotter
@@ -18,41 +19,34 @@ class MainWindowHandlers:
     def __init__(self, main_window):
         self.main_window = main_window
 
-        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is True:
-            self._start()
+        Commanding().request({"command": "STATUS"})
 
     def on_engine(self, _event):
         """Engine button callback"""
-        engine_window = EngineControls(None, title="Engine Controls")
+        engine_window = EngineControls(self.main_window, title="Engine Controls")
         engine_window.Show()
 
     def on_start_stop(self, _event):
         """Start/Stop button callback"""
 
-        if Commanding().request({"command": "SCHEDULER"})["schedulerIsRunning"] is False:
-            self._start()
+        Commanding().request({"command": "STATUS"})
+
+        if self.main_window.start_btn.GetLabel() == "Start":
             Commanding().request({"command": "START"})
         else:
-            self._stop()
             Commanding().request({"command": "STOP"})
-
-    def _start(self):
-        """Start receiving sim time updates from the engine"""
-        self.main_window.start_btn.SetLabel("Stop")
-        self.main_window.SetStatusText("Simulation running...")
-
-    def _stop(self):
-        """Stop receiving sim time updates from the engine"""
-        self.main_window.start_btn.SetLabel("Start")
-        self.main_window.SetStatusText("Simulation stopped.")
 
     def on_stop_at(self, _event):
         """Stop at button callback"""
-        pass  # TODO: Implement
+        stop_at_window = TimeSetter(self.main_window, "Stop Simulation At", "STOP_AT")
+        stop_at_window.Show()
+        # TODO: Implement
 
     def on_stop_in(self, _event):
         """Stop in button callback"""
-        pass  # TODO: Implement
+        stop_in_window = TimeSetter(self.main_window, "Stop Simulation In", "STOP_IN")
+        stop_in_window.Show()
+        # TODO: Implement
 
     def on_reset(self, _event):
         """Reset button callback"""
@@ -60,15 +54,19 @@ class MainWindowHandlers:
 
     def on_step(self, _event):
         """Step button callback"""
-        pass  # TODO: Implement
+        Commanding().request({"command": "STEP"})
 
     def on_run_for(self, _event):
         """Run for button callback"""
-        pass  # TODO: Implement
+        run_for_window = TimeSetter(self.main_window, "Run Simulation For", "RUN_FOR")
+        run_for_window.Show()
+        # TODO: Implement
 
     def on_run_until(self, _event):
         """Run until button callback"""
-        pass  # TODO: Implement
+        run_until_window = TimeSetter(self.main_window, "Run Simulation Until", "RUN_UNTIL")
+        run_until_window.Show()
+        # TODO: Implement
 
     def on_store(self, _event):
         """Store button callback"""

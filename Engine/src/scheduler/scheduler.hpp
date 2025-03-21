@@ -1,8 +1,15 @@
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <boost/core/noncopyable.hpp>
+#include <nlohmann/json.hpp>
 #include <thread>
+#include <vector>
 
-class Scheduler {
+#include "eventManager/eventManager.hpp"
+
+class Scheduler : public boost::noncopyable {
 public:
   static Scheduler &getInstance() {
     static Scheduler instance;
@@ -13,26 +20,37 @@ public:
 
   void start();
   void stop();
-  void reset();
-
+  void step();
   void setRate(double rate);
-
-  void progressTime(long millis);
+  void runFor(long millis);
+  void runUntil(const nlohmann::json &time);
+  void stopAt(const nlohmann::json &time);
+  void stopIn(long millis);
 
   bool isRunning() const { return m_isRunning; }
 
 private:
   Scheduler();
 
-  void step(long currentMillis);
+  void execute(boost::system::error_code const &errorCode);
   void transmitTime(long simTimeMillis);
 
-  double m_stepTimeMicros{};
+  EventManager *m_eventManagerInstance = &EventManager::getInstance();
+  std::vector<Event *> *m_eventQueueInstance = EventManager::getInstance().getEventQueue();
+
+  long m_stepTimeMillis{};
+  long m_currentMillis{};
+
   double m_rate{};
 
-  std::thread m_schedulerThread;
   bool m_isRunning = false;
 
   long long m_lastStopTicks{};
-  long m_progressTimeLastMillis{};
+
+  boost::asio::io_service m_ioService;
+  std::function<void(void)> m_task;
+  boost::asio::deadline_timer m_schedulerTimer;
+  boost::asio::deadline_timer m_durationTimer;
+  boost::asio::io_service::work m_work;
+  std::thread m_workingThread;
 };

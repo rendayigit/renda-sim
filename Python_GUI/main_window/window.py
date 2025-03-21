@@ -1,9 +1,9 @@
 """Renda Sim GUI Main Window"""
 
 import wx
+from main_window.bind import MainWindowEventBinder
 
 # TODO(renda): Separate panels into different files
-
 
 class MainWindow(wx.Frame):
     """Main Window Class"""
@@ -183,6 +183,8 @@ class MainWindow(wx.Frame):
 
         events_splitter.SplitHorizontally(variables_panel, self.events_panel)
         events_splitter.SetMinimumPaneSize(350)
+
+        MainWindowEventBinder(self)
 
 
 @staticmethod

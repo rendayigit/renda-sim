@@ -2,81 +2,105 @@
 
 #include "logger/logger.hpp"
 #include "messaging/commanding.hpp"
+#include "messaging/publisher.hpp"
 #include "model/modelContainer.hpp"
-#include "model/modelVariable.hpp"
 #include "scheduler/scheduler.hpp"
+
+// TODO implement error handling for all received json data
 
 CommandParser::CommandParser() {
   m_functionMap["START"] = [](const nlohmann::json &command) {
     Scheduler::getInstance().start();
 
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["status"] = Scheduler::getInstance().isRunning();
-    Commanding::getInstance().reply(replyStatus.dump());
+    Commanding::getInstance().reply("{}");
   };
 
   m_functionMap["STOP"] = [](const nlohmann::json &command) {
     Scheduler::getInstance().stop();
 
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["status"] = not Scheduler::getInstance().isRunning();
-    Commanding::getInstance().reply(replyStatus.dump());
+    Commanding::getInstance().reply("{}");
   };
 
-  m_functionMap["SCHEDULER"] = [](const nlohmann::json &command) {
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
-    replyStatus["status"] = true;
-    Commanding::getInstance().reply(replyStatus.dump());
+  m_functionMap["RUN_FOR"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().runFor(command["millis"]);
+
+    Commanding::getInstance().reply("{}");
+  };
+
+  m_functionMap["STOP_IN"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().stopIn(command["millis"]);
+
+    Commanding::getInstance().reply("{}");
+  };
+
+  m_functionMap["RUN_UNTIL"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().runUntil(command["time"]);
+
+    Commanding::getInstance().reply("{}");
+  };
+
+  m_functionMap["STOP_AT"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().stopAt(command["time"]);
+
+    Commanding::getInstance().reply("{}");
+  };
+
+  m_functionMap["STEP"] = [](const nlohmann::json &command) {
+    Scheduler::getInstance().step();
+
+    Commanding::getInstance().reply("{}");
+  };
+
+  m_functionMap["STATUS"] = [](const nlohmann::json &command) {
+    Commanding::getInstance().reply("{}");
+
+    nlohmann::json status;
+    status["schedulerIsRunning"] = Scheduler::getInstance().isRunning();
+    Publisher::getInstance().queueMessage("STATUS", status);
   };
 
   m_functionMap["MODEL_TREE"] = [](const nlohmann::json &command) {
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["modelTree"] = ModelContainer::getInstance().getModelTreeJson();
-    replyStatus["status"] = true;
-    Commanding::getInstance().reply(replyStatus.dump());
+    nlohmann::json reply;
+    reply["modelTree"] = ModelContainer::getInstance().getModelTreeJson();
+    Commanding::getInstance().reply(reply.dump());
   };
 
   m_functionMap["VARIABLE_ADD"] = [](const nlohmann::json &command) {
-    std::string variablePath = command["variablePath"]; // TODO implement error handling
-
+    std::string variablePath = command["variablePath"];
     auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["variable"] = variable->getJson();
-    replyStatus["status"] = true; // TODO implement return value
+    if (variable == nullptr) {
+      Logger::error(command["variablePath"].get<std::string>() + " is not a valid variable path");
+      Commanding::getInstance().reply({});
+      return;
+    }
 
     variable->setMonitored(true);
-    Logger::debug("Added " + variablePath + " to the monitor list.");
 
-    Commanding::getInstance().reply(replyStatus.dump());
+    nlohmann::json reply;
+    reply["variable"] = variable->getJson();
+    Commanding::getInstance().reply(reply.dump());
   };
 
   m_functionMap["VARIABLE_REMOVE"] = [](const nlohmann::json &command) {
-    std::string variablePath = command["variablePath"]; // TODO implement error handling
-
+    std::string variablePath = command["variablePath"];
     auto *variable = ModelContainer::getInstance().getModel(variablePath);
 
-    if (variable != nullptr) {
-      variable->setMonitored(false);
-      Logger::debug("Removed " + variablePath + " from the monitor list.");
+    if (variable == nullptr) {
+      Logger::error(command["variablePath"].get<std::string>() + " is not a valid variable path");
+      Commanding::getInstance().reply({});
+      return;
     }
 
-    nlohmann::json replyStatus;
-    replyStatus["command"] = command["command"];
-    replyStatus["status"] = true; // TODO implement return value
-    Commanding::getInstance().reply(replyStatus.dump());
+    variable->setMonitored(false);
+
+    Commanding::getInstance().reply("{}");
   };
 }
 
 void CommandParser::executeCommand(const nlohmann::json &command) {
   for (auto &function : m_functionMap) {
-    if (command["command"].dump().find(function.first) != std::string::npos) {
+    if (command["command"].get<std::string>() == function.first) {
       function.second(command);
       return; // return after first match
     }
@@ -85,8 +109,5 @@ void CommandParser::executeCommand(const nlohmann::json &command) {
   // return undefined if no match
   Logger::error("Undefined command: " + command.dump());
 
-  nlohmann::json message;
-  message["command"] = command["command"];
-  message["status"] = -1;
-  Commanding::getInstance().reply(message.dump());
+  Commanding::getInstance().reply("{}");
 }

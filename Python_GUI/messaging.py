@@ -23,6 +23,7 @@ class Messaging:
             cls._instance.subscriber = cls._instance.context.socket(zmq.SUB)
             cls._instance.subscriber.connect("tcp://localhost:12345")
             cls._instance.subscriber.set(zmq.SUBSCRIBE, "TIME".encode())
+            cls._instance.subscriber.set(zmq.SUBSCRIBE, "STATUS".encode())
             cls._instance.subscriber.set(zmq.SUBSCRIBE, "EVENT".encode())
             cls._instance.subscriber.set(zmq.SUBSCRIBE, "VARIABLE".encode())
 
@@ -68,6 +69,13 @@ class Messaging:
             # TODO(renda): Find a better way to do this
             if topic == "TIME":
                 wx.CallAfter(self.main_window.sim_time_display.ChangeValue, command_json["simTime"])
+            elif topic == "STATUS":
+                if command_json["schedulerIsRunning"] is True:
+                    wx.CallAfter(self.main_window.start_btn.SetLabel, "Stop")
+                    wx.CallAfter(self.main_window.SetStatusText, "Simulation running...")
+                else:
+                    wx.CallAfter(self.main_window.start_btn.SetLabel, "Start")
+                    wx.CallAfter(self.main_window.SetStatusText, "Simulation stopped.")
             elif topic == "EVENT":
                 wx.CallAfter(self._add_log, command_json)
             elif topic == "VARIABLE":
