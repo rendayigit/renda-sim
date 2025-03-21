@@ -67,7 +67,7 @@ class MainWindowHandlers:
 
     def on_step(self, _event):
         """Step button callback"""
-        pass  # TODO: Implement
+        Commanding().request({"command": "STEP"})
 
     def on_run_for(self, _event):
         """Run for button callback"""

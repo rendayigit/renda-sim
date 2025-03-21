@@ -20,9 +20,8 @@ public:
 
   void start();
   void stop();
-
+  void step();
   void setRate(double rate);
-
   void runFor(long millis);
   void runUntil(const nlohmann::json &time);
   void stopAt(const nlohmann::json &time);
@@ -34,13 +33,13 @@ private:
   Scheduler();
 
   void execute(boost::system::error_code const &errorCode);
-  void step(long currentMillis);
   void transmitTime(long simTimeMillis);
 
   EventManager *m_eventManagerInstance = &EventManager::getInstance();
   std::vector<Event *> *m_eventQueueInstance = EventManager::getInstance().getEventQueue();
 
   long m_stepTimeMillis{};
+  long m_currentMillis{};
 
   double m_rate{};
 

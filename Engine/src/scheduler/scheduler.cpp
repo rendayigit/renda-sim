@@ -53,11 +53,10 @@ Scheduler::~Scheduler() {
 
 void Scheduler::execute(boost::system::error_code const &errorCode) {
   if (not errorCode) {
-    m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(m_stepTimeMillis));
+    long nextScheduleMillis = m_stepTimeMillis / m_rate;
+    m_schedulerTimer.expires_at(m_schedulerTimer.expires_at() + boost::posix_time::milliseconds(nextScheduleMillis));
     m_schedulerTimer.async_wait([this](const boost::system::error_code &newErrorCode) { execute(newErrorCode); });
-    long currentMillis = static_cast<long>(static_cast<double>(Timer::getInstance().simMillis()) * m_rate);
-    transmitTime(currentMillis);
-    step(currentMillis);
+    step();
   } else {
     if (errorCode != boost::asio::error::operation_aborted) {
       Logger::warn("Scheduler error");
@@ -144,7 +143,10 @@ void Scheduler::stopIn(long millis) {
   });
 }
 
-void Scheduler::step(long currentMillis) {
+void Scheduler::step() {
+  m_currentMillis += m_stepTimeMillis;
+  transmitTime(m_currentMillis); // This step is resource intensive
+
   // Skip if no events in queue
   if (m_eventQueueInstance->empty()) {
     return;
@@ -157,7 +159,7 @@ void Scheduler::step(long currentMillis) {
     }
 
     // Skip if event is not due
-    if (event->getNextMillis() > currentMillis) {
+    if (event->getNextMillis() > m_currentMillis) {
       continue;
     }
 
