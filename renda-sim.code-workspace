@@ -25,7 +25,6 @@
         },
         "command": [
           "chmod -R 777 ./scripts/;",
-          "./scripts/clean.sh;",
           "./scripts/build.sh"
         ],
         "options": {
